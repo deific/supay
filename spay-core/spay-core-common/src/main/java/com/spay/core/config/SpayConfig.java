@@ -21,6 +21,7 @@ import java.util.Map;
  */
 @Data
 public class SpayConfig {
+
     /** 支付渠道参数配置列表 */
     private static Map<String, SpayChannelConfig> channelConfigMap = new HashMap<>();
     /** 支付渠道服务配置列表 */
@@ -35,17 +36,17 @@ public class SpayConfig {
 
     /**
      * 注册
-     * @param payChannel
-     * @param channelService
+     * @param channelType 渠道类型
+     * @param channelService 渠道服务实例
      */
-    public static void registerPayService(String payChannel, PayChannelService channelService) {
-        channelServiceMap.put(payChannel, channelService);
+    public static void registerPayService(String channelType, PayChannelService channelService) {
+        channelServiceMap.put(channelType, channelService);
     }
 
     /**
      * 获取支付参数
-     * @param appId
-     * @return
+     * @param appId appId
+     * @return 支付参数对象
      */
     public static SpayChannelConfig getPayConfig(String appId) {
         return channelConfigMap.get(appId);

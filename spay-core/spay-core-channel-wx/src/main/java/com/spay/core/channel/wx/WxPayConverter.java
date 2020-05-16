@@ -6,15 +6,7 @@ package com.spay.core.channel.wx;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.XmlUtil;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONUtil;
-import com.spay.core.channel.BasePayChannelService;
-import com.spay.core.channel.wx.data.WxPayUnifiedOrderRequest;
-import com.spay.core.channel.wx.data.WxPayUnifiedOrderResponse;
-import com.spay.core.context.SpayContext;
 import com.spay.core.converter.SpayConverter;
-import com.spay.core.data.SpayRequest;
-import com.spay.core.data.SpayResponse;
 
 /**
  * <b>Application name：</b> WxPayChannelService.java <br>
@@ -34,8 +26,8 @@ public class WxPayConverter implements SpayConverter {
 
     /**
      * 响应转换为对象
-     * @param body
-     * @param targetClass
+     * @param body 转换字符串
+     * @param targetClass 目标对象类型
      * @return
      */
     @Override

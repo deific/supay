@@ -5,15 +5,11 @@
 package com.spay.core.pay;
 
 import com.spay.core.channel.PayChannelService;
-import com.spay.core.channel.PayService;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
 import com.spay.core.context.SpayContext;
 import com.spay.core.data.SpayRequest;
 import com.spay.core.data.SpayResponse;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <b>Application name：</b> SpayCore.java <br>
@@ -25,13 +21,14 @@ import java.util.Map;
  * <b>@version：</b>V1.0.0 <br>
  */
 public class SpayCore {
-    /** 单例模式 */
-    private static SpayCore spayCore = new SpayCore();
+
+    /** 私有构造函数 */
+    private SpayCore() {}
 
     /**
      * 直接支付
-     * @param spayContext
-     * @return
+     * @param spayContext 支付上下文
+     * @return 支付上下文
      */
     public static  <T extends SpayContext> T pay(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
         SpayChannelConfig channelConfig = spayContext.getChannelConfig();

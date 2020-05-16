@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class WxPayChannelService extends BasePayChannelService {
+public class WxPayChannelService implements BasePayChannelService {
 
     private WxPayConverter convert = new WxPayConverter();
 
@@ -46,7 +46,7 @@ public class WxPayChannelService extends BasePayChannelService {
         String resXml = HttpUtil.post("http://www.baidu.com", reqXml);
         resXml = "<appid>aa</appid>";
         log.debug("[微信支付] 请求响应：{}", resXml);
-        WxPayUnifiedOrderResponse response = (WxPayUnifiedOrderResponse)convert.convert(resXml, WxPayUnifiedOrderResponse.class);
+        WxPayUnifiedOrderResponse response = convert.convert(resXml, WxPayUnifiedOrderResponse.class);
         thisCtx.setResponse(response);
         return ctx;
     }

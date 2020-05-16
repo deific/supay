@@ -4,7 +4,6 @@
  *******************************************************************************/
 package com.spay.core.data;
 
-import com.spay.core.enums.SpayTradeType;
 import lombok.Data;
 
 import java.io.Serializable;

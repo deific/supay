@@ -20,6 +20,8 @@ import com.spay.core.pay.SpayCore;
  */
 public class Spay {
 
+    /** 私有构造函数 */
+    private Spay() {}
 
     /**
      * 直接支付

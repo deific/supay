@@ -17,7 +17,7 @@ import com.spay.core.data.SpayResponse;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public abstract class BasePayChannelService implements PayChannelService {
+public interface  BasePayChannelService extends PayChannelService {
 
     /**
      * 检查上下文参数类型
@@ -25,7 +25,7 @@ public abstract class BasePayChannelService implements PayChannelService {
      * @param r 请求参数类型
      * @param s 响应参数类型
      */
-    public <T> T checkType(SpayContext<? extends SpayRequest, ? extends SpayResponse> ctx, Class<? extends SpayRequest> r, Class<? extends SpayResponse> s) {
+    default  <T> T checkType(SpayContext<? extends SpayRequest, ? extends SpayResponse> ctx, Class<? extends SpayRequest> r, Class<? extends SpayResponse> s) {
         // 判断类型是否匹配
         boolean isMatch = (ctx.getRequest() != null && !ctx.getRequest().getClass().isInstance(r))
                 || (ctx.getResponse() != null && !ctx.getResponse().getClass().isInstance(s));

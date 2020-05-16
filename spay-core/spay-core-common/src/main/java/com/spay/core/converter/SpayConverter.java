@@ -4,10 +4,7 @@
  *******************************************************************************/
 package com.spay.core.converter;
 
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import com.spay.core.data.SpayRequest;
-import com.spay.core.data.SpayResponse;
 
 /**
  * <b>Application name：</b> SpayRequestConverter.java <br>
@@ -22,18 +19,18 @@ public interface SpayConverter {
 
     /**
      * 请求对象转换
-     * @param request
-     * @return
+     * @param obj 对象
+     * @return 转换后字符串
      */
-    default String convert(Object request) {
-        return JSONUtil.toJsonStr(request);
+    default String convert(Object obj) {
+        return JSONUtil.toJsonStr(obj);
     }
 
     /**
      * 响应转换为对象
-     * @param body
-     * @param targetClass
-     * @return
+     * @param body 数据字符串
+     * @param targetClass 转换目标对象类型
+     * @return 目标对象实例
      */
     default <T> T convert(String body, Class<T> targetClass) {
         return JSONUtil.toBean(body, targetClass);
