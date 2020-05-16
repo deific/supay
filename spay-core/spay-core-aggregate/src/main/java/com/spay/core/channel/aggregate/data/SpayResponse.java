@@ -2,8 +2,9 @@
  * @(#)SPayData.java 2020年05月15日 22:40
  * Copyright 2020 http://codegarden.com All rights reserved.
  *******************************************************************************/
-package com.spay.core.data;
+package com.spay.core.channel.aggregate.data;
 
+import com.spay.core.data.Response;
 import lombok.Data;
 
 /**
@@ -16,7 +17,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class SpayResponse<T> {
+public class SpayResponse extends Response {
     /** 业务处理编码 */
     protected String resultCode;
     /** 业务处理信息 */
@@ -27,6 +28,4 @@ public class SpayResponse<T> {
     protected String redirectUrl;
     /** 跳转页面内容 */
     protected String redirectPageBody;
-    /** 业务数据 */
-    protected T data;
 }

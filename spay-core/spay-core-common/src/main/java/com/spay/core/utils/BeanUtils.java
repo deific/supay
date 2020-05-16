@@ -5,6 +5,8 @@
 package com.spay.core.utils;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.spay.core.annotation.XmlField;
 
 import java.lang.reflect.Field;
@@ -21,6 +23,7 @@ import java.util.*;
  * <b>@version：</b>V1.0.0 <br>
  */
 public class BeanUtils extends BeanUtil {
+
     /**
      *
      * 将bean按照@XmlAlias标识的字符串内容生成以之为key的map对象
@@ -59,5 +62,35 @@ public class BeanUtils extends BeanUtil {
             }
         }
         return result;
+    }
+
+    /**
+     *
+     * 将bean按照@XmlAlias标识的字符串内容生成以之为key的map对象
+     * @param  map xml数据map对象
+     * @param  targetClass 转换目标对象@XmlField
+     * @return bean 包含@XmlField的xml bean对象
+     */
+    public static <T> T map2XmlBean(Map<String, Object> map, Class<T> targetClass) {
+        Map<String, Object> result = new HashMap<>(16);
+
+        T xmlBean = ReflectUtil.newInstance(targetClass, new Object[0]);
+
+        List<Field> fields = new ArrayList<>(Arrays.asList(xmlBean.getClass().getDeclaredFields()));
+        Class superClass = xmlBean.getClass().getSuperclass();
+        fields.addAll(Arrays.asList(superClass.getDeclaredFields()));
+        superClass = superClass.getSuperclass();
+        if (superClass != null) {
+            fields.addAll(Arrays.asList(superClass.getDeclaredFields()));
+        }
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(XmlField.class)) {
+                ReflectUtil.setFieldValue(xmlBean, field, map.get(field.getAnnotation(XmlField.class).value()));
+            } else {
+                ReflectUtil.setFieldValue(xmlBean, field, map.get(field.getName()));
+            }
+        }
+        return xmlBean;
     }
 }

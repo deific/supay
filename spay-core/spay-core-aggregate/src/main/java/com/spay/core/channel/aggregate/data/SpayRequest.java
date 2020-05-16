@@ -2,9 +2,17 @@
  * @(#)SPayRequest.java 2020年05月15日 22:44
  * Copyright 2020 http://codegarden.com All rights reserved.
  *******************************************************************************/
-package com.spay.core.data;
+package com.spay.core.channel.aggregate.data;
 
+import cn.hutool.core.util.StrUtil;
+import com.spay.core.context.SpayContext;
+import com.spay.core.data.Request;
+import com.spay.core.data.Response;
+import com.spay.core.utils.BeanUtils;
+import com.spay.core.utils.SignUtils;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
@@ -18,6 +26,8 @@ import java.io.Serializable;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class SpayRequest implements Serializable {
+@SuperBuilder
+@NoArgsConstructor
+public class SpayRequest extends Request {
 
 }

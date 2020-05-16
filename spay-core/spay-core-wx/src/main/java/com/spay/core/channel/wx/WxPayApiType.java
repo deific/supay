@@ -4,6 +4,8 @@
  *******************************************************************************/
 package com.spay.core.channel.wx;
 
+import com.spay.core.channel.ChannelApiType;
+
 /**
  * <b>Application name：</b> WxPayChannelService.java <br>
  * <b>Application describing： </b> <br>
@@ -13,50 +15,38 @@ package com.spay.core.channel.wx;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public enum WxPayApiType {
+public class WxPayApiType extends ChannelApiType {
     /** 中国国内 */
-    BASE_URL_CHINA1("https://api.mch.weixin.qq.com"),
+    public static WxPayApiType BASE_URL_CHINA1 = new WxPayApiType("", "https://api.mch.weixin.qq.com");
     /** 中国国内(备用域名) */
-    BASE_URL_CHINA2("https://api2.mch.weixin.qq.com"),
+    public static WxPayApiType BASE_URL_CHINA2 = new WxPayApiType("", "https://api2.mch.weixin.qq.com");
     /** 东南亚 */
-    BASE_URL_HK("https://apihk.mch.weixin.qq.com"),
+    public static WxPayApiType BASE_URL_HK = new WxPayApiType("", "https://apihk.mch.weixin.qq.com");
     /** 其它 */
-    BASE_URL_US("https://apius.mch.weixin.qq.com"),
+    public static WxPayApiType BASE_URL_US = new WxPayApiType("", "https://apius.mch.weixin.qq.com");
     /** 沙箱环境 */
-    SAND_BOX_URL("/sandboxnew"),
+    public static WxPayApiType SAND_BOX_URL = new WxPayApiType("", "/sandboxnew");
 
     /** 统一下单 */
-    UNIFIED_ORDER("/pay/unifiedorder"),
+    public static WxPayApiType UNIFIED_ORDER = new WxPayApiType("", "/pay/unifiedorder");
 
-    //红包接口
-    REDPACKET("/mmpaymkttransfers/sendredpack"),
+    /** 红包接口 */
+    public static WxPayApiType REDPACKET = new WxPayApiType("", "/mmpaymkttransfers/sendredpack");
 
-    //查询订单
-    QUERY("/pay/orderquery"),
-    //关闭订单
-    CLOSE("/pay/closeorder"),
-    //申请退款
-    REFUND("/secapi/pay/refund"),
-    //查询退款
-    REFUNDQUERY("/pay/refundquery"),
-    //下载对账单
-    DOWNLOADBILL("/pay/downloadbill"),
-    //不知道交易类型，主要用于回调通知，回调后不清楚交易类型，以此定义
-    UNAWARE("UNAWARE"),
-    //获取仿真系统key
-    GETSIGNKEY("/pay/getsignkey"),
+    /** 查询订单 */
+    public static WxPayApiType PAY_QUERY = new WxPayApiType("", "/pay/orderquery");
+    /** 关闭订单 */
+    public static WxPayApiType CLOSE = new WxPayApiType("", "/pay/closeorder");
+    /** 申请退款 */
+    public static WxPayApiType REFUND = new WxPayApiType("", "/secapi/pay/refund");
+    /** 查询退款 */
+    public static WxPayApiType REFUND_QUERY = new WxPayApiType("", "/pay/refundquery");
+    /** 下载对账单 */
+    public static WxPayApiType DOWNLOAD_BILL = new WxPayApiType("", "/pay/downloadbill");
+    /** 获取仿真系统key */
+    public static WxPayApiType GET_SIGN_KEY = new WxPayApiType("", "/pay/getsignkey");
 
-    ;
-    WxPayApiType(String method) {
-        this.method = method;
-    }
-
-    private String method;
-
-    public String getType() {
-        return this.name();
-    }
-    public String getMethod() {
-        return this.method;
+    public WxPayApiType(String name, String url) {
+        super(name, url);
     }
 }

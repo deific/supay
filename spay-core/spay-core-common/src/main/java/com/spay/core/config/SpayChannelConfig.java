@@ -44,4 +44,12 @@ public class SpayChannelConfig {
     private String apiBaseUrl;
     /** 是否启用沙箱环境 */
     private boolean sandBox;
+
+    /**
+     * 注册渠道参数配置
+     */
+    public SpayChannelConfig register() {
+        SpayConfig.registerPayConfig(appId, this);
+        return this;
+    }
 }

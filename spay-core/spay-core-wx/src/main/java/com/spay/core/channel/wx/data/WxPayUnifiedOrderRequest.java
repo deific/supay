@@ -5,9 +5,8 @@
 package com.spay.core.channel.wx.data;
 
 import com.spay.core.annotation.XmlField;
-import com.spay.core.data.SpayRequest;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <b>Application name：</b> WxPayUnifiedOrderRequest.java <br>
@@ -18,21 +17,13 @@ import lombok.Data;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-@Builder
 @Data
-public class WxPayUnifiedOrderRequest extends SpayRequest {
-    private String appid;
-    @XmlField("mch_id")
-    private String mchId;
-    @XmlField("sub_appid")
-    private String subAppId;
-    @XmlField("sub_mch_id")
-    private String subMchId;
+@SuperBuilder
+public class WxPayUnifiedOrderRequest extends WxPayBaseRequest {
     @XmlField("device_info")
     private String deviceInfo;
     @XmlField("nonce_str")
     private String nonceStr;
-    private String sign;
     @XmlField("signType")
     private String sign_type;
     private String body;
@@ -69,4 +60,6 @@ public class WxPayUnifiedOrderRequest extends SpayRequest {
     private String sceneInfo;
     @XmlField("profit_sharing")
     private String profitSharing;
+
+
 }

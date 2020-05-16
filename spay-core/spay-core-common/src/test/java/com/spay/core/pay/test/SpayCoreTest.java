@@ -7,8 +7,8 @@ package com.spay.core.pay.test;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
 import com.spay.core.context.SpayContext;
-import com.spay.core.data.SpayRequest;
-import com.spay.core.data.SpayResponse;
+import com.spay.core.data.Request;
+import com.spay.core.data.Response;
 import com.spay.core.enums.SpayChannelType;
 import com.spay.core.pay.SpayCore;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +30,15 @@ public class SpayCoreTest {
         SpayChannelConfig channelConfig = SpayChannelConfig.builder().appId("1").channelType(SpayChannelType.WECHAT).build();
         SpayConfig.registerPayConfig("1", channelConfig);
 
-        SpayContext<SpayRequest, SpayResponse> cxt = SpayContext.builder()
+        SpayContext<Request, Response> cxt = SpayContext.builder()
                 .channelConfig(SpayConfig.getPayConfig("1"))
-                .request(new SpayRequest())
-                .response(new SpayResponse()).build();
+                .request(new Request(){
+                    @Override
+                    public SpayContext<Request, Response> checkAndSign(SpayContext<Request, Response> ctx) {
+                        return null;
+                    }
+                })
+                .response(new Response()).build();
 
         cxt = SpayCore.pay(cxt);
         System.out.printf("结果：" + cxt.getResponse());

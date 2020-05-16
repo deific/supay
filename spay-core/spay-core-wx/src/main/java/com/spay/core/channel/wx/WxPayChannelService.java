@@ -4,21 +4,16 @@
  *******************************************************************************/
 package com.spay.core.channel.wx;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
 import com.spay.core.channel.BasePayChannelService;
-import com.spay.core.channel.PayChannelService;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderRequest;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderResponse;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.context.SpayContext;
-import com.spay.core.data.SpayRequest;
-import com.spay.core.data.SpayResponse;
-import com.spay.core.enums.SpayChannelType;
-import com.spay.core.utils.BeanUtils;
-import com.spay.core.utils.SignUtils;
+import com.spay.core.data.Request;
+import com.spay.core.data.Response;
+import com.spay.core.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -33,8 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WxPayChannelService implements BasePayChannelService {
 
-    private WxPayConverter convert = new WxPayConverter();
-
     @Override
     public String getPayServiceName() {
         return "wxPayChannelService";
@@ -47,41 +40,35 @@ public class WxPayChannelService implements BasePayChannelService {
      * @return {@link String} 返回完整的接口请求URL
      */
     public static String getReqUrl(SpayChannelConfig config, WxPayApiType wxApiType) {
-        return config.getApiBaseUrl().concat(config.isSandBox()?WxPayApiType.SAND_BOX_URL.getType():wxApiType.getType());
+        return config.getApiBaseUrl().concat(config.isSandBox()?WxPayApiType.SAND_BOX_URL.getUrl():wxApiType.getUrl());
     }
 
     @Override
-    public SpayContext pay(SpayContext<? extends SpayRequest, ? extends SpayResponse> ctx) {
-        SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse> thisCtx = checkType(ctx,
+    public SpayContext<Request, Response> pay(SpayContext<Request, Response> ctx) {
+        // 检查并转换类型
+        SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse> thisCtx = checkAndConvertType(ctx,
                 WxPayUnifiedOrderRequest.class, WxPayUnifiedOrderResponse.class);
         if (ctx.hasError()) {
             return ctx;
         }
 
-        SpayChannelConfig channelConfig = ctx.getChannelConfig();
         // 设置随机数和签名
+        SpayChannelConfig channelConfig = ctx.getChannelConfig();
         WxPayUnifiedOrderRequest request = thisCtx.getRequest();
-        request.setAppid(channelConfig.getAppId());
+        request.setAppid(StrUtil.isNotEmpty(request.getAppid())?request.getAppid():channelConfig.getAppId());
         request.setNonceStr(RandomUtil.randomString(16));
-        String sign = SignUtils.signForMap(BeanUtils.xmlBean2Map(request), thisCtx.getChannelConfig().getMchSecretKey());
-        request.setSign(sign);
 
-        String reqXml = convert.convert(ctx.getRequest());
+        // 参数检查并签名
+        request.checkAndSign(ctx);
+        if (ctx.hasError()) {
+            return ctx;
+        }
+
+        String reqXml = ctx.toRequestStr();
         log.debug("[微信支付] 请求参数：{}", reqXml);
-        String resXml = HttpUtil.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.UNIFIED_ORDER), reqXml);
+        String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.UNIFIED_ORDER), reqXml);
         log.debug("[微信支付] 请求响应：{}", resXml);
-        WxPayUnifiedOrderResponse response = convert.convert(resXml, WxPayUnifiedOrderResponse.class);
-        thisCtx.setResponse(response);
+        ctx.parseResponseStr(resXml, WxPayUnifiedOrderResponse.class);
         return ctx;
-    }
-
-    @Override
-    public SpayContext refund(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        return null;
-    }
-
-    @Override
-    public SpayResponse queryTradeInfo(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        return null;
     }
 }

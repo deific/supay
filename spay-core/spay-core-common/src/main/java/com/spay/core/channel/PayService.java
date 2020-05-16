@@ -5,8 +5,8 @@
 package com.spay.core.channel;
 
 import com.spay.core.context.SpayContext;
-import com.spay.core.data.SpayRequest;
-import com.spay.core.data.SpayResponse;
+import com.spay.core.data.Request;
+import com.spay.core.data.Response;
 
 /**
  * <b>Application name：</b> PayService.java <br>
@@ -21,46 +21,46 @@ public interface PayService {
 
     /**
      * 直接支付
-     * @param spayContext
+     * @param ctx
      * @return
      */
-    default SpayContext pay(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        return SpayContext.fail(spayContext, "不支持该方法");
+    default SpayContext<Request, Response> pay(SpayContext<Request, Response> ctx) {
+        return ctx.fail("不支持该方法");
     }
 
     /**
      * 确认支付
-     * @param spayContext
+     * @param ctx
      * @return
      */
-    default SpayContext confirm(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        return SpayContext.fail(spayContext, "不支持该方法");
+    default SpayContext<Request, Response> confirm(SpayContext<Request, Response> ctx) {
+        return ctx.fail("不支持该方法");
     }
 
     /**
      * 退款
-     * @param spayContext
+     * @param ctx
      * @return
      */
-    default SpayContext refund(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        return SpayContext.fail(spayContext, "不支持该方法");
+    default SpayContext<Request, Response> refund(SpayContext<Request, Response> ctx) {
+        return ctx.fail("不支持该方法");
     }
 
     /**
-     * 批量查询支付状态
-     * @param spayContext
+     * 批量查询交易信息
+     * @param ctx
      * @return
      */
-    default SpayResponse queryTradeInfo(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        return SpayContext.fail(spayContext, "不支持该方法");
+    default SpayContext<Request, Response> queryTradeInfo(SpayContext<Request, Response> ctx) {
+        return ctx.fail("不支持该方法");
     }
 
     /**
      * 发送红包
-     * @param spayContext
+     * @param ctx
      * @return
      */
-    default SpayContext sendRedPackage(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        return SpayContext.fail(spayContext, "不支持该方法");
+    default SpayContext<Request, Response> sendRedPackage(SpayContext<Request, Response> ctx) {
+        return ctx.fail("不支持该方法");
     }
 }

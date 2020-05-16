@@ -4,12 +4,16 @@
  *******************************************************************************/
 package com.spay.core.pay;
 
+import cn.hutool.core.date.DateUtil;
 import com.spay.core.channel.PayChannelService;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
 import com.spay.core.context.SpayContext;
-import com.spay.core.data.SpayRequest;
-import com.spay.core.data.SpayResponse;
+import com.spay.core.data.Request;
+import com.spay.core.data.Response;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Date;
 
 /**
  * <b>Application name：</b> SpayCore.java <br>
@@ -20,6 +24,7 @@ import com.spay.core.data.SpayResponse;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Slf4j
 public class SpayCore {
 
     /** 私有构造函数 */
@@ -27,19 +32,27 @@ public class SpayCore {
 
     /**
      * 直接支付
-     * @param spayContext 支付上下文
+     * @param ctx 支付上下文
      * @return 支付上下文
      */
-    public static  <T extends SpayContext> T pay(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
-        SpayChannelConfig channelConfig = spayContext.getChannelConfig();
+    public static  <T extends SpayContext> T pay(SpayContext<Request, Response> ctx) {
+        SpayChannelConfig channelConfig = ctx.getChannelConfig();
         if (channelConfig == null) {
-            return SpayContext.fail(spayContext, "请配置支付渠道参数");
+            return ctx.fail("请配置支付渠道参数");
         }
-        PayChannelService payService = SpayConfig.getPayService(channelConfig.getChannelType());
-        if (payService != null) {
-            return (T)payService.pay(spayContext);
-        } else {
-            return SpayContext.fail(spayContext, "不支持该渠道支付");
+        ctx.setStartTime(new Date());
+        try {
+            PayChannelService payService = SpayConfig.getPayService(channelConfig.getChannelType());
+            if (payService != null) {
+                return (T)payService.pay(ctx);
+            } else {
+                return ctx.fail("不支持该渠道支付");
+            }
+        } catch (Exception e) {
+            return ctx.fail("支付异常：" + e.getMessage());
+        } finally {
+            ctx.setEndTime(new Date());
+            log.debug("[支付] 支付耗时：{} 结果：{}", ctx.duration(), ctx.getResponse());
         }
     }
 }

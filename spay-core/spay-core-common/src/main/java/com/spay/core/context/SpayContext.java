@@ -4,15 +4,19 @@
  *******************************************************************************/
 package com.spay.core.context;
 
-import com.spay.core.Spay;
+import cn.hutool.core.date.DateTime;
 import com.spay.core.config.SpayChannelConfig;
-import com.spay.core.data.SpayRequest;
-import com.spay.core.data.SpayResponse;
+import com.spay.core.config.SpayConfig;
+import com.spay.core.converter.SpayConverter;
+import com.spay.core.data.Request;
+import com.spay.core.data.Response;
 import com.spay.core.enums.SpayPayType;
 import com.spay.core.enums.SpayTradeType;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.Date;
 
 /**
  * <b>Application name：</b> SpayContext.java <br>
@@ -25,8 +29,8 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder
-@NoArgsConstructor
-public class SpayContext<R extends SpayRequest, S extends SpayResponse> {
+@ToString(callSuper = true)
+public class SpayContext<R extends Request, S extends Response> {
     /** 交易流水号 */
     protected String tradeId;
     /** 支付请求交易类型 */
@@ -35,6 +39,10 @@ public class SpayContext<R extends SpayRequest, S extends SpayResponse> {
     protected SpayPayType payType;
     /** 支付渠道参数 */
     protected SpayChannelConfig channelConfig;
+    /** 开始时间 */
+    private Date startTime;
+    /** 结束时间 */
+    private Date endTime;
     /** 支付请求参数 */
     protected  R request;
     /** 支付结果 */
@@ -42,18 +50,17 @@ public class SpayContext<R extends SpayRequest, S extends SpayResponse> {
 
     /**
      * 失败
-     * @param ctx
      * @param msg
      * @param <T>
      * @return
      */
-    public static <T> T fail(SpayContext<? extends SpayRequest, ? extends SpayResponse> ctx, String msg) {
-        if (ctx.response == null) {
-
+    public <T> T fail(String msg) {
+        if (this.response == null) {
+            this.setResponse((S) new Response());
         }
-        ctx.response.setResultMsg(msg);
-        ctx.response.setSuccess(false);
-        return (T) ctx;
+        this.response.setMsg(msg);
+        this.response.setSuccess(false);
+        return (T) this;
     }
 
     /**
@@ -65,10 +72,31 @@ public class SpayContext<R extends SpayRequest, S extends SpayResponse> {
     }
 
     /**
-     * 设置结果
-     * @param s
+     * 转换为请求字符串
+     * @return
      */
-    public void setResponse(S s) {
-        this.response = s;
+    public String toRequestStr() {
+        SpayConverter converter = SpayConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        return converter.convert(this.getRequest());
+    }
+
+    /**
+     * 解析响应字符串为对象实例
+     * @param respStr
+     * @param targetClass
+     * @return
+     */
+    public Response parseResponseStr(String respStr, Class<? extends Response> targetClass) {
+        SpayConverter converter = SpayConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        this.setResponse((S) converter.convert(respStr, targetClass));
+        return this.response;
+    }
+
+    /**
+     * 耗时
+     * @return
+     */
+    public long duration() {
+        return this.endTime.getTime() - this.startTime.getTime();
     }
 }

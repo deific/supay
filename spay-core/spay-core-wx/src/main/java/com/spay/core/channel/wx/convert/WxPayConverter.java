@@ -2,9 +2,8 @@
  * @(#)WxPayChannelService.java 2020年05月16日 09:37
  * Copyright 2020 http://codegarden.com All rights reserved.
  *******************************************************************************/
-package com.spay.core.channel.wx;
+package com.spay.core.channel.wx.convert;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.XmlUtil;
 import com.spay.core.converter.SpayConverter;
 import com.spay.core.utils.BeanUtils;
@@ -33,6 +32,6 @@ public class WxPayConverter implements SpayConverter {
      */
     @Override
     public <T> T convert(String body, Class<T> targetClass) {
-        return XmlUtil.readObjectFromXml(body);
+        return BeanUtils.map2XmlBean(XmlUtil.xmlToMap(body), targetClass);
     }
 }
