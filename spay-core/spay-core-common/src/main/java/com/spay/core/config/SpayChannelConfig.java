@@ -4,6 +4,7 @@
  *******************************************************************************/
 package com.spay.core.config;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -15,8 +16,11 @@ import lombok.Data;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Builder
 @Data
 public class SpayChannelConfig {
+    /** 渠道类型 */
+    private String channelType;
     /** 第三方渠道appappId */
     private String appId;
     /** 第三方渠道app秘钥 */

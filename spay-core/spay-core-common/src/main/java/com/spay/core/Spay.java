@@ -4,6 +4,11 @@
  *******************************************************************************/
 package com.spay.core;
 
+import com.spay.core.context.SpayContext;
+import com.spay.core.data.SpayRequest;
+import com.spay.core.data.SpayResponse;
+import com.spay.core.pay.SpayCore;
+
 /**
  * <b>Application name：</b> SPay.java <br>
  * <b>Application describing： </b> <br>
@@ -16,5 +21,12 @@ package com.spay.core;
 public class Spay {
 
 
-
+    /**
+     * 直接支付
+     * @param spayContext
+     * @return
+     */
+    public static <T extends SpayContext> T pay(SpayContext<? extends SpayRequest, ? extends SpayResponse> spayContext) {
+        return SpayCore.pay(spayContext);
+    }
 }

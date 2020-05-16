@@ -4,6 +4,12 @@
  *******************************************************************************/
 package com.spay.core.config;
 
+import com.spay.core.channel.PayChannelService;
+import lombok.Data;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <b>Application name：</b> SpayServerConfig.java <br>
  * <b>Application describing： </b> <br>
@@ -13,5 +19,44 @@ package com.spay.core.config;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Data
 public class SpayConfig {
+    /** 支付渠道参数配置列表 */
+    private static Map<String, SpayChannelConfig> channelConfigMap = new HashMap<>();
+    /** 支付渠道服务配置列表 */
+    private static Map<String, PayChannelService> channelServiceMap = new HashMap<>();
+
+    /**
+     * 注册渠道支付参数
+     */
+    public static void registerPayConfig(String appId, SpayChannelConfig channelConfig) {
+        channelConfigMap.put(appId, channelConfig);
+    }
+
+    /**
+     * 注册
+     * @param payChannel
+     * @param channelService
+     */
+    public static void registerPayService(String payChannel, PayChannelService channelService) {
+        channelServiceMap.put(payChannel, channelService);
+    }
+
+    /**
+     * 获取支付参数
+     * @param appId
+     * @return
+     */
+    public static SpayChannelConfig getPayConfig(String appId) {
+        return channelConfigMap.get(appId);
+    }
+
+    /**
+     * 获取支付服务
+     * @param channelType
+     * @return
+     */
+    public static PayChannelService getPayService(String channelType) {
+        return channelServiceMap.get(channelType);
+    }
 }

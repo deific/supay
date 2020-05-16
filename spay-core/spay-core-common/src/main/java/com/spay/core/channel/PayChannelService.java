@@ -4,8 +4,6 @@
  *******************************************************************************/
 package com.spay.core.channel;
 
-import com.spay.core.pay.PayService;
-
 /**
  * <b>Application name：</b> ChannelPayService.java <br>
  * <b>Application describing： </b> <br>
