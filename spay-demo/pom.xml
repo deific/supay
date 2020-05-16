@@ -9,12 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spay-core</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>spay-demo</artifactId>
+
     <modules>
-        <module>spay-core-common</module>
-        <module>spay-core-wx</module>
-        <module>spay-core-alipay</module>
+        <module>spay-simaple-demo</module>
     </modules>
 
 

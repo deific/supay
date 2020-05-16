@@ -4,6 +4,7 @@
  *******************************************************************************/
 package com.spay.core.context;
 
+import com.spay.core.Spay;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.data.SpayRequest;
 import com.spay.core.data.SpayResponse;
@@ -11,6 +12,7 @@ import com.spay.core.enums.SpayPayType;
 import com.spay.core.enums.SpayTradeType;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * <b>Application name：</b> SpayContext.java <br>
@@ -23,6 +25,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
 public class SpayContext<R extends SpayRequest, S extends SpayResponse> {
     /** 交易流水号 */
     protected String tradeId;
@@ -45,6 +48,9 @@ public class SpayContext<R extends SpayRequest, S extends SpayResponse> {
      * @return
      */
     public static <T> T fail(SpayContext<? extends SpayRequest, ? extends SpayResponse> ctx, String msg) {
+        if (ctx.response == null) {
+
+        }
         ctx.response.setResultMsg(msg);
         ctx.response.setSuccess(false);
         return (T) ctx;

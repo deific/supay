@@ -18,15 +18,15 @@ import lombok.Data;
 @Data
 public class SpayResponse<T> {
     /** 业务处理编码 */
-    private String resultCode;
+    protected String resultCode;
     /** 业务处理信息 */
-    private String resultMsg;
+    protected String resultMsg;
     /** 业务处理是否成功 */
-    private boolean success;
+    protected boolean success;
     /** 跳转地址 */
-    private String redirectUrl;
+    protected String redirectUrl;
     /** 跳转页面内容 */
-    private String redirectPageBody;
+    protected String redirectPageBody;
     /** 业务数据 */
-    private T data;
+    protected T data;
 }

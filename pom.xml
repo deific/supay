@@ -9,6 +9,8 @@
     <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>spay-core</module>
+        <module>spay-demo</module>
+
     </modules>
 
     <packaging>pom</packaging>

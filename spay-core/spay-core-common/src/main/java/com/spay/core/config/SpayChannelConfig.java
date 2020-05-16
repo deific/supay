@@ -4,6 +4,7 @@
  *******************************************************************************/
 package com.spay.core.config;
 
+import com.spay.core.enums.SpayChannelType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,8 +20,8 @@ import lombok.Data;
 @Builder
 @Data
 public class SpayChannelConfig {
-    /** 渠道类型 */
-    private String channelType;
+    /** 渠道类型 {@link SpayChannelType} */
+    private SpayChannelType channelType;
     /** 第三方渠道appappId */
     private String appId;
     /** 第三方渠道app秘钥 */
@@ -41,4 +42,6 @@ public class SpayChannelConfig {
     private String certFormat;
     /** 合作方基本接口地址 */
     private String apiBaseUrl;
+    /** 是否启用沙箱环境 */
+    private boolean sandBox;
 }

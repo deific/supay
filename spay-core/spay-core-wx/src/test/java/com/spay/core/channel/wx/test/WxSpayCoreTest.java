@@ -2,8 +2,10 @@
  * @(#)SpayCoreTest.java 2020年05月16日 09:07
  * Copyright 2020 http://codegarden.com All rights reserved.
  *******************************************************************************/
-package com.spay.core.pay.test;
+package com.spay.core.channel.wx.test;
 
+import com.spay.core.channel.wx.WxPayChannelService;
+import com.spay.core.channel.wx.data.WxPayUnifiedOrderRequest;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
 import com.spay.core.context.SpayContext;
@@ -23,17 +25,18 @@ import lombok.extern.slf4j.Slf4j;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class SpayCoreTest {
+public class WxSpayCoreTest {
 
     public static void main(String[] args) {
 
         SpayChannelConfig channelConfig = SpayChannelConfig.builder().appId("1").channelType(SpayChannelType.WECHAT).build();
         SpayConfig.registerPayConfig("1", channelConfig);
+        SpayConfig.registerPayService(SpayChannelType.WECHAT, new WxPayChannelService());
 
         SpayContext<SpayRequest, SpayResponse> cxt = SpayContext.builder()
                 .channelConfig(SpayConfig.getPayConfig("1"))
-                .request(new SpayRequest())
-                .response(new SpayResponse()).build();
+                .request(WxPayUnifiedOrderRequest.builder().appid("aaa").build())
+                .build();
 
         cxt = SpayCore.pay(cxt);
         System.out.printf("结果：" + cxt.getResponse());

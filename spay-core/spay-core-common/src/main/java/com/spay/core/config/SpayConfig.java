@@ -5,6 +5,7 @@
 package com.spay.core.config;
 
 import com.spay.core.channel.PayChannelService;
+import com.spay.core.enums.SpayChannelType;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class SpayConfig {
     /** 支付渠道参数配置列表 */
     private static Map<String, SpayChannelConfig> channelConfigMap = new HashMap<>();
     /** 支付渠道服务配置列表 */
-    private static Map<String, PayChannelService> channelServiceMap = new HashMap<>();
+    private static Map<SpayChannelType, PayChannelService> channelServiceMap = new HashMap<>();
 
     /**
      * 注册渠道支付参数
@@ -39,7 +40,7 @@ public class SpayConfig {
      * @param channelType 渠道类型
      * @param channelService 渠道服务实例
      */
-    public static void registerPayService(String channelType, PayChannelService channelService) {
+    public static void registerPayService(SpayChannelType channelType, PayChannelService channelService) {
         channelServiceMap.put(channelType, channelService);
     }
 
@@ -57,7 +58,7 @@ public class SpayConfig {
      * @param channelType
      * @return
      */
-    public static PayChannelService getPayService(String channelType) {
+    public static PayChannelService getPayService(SpayChannelType channelType) {
         return channelServiceMap.get(channelType);
     }
 }
