@@ -17,8 +17,5 @@ import lombok.Data;
  */
 @Data
 public class Response {
-    /** 是否成功 */
-    private boolean success;
-    /** 返回信息 */
-    private String msg;
+
 }

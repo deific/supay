@@ -5,8 +5,14 @@
 package com.spay.core.channel.wx.data;
 
 import com.spay.core.annotation.XmlField;
+import com.spay.core.config.SpayChannelConfig;
+import com.spay.core.context.SpayContext;
 import com.spay.core.data.Response;
+import com.spay.core.utils.BeanUtils;
+import com.spay.core.utils.SignUtils;
 import lombok.Data;
+
+import java.util.Map;
 
 /**
  * <b>Application name：</b> WxPayBaseResponse.java <br>
@@ -54,4 +60,39 @@ public class WxPayBaseResponse extends Response {
     /** 签名 */
     @XmlField("sign")
     protected String sign;
+
+    /**
+     * 校验返回结果签名
+     */
+    public boolean checkResult(SpayContext ctx) {
+        //校验返回结果签名
+        Map<String, Object> map = BeanUtils.xmlBean2Map(this);
+        if (getSign() != null && !SignUtils.checkSignForMap(map, ctx.getChannelConfig().getMchSecretKey())) {
+            ctx.fail("微信返回报文签名校验失败");
+        }
+
+        //校验结果是否成功
+        if (!"SUCCESS".equalsIgnoreCase(getReturnCode())
+                || !"SUCCESS".equalsIgnoreCase(getResultCode())) {
+            StringBuilder errorMsg = new StringBuilder("[微信接口返回]");
+            if (getReturnCode() != null) {
+                errorMsg.append("返回代码：").append(getReturnCode());
+            }
+            if (getReturnMsg() != null) {
+                errorMsg.append("，返回信息：").append(getReturnMsg());
+            }
+            if (getResultCode() != null) {
+                errorMsg.append("，结果代码：").append(getResultCode());
+            }
+            if (getErrCode() != null) {
+                errorMsg.append("，错误代码：").append(getErrCode());
+            }
+            if (getErrCodeDes() != null) {
+                errorMsg.append("，错误详情：").append(getErrCodeDes());
+            }
+            ctx.fail(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
 }

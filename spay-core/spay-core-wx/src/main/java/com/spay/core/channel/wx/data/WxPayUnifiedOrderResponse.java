@@ -36,4 +36,6 @@ public class WxPayUnifiedOrderResponse extends WxPayBaseResponse {
     /** 支付跳转链接 */
     @XmlField("mweb_url")
     private String mwebUrl;
+
+
 }

@@ -6,6 +6,7 @@ package com.spay.core.channel.wx.convert;
 
 import cn.hutool.core.util.XmlUtil;
 import com.spay.core.converter.SpayConverter;
+import com.spay.core.data.Response;
 import com.spay.core.utils.BeanUtils;
 
 /**
@@ -31,7 +32,7 @@ public class WxPayConverter implements SpayConverter {
      * @return
      */
     @Override
-    public <T> T convert(String body, Class<T> targetClass) {
+    public Response convert(String body, Class<? extends Response> targetClass) {
         return BeanUtils.map2XmlBean(XmlUtil.xmlToMap(body), targetClass);
     }
 }

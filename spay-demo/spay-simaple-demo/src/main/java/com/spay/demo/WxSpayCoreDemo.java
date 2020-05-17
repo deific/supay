@@ -50,6 +50,6 @@ public class WxSpayCoreDemo {
                 .build();
 
         cxt = SpayCore.pay(cxt);
-        log.debug("结果：{}", cxt.getResponse());
+        log.debug("交易状态：{} 信息：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.getResponse());
     }
 }

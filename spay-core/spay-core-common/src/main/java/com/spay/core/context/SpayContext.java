@@ -47,6 +47,10 @@ public class SpayContext<R extends Request, S extends Response> {
     protected  R request;
     /** 支付结果 */
     protected S response;
+    /** 交易是否成功 */
+    protected boolean success = true;
+    /** 交易信息 */
+    protected String msg;
 
     /**
      * 失败
@@ -58,8 +62,8 @@ public class SpayContext<R extends Request, S extends Response> {
         if (this.response == null) {
             this.setResponse((S) new Response());
         }
-        this.response.setMsg(msg);
-        this.response.setSuccess(false);
+        this.setMsg(msg);
+        this.setSuccess(false);
         return (T) this;
     }
 
@@ -68,7 +72,7 @@ public class SpayContext<R extends Request, S extends Response> {
      * @return
      */
     public boolean hasError() {
-        return response != null && !response.isSuccess();
+        return success;
     }
 
     /**

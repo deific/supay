@@ -5,6 +5,7 @@
 package com.spay.core.converter;
 
 import cn.hutool.json.JSONUtil;
+import com.spay.core.data.Response;
 
 /**
  * <b>Application name：</b> SpayRequestConverter.java <br>
@@ -32,7 +33,7 @@ public interface SpayConverter {
      * @param targetClass 转换目标对象类型
      * @return 目标对象实例
      */
-    default <T> T convert(String body, Class<T> targetClass) {
+    default Response convert(String body, Class<? extends Response> targetClass) {
         return JSONUtil.toBean(body, targetClass);
     }
 }

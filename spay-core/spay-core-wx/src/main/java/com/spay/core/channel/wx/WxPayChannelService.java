@@ -69,6 +69,9 @@ public class WxPayChannelService implements BasePayChannelService {
         String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.UNIFIED_ORDER), reqXml);
         log.debug("[微信支付] 请求响应：{}", resXml);
         ctx.parseResponseStr(resXml, WxPayUnifiedOrderResponse.class);
+        // 校验结果
+        WxPayUnifiedOrderResponse response = (WxPayUnifiedOrderResponse)ctx.getResponse();
+        response.checkResult(ctx);
         return ctx;
     }
 }
