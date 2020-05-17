@@ -4,6 +4,7 @@
  *******************************************************************************/
 package com.spay.core.data;
 
+import com.spay.core.context.SpayContext;
 import lombok.Data;
 
 /**
@@ -16,6 +17,14 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class Response {
+public class Response<T> {
 
+    /**
+     * 验证响应结果
+     * @param ctx
+     * @return
+     */
+    public SpayContext<? extends Request, ? extends Response> checkResult(SpayContext<? extends Request, ? extends Response> ctx) {
+        return ctx;
+    }
 }

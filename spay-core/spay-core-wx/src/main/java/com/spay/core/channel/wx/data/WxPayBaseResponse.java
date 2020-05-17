@@ -7,6 +7,7 @@ package com.spay.core.channel.wx.data;
 import com.spay.core.annotation.XmlField;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.context.SpayContext;
+import com.spay.core.data.Request;
 import com.spay.core.data.Response;
 import com.spay.core.utils.BeanUtils;
 import com.spay.core.utils.SignUtils;
@@ -24,7 +25,7 @@ import java.util.Map;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class WxPayBaseResponse extends Response {
+public class WxPayBaseResponse<T extends WxPayData> extends Response {
     /** 返回状态码 */
     @XmlField("return_code")
     protected String returnCode;
@@ -62,9 +63,16 @@ public class WxPayBaseResponse extends Response {
     protected String sign;
 
     /**
+     * 不同支付交易类型下支付数据封装,便于更清晰的区分不同支付类型的数据
+     * @link {WxPayData}
+     */
+    protected T payData;
+
+    /**
      * 校验返回结果签名
      */
-    public boolean checkResult(SpayContext ctx) {
+    @Override
+    public SpayContext<Request, Response> checkResult(SpayContext ctx) {
         //校验返回结果签名
         Map<String, Object> map = BeanUtils.xmlBean2Map(this);
         if (getSign() != null && !SignUtils.checkSignForMap(map, ctx.getChannelConfig().getMchSecretKey())) {
@@ -91,8 +99,8 @@ public class WxPayBaseResponse extends Response {
                 errorMsg.append("，错误详情：").append(getErrCodeDes());
             }
             ctx.fail(errorMsg.toString());
-            return false;
         }
-        return true;
+        ctx.success("成功");
+        return ctx;
     }
 }

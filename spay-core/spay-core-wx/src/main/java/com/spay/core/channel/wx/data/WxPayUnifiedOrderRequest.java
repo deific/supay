@@ -60,6 +60,4 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest {
     private String sceneInfo;
     @XmlField("profit_sharing")
     private String profitSharing;
-
-
 }

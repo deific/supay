@@ -7,7 +7,7 @@ package com.spay.core.channel.wx;
 import com.spay.core.channel.ChannelApiType;
 
 /**
- * <b>Application name：</b> WxPayChannelService.java <br>
+ * <b>Application name：</b> WxPayApiType.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 codegarden.com/ 版权所有。<br>
  * <b>Company：</b> codegarden.com/ <br>

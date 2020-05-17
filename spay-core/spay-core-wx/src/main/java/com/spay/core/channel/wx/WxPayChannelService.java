@@ -7,6 +7,8 @@ package com.spay.core.channel.wx;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.spay.core.channel.BasePayChannelService;
+import com.spay.core.channel.wx.data.WxMpPayData;
+import com.spay.core.channel.wx.data.WxPayData;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderRequest;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderResponse;
 import com.spay.core.config.SpayChannelConfig;
@@ -44,7 +46,7 @@ public class WxPayChannelService implements BasePayChannelService {
     }
 
     @Override
-    public SpayContext<Request, Response> pay(SpayContext<Request, Response> ctx) {
+    public SpayContext<? extends Request, ? extends Response> pay(SpayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
         SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse> thisCtx = checkAndConvertType(ctx,
                 WxPayUnifiedOrderRequest.class, WxPayUnifiedOrderResponse.class);
@@ -70,9 +72,7 @@ public class WxPayChannelService implements BasePayChannelService {
         String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.UNIFIED_ORDER), reqXml);
         log.debug("[微信支付] 请求响应：{}", resXml);
         ctx.parseResponseStr(resXml, WxPayUnifiedOrderResponse.class);
-        // 校验结果
-        WxPayUnifiedOrderResponse response = (WxPayUnifiedOrderResponse)ctx.getResponse();
-        response.checkResult(ctx);
+
         return ctx;
     }
 }

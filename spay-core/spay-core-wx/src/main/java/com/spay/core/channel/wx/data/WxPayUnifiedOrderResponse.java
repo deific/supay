@@ -19,7 +19,7 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
-public class WxPayUnifiedOrderResponse extends WxPayBaseResponse {
+public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseResponse {
 
     /** 微信生成的预支付回话标识，用于后续接口调用中使用，该值有效期为2小时 */
     @XmlField("prepay_id")
@@ -36,6 +36,4 @@ public class WxPayUnifiedOrderResponse extends WxPayBaseResponse {
     /** 支付跳转链接 */
     @XmlField("mweb_url")
     private String mwebUrl;
-
-
 }

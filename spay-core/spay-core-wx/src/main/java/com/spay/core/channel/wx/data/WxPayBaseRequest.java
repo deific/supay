@@ -49,7 +49,7 @@ public class WxPayBaseRequest extends Request {
     protected String sign;
 
     @Override
-    public SpayContext<Request, Response> checkAndSign(SpayContext<Request, Response> ctx) {
+    public SpayContext<? extends Request, ? extends Response> checkAndSign(SpayContext<? extends Request, ? extends Response> ctx) {
         // 参数校验
         if (StrUtil.isBlank(appid)) {
             ctx.fail("appId不能为空");

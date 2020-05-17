@@ -28,7 +28,7 @@ public class Spay {
      * @param spayContext
      * @return
      */
-    public static <T extends SpayContext> T pay(SpayContext<Request, Response> spayContext) {
+    public static SpayContext<? extends Request, ? extends Response> pay(SpayContext<? extends Request, ? extends Response> spayContext) {
         return SpayCore.pay(spayContext);
     }
 }

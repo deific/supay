@@ -53,18 +53,25 @@ public class SpayContext<R extends Request, S extends Response> {
     protected String msg;
 
     /**
-     * 失败
+     * 成功
      * @param msg
-     * @param <T>
      * @return
      */
-    public <T> T fail(String msg) {
-        if (this.response == null) {
-            this.setResponse((S) new Response());
-        }
+    public SpayContext success(String msg) {
+        this.setMsg(msg);
+        this.setSuccess(true);
+        return this;
+    }
+
+    /**
+     * 失败
+     * @param msg
+     * @return
+     */
+    public SpayContext fail(String msg) {
         this.setMsg(msg);
         this.setSuccess(false);
-        return (T) this;
+        return this;
     }
 
     /**
@@ -93,6 +100,8 @@ public class SpayContext<R extends Request, S extends Response> {
     public Response parseResponseStr(String respStr, Class<? extends Response> targetClass) {
         SpayConverter converter = SpayConfig.getApiParamConverter(this.channelConfig.getChannelType());
         this.setResponse((S) converter.convert(respStr, targetClass));
+        // 检查结果
+        this.getResponse().checkResult(this);
         return this.response;
     }
 

@@ -14,9 +14,12 @@ package com.spay.core.enums;
  * <b>@version：</b>V1.0.0 <br>
  */
 public enum SpayPayType {
-    WX_SCAN_PAY("30", "直接交易"),
-    WX_H5_PAY("34", "担保交易"),
-    WX_MINI_APP_PAY("35", "确认支付"),
+    WX_SCAN_PAY("NATIVE", "扫码支付"),
+    WX_MP_PAY("JSAPI", "公众号支付"),
+    WX_APP_PAY("APP", "APP支付"),
+    WX_MICRO_PAY("MICROPAY", "刷卡付"),
+    WX_H5_PAY("MWEB", "H5支付"),
+    WX_FACE_PAY("FACEPAY", "刷脸付"),
     ;
 
     /** 编码 */

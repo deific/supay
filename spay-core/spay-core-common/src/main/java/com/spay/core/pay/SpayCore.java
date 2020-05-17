@@ -4,7 +4,6 @@
  *******************************************************************************/
 package com.spay.core.pay;
 
-import cn.hutool.core.date.DateUtil;
 import com.spay.core.channel.PayChannelService;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
@@ -35,7 +34,7 @@ public class SpayCore {
      * @param ctx 支付上下文
      * @return 支付上下文
      */
-    public static  <T extends SpayContext> T pay(SpayContext<Request, Response> ctx) {
+    public static SpayContext pay(SpayContext<? extends Request, ? extends Response> ctx) {
         SpayChannelConfig channelConfig = ctx.getChannelConfig();
         if (channelConfig == null) {
             return ctx.fail("请配置支付渠道参数");
@@ -44,7 +43,7 @@ public class SpayCore {
         try {
             PayChannelService payService = SpayConfig.getPayService(channelConfig.getChannelType());
             if (payService != null) {
-                return (T)payService.pay(ctx);
+                return payService.pay(ctx);
             } else {
                 return ctx.fail("不支持该渠道支付");
             }

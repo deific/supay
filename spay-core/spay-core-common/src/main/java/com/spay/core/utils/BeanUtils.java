@@ -45,7 +45,7 @@ public class BeanUtils extends BeanUtil {
             try {
                 boolean isAccessible = field.isAccessible();
                 field.setAccessible(true);
-                if (field.getModifiers() == Modifier.STATIC) {
+                if (field.get(bean) == null || field.getModifiers() == Modifier.STATIC) {
                     field.setAccessible(isAccessible);
                     continue;
                 }

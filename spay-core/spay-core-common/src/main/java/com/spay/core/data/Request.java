@@ -30,7 +30,7 @@ public class Request implements Serializable {
      * @param ctx
      * @return
      */
-    public SpayContext<Request, Response> checkAndSign(SpayContext<Request, Response> ctx) {
+    public SpayContext<? extends Request, ? extends Response> checkAndSign(SpayContext<? extends Request, ? extends Response> ctx) {
         return ctx;
     }
 }

@@ -30,14 +30,9 @@ public class SpayCoreTest {
         SpayChannelConfig channelConfig = SpayChannelConfig.builder().appId("1").channelType(SpayChannelType.WECHAT).build();
         SpayConfig.registerPayConfig("1", channelConfig);
 
-        SpayContext<Request, Response> cxt = SpayContext.builder()
+        SpayContext<? extends Request, ? extends Response> cxt = SpayContext.builder()
                 .channelConfig(SpayConfig.getPayConfig("1"))
-                .request(new Request(){
-                    @Override
-                    public SpayContext<Request, Response> checkAndSign(SpayContext<Request, Response> ctx) {
-                        return null;
-                    }
-                })
+                .request(new Request())
                 .response(new Response()).build();
 
         cxt = SpayCore.pay(cxt);

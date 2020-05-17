@@ -6,6 +6,7 @@ package com.spay.core.channel.wx.test;
 
 import com.spay.core.channel.wx.WxPayChannelService;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderRequest;
+import com.spay.core.channel.wx.data.WxPayUnifiedOrderResponse;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
 import com.spay.core.context.SpayContext;
@@ -33,7 +34,7 @@ public class WxSpayCoreTest {
         SpayConfig.registerPayConfig("1", channelConfig);
         SpayConfig.registerPayService(SpayChannelType.WECHAT, new WxPayChannelService());
 
-        SpayContext<Request, Response> cxt = SpayContext.builder()
+        SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse> cxt = SpayContext.<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse>builder()
                 .channelConfig(SpayConfig.getPayConfig("1"))
                 .request(WxPayUnifiedOrderRequest.builder().appid("a").build())
                 .build();

@@ -36,7 +36,7 @@ public interface  BasePayChannelService extends PayChannelService {
      * @param s 响应参数类型
      * @return 返回转换后的指定类型对象
      */
-    default  <T> T checkAndConvertType(SpayContext<Request, Response> ctx, Class<? extends Request> r, Class<? extends Response> s) {
+    default  <T> T checkAndConvertType(SpayContext<? extends Request, ? extends Response> ctx, Class<? extends Request> r, Class<? extends Response> s) {
         // 判断类型是否匹配
         boolean isMatch = (ctx.getRequest() != null && !ctx.getRequest().getClass().isInstance(r))
                 || (ctx.getResponse() != null && !ctx.getResponse().getClass().isInstance(s));
