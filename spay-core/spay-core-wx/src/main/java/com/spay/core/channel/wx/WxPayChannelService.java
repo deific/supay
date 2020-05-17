@@ -56,6 +56,7 @@ public class WxPayChannelService implements BasePayChannelService {
         SpayChannelConfig channelConfig = ctx.getChannelConfig();
         WxPayUnifiedOrderRequest request = thisCtx.getRequest();
         request.setAppid(StrUtil.isNotEmpty(request.getAppid())?request.getAppid():channelConfig.getAppId());
+        request.setMchId(StrUtil.isNotEmpty(request.getMchId())?request.getMchId():channelConfig.getMchId());
         request.setNonceStr(RandomUtil.randomString(16));
 
         // 参数检查并签名
