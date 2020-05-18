@@ -52,6 +52,7 @@ public class SpayCore {
                 return ctx.fail("不支持该渠道支付");
             }
         } catch (Exception e) {
+            log.error("支付异常：", e);
             return ctx.fail("支付异常：" + e.getMessage());
         } finally {
             ctx.setEndTime(new Date());

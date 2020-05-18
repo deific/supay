@@ -53,8 +53,8 @@ public class SpayFilterChain implements FilterChain {
 
     @Override
     public SpayContext<? extends Request, ? extends Response> nextAfter(SpayContext<? extends Request, ? extends Response> ctx) {
+        chainPos --;
         if (filters != null && chainPos > -1) {
-            chainPos --;
             SpayFilter filter = filters.get(chainPos);
             log.debug("[after-{}]执行过滤器after方法:{}", this.getCurrent(), filter.getClass().getName());
             filter.after(ctx, this);

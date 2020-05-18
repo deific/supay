@@ -6,13 +6,13 @@ package com.spay.core.channel.wx.filter;
 
 import com.spay.core.channel.filter.FilterChain;
 import com.spay.core.channel.filter.SpayFilter;
-import com.spay.core.channel.wx.data.WxH5PayData;
 import com.spay.core.channel.wx.data.WxMpPayData;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderResponse;
 import com.spay.core.context.SpayContext;
 import com.spay.core.context.SpayPayContext;
 import com.spay.core.data.Request;
 import com.spay.core.data.Response;
+import com.spay.core.enums.SpayPayType;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,8 +36,9 @@ public class WxPayFilter implements SpayFilter {
         // 如果是支付
         if (ctx instanceof SpayPayContext) {
             WxPayUnifiedOrderResponse response = (WxPayUnifiedOrderResponse) ctx.getResponse();
+            SpayPayType payType = SpayPayType.valueOfByCode(response.getTradeType());
             // 解析和封装微信返回数据
-            switch (((SpayPayContext<? extends Request, ? extends Response>) ctx).getPayType()) {
+            switch (payType) {
                 case WX_MP_PAY:
                     WxMpPayData mpPayData = WxMpPayData.builder()
                             .appId(response.getAppid())

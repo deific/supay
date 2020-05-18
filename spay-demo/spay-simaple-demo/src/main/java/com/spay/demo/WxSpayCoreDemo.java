@@ -55,7 +55,7 @@ public class WxSpayCoreDemo {
 
         SpayConfig.registerPayService(SpayChannelType.WECHAT, new WxPayChannelService());
         SpayConfig.registerParamConverter(SpayChannelType.WECHAT, new WxPayConverter());
-
+        WxPayFilter wxPayFilter = new WxPayFilter();
         // 构建支付上下文参数
         WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.builder()
                 .body("测试微信支付订单")
@@ -77,7 +77,7 @@ public class WxSpayCoreDemo {
                 .build();
 
         // 增加过滤器链
-        cxt.addFilter(new DefaultFilter()).addFilter(new WxPayFilter()).addFilter(new SpayFilter() {});
+        cxt.addFilter(wxPayFilter).addFilter(new DefaultFilter());
 
         cxt = (SpayPayContext) SpayCore.pay(cxt);
         log.debug("交易状态：{} 信息：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.getResponse());
