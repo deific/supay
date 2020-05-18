@@ -4,7 +4,9 @@
  *******************************************************************************/
 package com.spay.core.context;
 
-import cn.hutool.core.date.DateTime;
+import com.spay.core.channel.filter.FilterChain;
+import com.spay.core.channel.filter.SpayFilter;
+import com.spay.core.channel.filter.SpayFilterChain;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
 import com.spay.core.converter.SpayConverter;
@@ -15,8 +17,10 @@ import com.spay.core.enums.SpayTradeType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>Application name：</b> SpayContext.java <br>
@@ -28,15 +32,12 @@ import java.util.Date;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-@Builder
+@SuperBuilder(builderMethodName = "ctxBuilder")
 @ToString(callSuper = true)
-public class SpayContext<R extends Request, S extends Response> {
+public class SpayContext<R extends Request, S extends Response> extends SpayFilterChain {
     /** 交易流水号 */
     protected String tradeId;
-    /** 支付请求交易类型 */
-    protected SpayTradeType tradeType;
-    /** 支付方式 */
-    protected SpayPayType payType;
+
     /** 支付渠道参数 */
     protected SpayChannelConfig channelConfig;
     /** 开始时间 */

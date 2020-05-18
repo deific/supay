@@ -30,7 +30,7 @@ public class SpayCoreTest {
         SpayChannelConfig channelConfig = SpayChannelConfig.builder().appId("1").channelType(SpayChannelType.WECHAT).build();
         SpayConfig.registerPayConfig("1", channelConfig);
 
-        SpayContext<? extends Request, ? extends Response> cxt = SpayContext.builder()
+        SpayContext<? extends Request, ? extends Response> cxt = SpayContext.ctxBuilder()
                 .channelConfig(SpayConfig.getPayConfig("1"))
                 .request(new Request())
                 .response(new Response()).build();

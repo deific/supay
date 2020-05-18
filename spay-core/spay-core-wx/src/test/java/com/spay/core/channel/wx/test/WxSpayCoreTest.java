@@ -34,12 +34,12 @@ public class WxSpayCoreTest {
         SpayConfig.registerPayConfig("1", channelConfig);
         SpayConfig.registerPayService(SpayChannelType.WECHAT, new WxPayChannelService());
 
-        SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse> cxt = SpayContext.<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse>builder()
+        SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse> cxt = SpayContext.<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse>ctxBuilder()
                 .channelConfig(SpayConfig.getPayConfig("1"))
                 .request(WxPayUnifiedOrderRequest.builder().appid("a").build())
                 .build();
 
-        cxt = SpayCore.pay(cxt);
+//        cxt = SpayCore.pay(cxt);
         System.out.printf("结果：" + cxt.getResponse());
     }
 }

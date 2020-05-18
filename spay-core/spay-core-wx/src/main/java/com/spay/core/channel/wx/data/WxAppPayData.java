@@ -6,6 +6,8 @@ package com.spay.core.channel.wx.data;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
 import java.io.Serializable;
 
 /**
@@ -18,7 +20,7 @@ import java.io.Serializable;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-@Builder
+@SuperBuilder
 public class WxAppPayData extends WxPayData implements Serializable {
     /** 微信appId */
     private String appId;

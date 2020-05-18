@@ -6,15 +6,19 @@ package com.spay.demo;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
+import com.spay.core.channel.filter.DefaultFilter;
+import com.spay.core.channel.filter.SpayFilter;
 import com.spay.core.channel.wx.WxPayApiType;
 import com.spay.core.channel.wx.WxPayChannelService;
 import com.spay.core.channel.wx.convert.WxPayConverter;
 import com.spay.core.channel.wx.data.WxAppPayData;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderRequest;
 import com.spay.core.channel.wx.data.WxPayUnifiedOrderResponse;
+import com.spay.core.channel.wx.filter.WxPayFilter;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
 import com.spay.core.context.SpayContext;
+import com.spay.core.context.SpayPayContext;
 import com.spay.core.data.Request;
 import com.spay.core.data.Response;
 import com.spay.core.enums.SpayChannelType;
@@ -53,24 +57,29 @@ public class WxSpayCoreDemo {
         SpayConfig.registerParamConverter(SpayChannelType.WECHAT, new WxPayConverter());
 
         // 构建支付上下文参数
-        SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse<WxAppPayData>> cxt = SpayContext.<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse<WxAppPayData>>builder()
-                .channelConfig(SpayConfig.getPayConfig("wxf4a7649a7bf71c11"))
-                .request(WxPayUnifiedOrderRequest.builder()
-                        .body("测试微信支付订单")
-                        .outTradeNo(UUID.fastUUID().toString(true))
-                        .productId("12")
-                        .notifyUrl("https://www.spay.com/notify")
-                        .totalFee("100")
-                        .timeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"))
-                        .timeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"))
-                        .tradeType(SpayPayType.WX_MP_PAY.getCode())
-                        .openid("ouQdUuJzQX4t-IuiGM71rnifMoRc")
-                        .spbillCreateIp("127.0.0.1")
-                        .nonceStr(String.valueOf(System.currentTimeMillis()))
-                        .build())
+        WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.builder()
+                .body("测试微信支付订单")
+                .outTradeNo(UUID.fastUUID().toString(true))
+                .productId("12")
+                .notifyUrl("https://www.spay.com/notify")
+                .totalFee("100")
+                .timeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"))
+                .timeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"))
+                .tradeType(SpayPayType.WX_MP_PAY.getCode())
+                .openid("ouQdUuJzQX4t-IuiGM71rnifMoRc")
+                .spbillCreateIp("127.0.0.1")
+                .nonceStr(String.valueOf(System.currentTimeMillis()))
                 .build();
 
-        cxt = SpayCore.pay(cxt);
+        SpayPayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse<WxAppPayData>> cxt = SpayPayContext.<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse<WxAppPayData>>builder()
+                .channelConfig(SpayConfig.getPayConfig("wxf4a7649a7bf71c11"))
+                .request(request)
+                .build();
+
+        // 增加过滤器链
+        cxt.addFilter(new DefaultFilter()).addFilter(new WxPayFilter()).addFilter(new SpayFilter() {});
+
+        cxt = (SpayPayContext) SpayCore.pay(cxt);
         log.debug("交易状态：{} 信息：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.getResponse());
     }
 }

@@ -5,8 +5,11 @@
 package com.spay.core.channel.wx.data;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+
 
 /**
  * <b>Application name：</b> WxBaseData.java <br>
@@ -18,7 +21,10 @@ import java.io.Serializable;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
 public class WxPayData implements Serializable {
+
     /** 附加参数*/
     protected String attach;
     /** 签名 */

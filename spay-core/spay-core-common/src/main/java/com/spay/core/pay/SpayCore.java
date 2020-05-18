@@ -34,7 +34,7 @@ public class SpayCore {
      * @param ctx 支付上下文
      * @return 支付上下文
      */
-    public static SpayContext pay(SpayContext<? extends Request, ? extends Response> ctx) {
+    public static SpayContext<? extends Request, ? extends Response> pay(SpayContext<? extends Request, ? extends Response> ctx) {
         SpayChannelConfig channelConfig = ctx.getChannelConfig();
         if (channelConfig == null) {
             return ctx.fail("请配置支付渠道参数");
@@ -43,7 +43,11 @@ public class SpayCore {
         try {
             PayChannelService payService = SpayConfig.getPayService(channelConfig.getChannelType());
             if (payService != null) {
-                return payService.pay(ctx);
+                // 拦截器
+                ctx.nextBefore(ctx);
+                payService.pay(ctx);
+                ctx.nextAfter(ctx);
+                return ctx;
             } else {
                 return ctx.fail("不支持该渠道支付");
             }

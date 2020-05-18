@@ -4,6 +4,10 @@
  *******************************************************************************/
 package com.spay.core.channel.wx.data;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
 import java.io.Serializable;
 
 /**
@@ -15,19 +19,19 @@ import java.io.Serializable;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public class WxH5PayData implements Serializable {
-    /** 微信预支付id */
-    private String prepayId;
-    /** 微信预支付id */
+@Data
+@SuperBuilder
+public class WxH5PayData extends WxPayData implements Serializable {
+    /** 微信appid */
     private String appId;
     /** 时间戳 */
     private String mchId;
+    /** 微信预支付id */
+    private String prepayId;
     /** 时间戳 */
     private String packageStr;
     /** 时间戳 */
     private String timeStamp;
     /** 时间戳 */
     private String nonceStr;
-    /** 时间戳 */
-    private String sign;
 }

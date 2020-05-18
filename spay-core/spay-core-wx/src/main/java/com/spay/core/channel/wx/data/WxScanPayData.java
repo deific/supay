@@ -5,6 +5,7 @@
 package com.spay.core.channel.wx.data;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
@@ -18,6 +19,7 @@ import java.io.Serializable;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@SuperBuilder
 public class WxScanPayData extends WxPayData implements Serializable {
     /** 微信预支付id */
     private String prepayId;
