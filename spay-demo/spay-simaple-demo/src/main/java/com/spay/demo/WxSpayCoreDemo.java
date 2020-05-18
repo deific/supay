@@ -56,6 +56,25 @@ public class WxSpayCoreDemo {
         SpayConfig.registerPayService(SpayChannelType.WECHAT, new WxPayChannelService());
         SpayConfig.registerParamConverter(SpayChannelType.WECHAT, new WxPayConverter());
         WxPayFilter wxPayFilter = new WxPayFilter();
+
+        int times = 3;
+        long sumTime = 0;
+        for (int i = 0; i < times; i++) {
+            SpayPayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse<WxAppPayData>> cxt = buildPayContext(wxPayFilter);
+            cxt = (SpayPayContext) SpayCore.pay(cxt);
+            log.debug("交易状态：{} 信息：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.getResponse());
+            sumTime = sumTime + cxt.duration();
+        }
+
+        log.info("平均耗时：{}", sumTime / times);
+    }
+
+
+    /**
+     * 构建
+     * @return
+     */
+    private static SpayPayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse<WxAppPayData>> buildPayContext(SpayFilter... filter) {
         // 构建支付上下文参数
         WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.builder()
                 .body("测试微信支付订单")
@@ -77,9 +96,7 @@ public class WxSpayCoreDemo {
                 .build();
 
         // 增加过滤器链
-        cxt.addFilter(wxPayFilter).addFilter(new DefaultFilter());
-
-        cxt = (SpayPayContext) SpayCore.pay(cxt);
-        log.debug("交易状态：{} 信息：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.getResponse());
+        cxt.addFilter(filter);
+        return cxt;
     }
 }

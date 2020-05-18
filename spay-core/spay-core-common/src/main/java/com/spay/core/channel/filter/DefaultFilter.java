@@ -22,13 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultFilter implements SpayFilter {
     @Override
     public SpayContext<? extends Request, ? extends Response> before(SpayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-
         return chain.nextBefore(ctx);
     }
 
     @Override
     public SpayContext<? extends Request, ? extends Response> after(SpayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-        log.debug("[after]默认过滤器");
-        return null;
+        return chain.nextAfter(ctx);
     }
 }

@@ -4,6 +4,7 @@
  *******************************************************************************/
 package com.spay.core.channel.filter;
 
+import cn.hutool.core.collection.ListUtil;
 import com.spay.core.context.SpayContext;
 import com.spay.core.data.Request;
 import com.spay.core.data.Response;
@@ -53,8 +54,8 @@ public class SpayFilterChain implements FilterChain {
 
     @Override
     public SpayContext<? extends Request, ? extends Response> nextAfter(SpayContext<? extends Request, ? extends Response> ctx) {
-        chainPos --;
-        if (filters != null && chainPos > -1) {
+        if (filters != null && chainPos > 0) {
+            chainPos --;
             SpayFilter filter = filters.get(chainPos);
             log.debug("[after-{}]执行过滤器after方法:{}", this.getCurrent(), filter.getClass().getName());
             filter.after(ctx, this);
@@ -74,6 +75,21 @@ public class SpayFilterChain implements FilterChain {
         }
         if (filter != null) {
             filters.add(filter);
+        }
+        return this;
+    }
+
+    /**
+     * 添加过滤器
+     * @param filter
+     * @return 过滤器链
+     */
+    public SpayFilterChain addFilter(SpayFilter... filter) {
+        if (filters == null) {
+            filters = new ArrayList<>();
+        }
+        if (filter != null) {
+            filters.addAll(ListUtil.toList(filter));
         }
         return this;
     }

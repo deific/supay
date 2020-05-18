@@ -69,17 +69,19 @@ public class WxPayChannelService implements BasePayChannelService {
 
         String reqXml = ctx.toRequestStr();
         log.debug("[微信支付] 请求参数：{}", reqXml);
-//        String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.UNIFIED_ORDER), reqXml);
-        String resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code>\n" +
-                "<return_msg><![CDATA[OK]]></return_msg>\n" +
-                "<appid><![CDATA[wxf4a7649a7bf71c11]]></appid>\n" +
-                "<mch_id><![CDATA[1332506201]]></mch_id>\n" +
-                "<nonce_str><![CDATA[hVe3TfV1Pcx0JrYy]]></nonce_str>\n" +
-                "<sign><![CDATA[6F7CAFA4DBA66B4A4391E92364617CE3]]></sign>\n" +
-                "<result_code><![CDATA[SUCCESS]]></result_code>\n" +
-                "<prepay_id><![CDATA[wx182300329340268721d7c3381203142600]]></prepay_id>\n" +
-                "<trade_type><![CDATA[JSAPI]]></trade_type>\n" +
-                "</xml>";
+        long startCallTime = System.currentTimeMillis();
+        String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.UNIFIED_ORDER), reqXml);
+        log.debug("微信接口调用耗时：{}", System.currentTimeMillis() - startCallTime);
+//        String resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code>\n" +
+//                "<return_msg><![CDATA[OK]]></return_msg>\n" +
+//                "<appid><![CDATA[wxf4a7649a7bf71c11]]></appid>\n" +
+//                "<mch_id><![CDATA[1332506201]]></mch_id>\n" +
+//                "<nonce_str><![CDATA[hVe3TfV1Pcx0JrYy]]></nonce_str>\n" +
+//                "<sign><![CDATA[6F7CAFA4DBA66B4A4391E92364617CE3]]></sign>\n" +
+//                "<result_code><![CDATA[SUCCESS]]></result_code>\n" +
+//                "<prepay_id><![CDATA[wx182300329340268721d7c3381203142600]]></prepay_id>\n" +
+//                "<trade_type><![CDATA[JSAPI]]></trade_type>\n" +
+//                "</xml>";
         log.debug("[微信支付] 请求响应：{}", resXml);
         ctx.parseResponseStr(resXml, WxPayUnifiedOrderResponse.class);
 
