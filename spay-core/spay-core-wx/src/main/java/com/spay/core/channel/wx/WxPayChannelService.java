@@ -44,76 +44,48 @@ public class WxPayChannelService implements BasePayChannelService {
 
     @Override
     public SpayContext<? extends Request, ? extends Response> pay(SpayContext<? extends Request, ? extends Response> ctx) {
-        // 检查并转换类型
-        SpayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse> thisCtx = checkAndConvertType(ctx,
-                WxPayUnifiedOrderRequest.class, WxPayUnifiedOrderResponse.class);
-        if (ctx.hasError()) {
-            return ctx;
-        }
-
-        // 设置随机数和签名
-        SpayChannelConfig channelConfig = ctx.getChannelConfig();
-        WxPayUnifiedOrderRequest request = thisCtx.getRequest();
-        request.setAppid(StrUtil.isNotEmpty(request.getAppid())?request.getAppid():channelConfig.getAppId());
-        request.setMchId(StrUtil.isNotEmpty(request.getMchId())?request.getMchId():channelConfig.getMchId());
-        request.setNonceStr(RandomUtil.randomString(16));
-
-        // 参数检查并签名
-        request.checkAndSign(ctx);
-        if (ctx.hasError()) {
-            return ctx;
-        }
-
-        String reqXml = ctx.toRequestStr();
-        log.debug("[微信支付] 请求参数：{}", reqXml);
-        long startCallTime = System.currentTimeMillis();
-        String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.UNIFIED_ORDER), reqXml);
-        log.debug("微信接口调用耗时：{}", System.currentTimeMillis() - startCallTime);
-//        String resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code>\n" +
-//                "<return_msg><![CDATA[OK]]></return_msg>\n" +
-//                "<appid><![CDATA[wxf4a7649a7bf71c11]]></appid>\n" +
-//                "<mch_id><![CDATA[1332506201]]></mch_id>\n" +
-//                "<nonce_str><![CDATA[hVe3TfV1Pcx0JrYy]]></nonce_str>\n" +
-//                "<sign><![CDATA[6F7CAFA4DBA66B4A4391E92364617CE3]]></sign>\n" +
-//                "<result_code><![CDATA[SUCCESS]]></result_code>\n" +
-//                "<prepay_id><![CDATA[wx182300329340268721d7c3381203142600]]></prepay_id>\n" +
-//                "<trade_type><![CDATA[JSAPI]]></trade_type>\n" +
-//                "</xml>";
-        log.debug("[微信支付] 请求响应：{}", resXml);
-        ctx.parseResponseStr(resXml, WxPayUnifiedOrderResponse.class);
-
-        return ctx;
+        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiType.UNIFIED_ORDER);
     }
 
     @Override
     public SpayContext<? extends Request, ? extends Response> queryTradeInfo(SpayContext<? extends Request, ? extends Response> ctx) {
+        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiType.PAY_QUERY);
+    }
+
+    /**
+     * 调用微信接口
+     * @param ctx
+     * @param requestClass
+     * @param responseClass
+     * @param apiType
+     * @return
+     */
+    private SpayContext<? extends Request, ? extends Response> callApi(SpayContext<? extends Request, ? extends Response> ctx,
+                                                                       Class<? extends WxPayBaseRequest> requestClass, Class<? extends WxPayBaseResponse> responseClass, WxPayApiType apiType) {
         // 检查并转换类型
-        SpayContext<WxPayOrderQueryRequest, WxPayOrderQueryResponse> thisCtx = checkAndConvertType(ctx,
-                WxPayOrderQueryRequest.class, WxPayOrderQueryResponse.class);
+        SpayContext<WxPayBaseRequest, WxPayBaseResponse> thisCtx = checkAndConvertType(ctx,
+                requestClass, responseClass);
         if (ctx.hasError()) {
             return ctx;
         }
-
         // 设置随机数和签名
         SpayChannelConfig channelConfig = ctx.getChannelConfig();
-        WxPayOrderQueryRequest request = thisCtx.getRequest();
+        WxPayBaseRequest request = thisCtx.getRequest();
         request.setAppid(StrUtil.isNotEmpty(request.getAppid())?request.getAppid():channelConfig.getAppId());
         request.setMchId(StrUtil.isNotEmpty(request.getMchId())?request.getMchId():channelConfig.getMchId());
         request.setNonceStr(RandomUtil.randomString(16));
-
         // 参数检查并签名
         request.checkAndSign(ctx);
         if (ctx.hasError()) {
             return ctx;
         }
-
         String reqXml = ctx.toRequestStr();
-        log.debug("[微信支付] 请求参数：{}", reqXml);
+
+        log.debug("[微信渠道] 接口：{} 请求参数：{}", apiType.getUrl(), reqXml);
         long startCallTime = System.currentTimeMillis();
-        String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), WxPayApiType.PAY_QUERY), reqXml);
-        log.debug("微信接口调用耗时：{}", System.currentTimeMillis() - startCallTime);
-        log.debug("[微信支付] 请求响应：{}", resXml);
-        ctx.parseResponseStr(resXml, WxPayOrderQueryResponse.class);
+        String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), apiType), reqXml);
+        log.debug("[微信渠道] 接口：{} 耗时：{} 请求响应：{}", apiType.getUrl(), System.currentTimeMillis() - startCallTime, resXml);
+        ctx.parseResponseStr(resXml, responseClass);
         return ctx;
     }
 }

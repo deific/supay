@@ -55,7 +55,7 @@ public class WxSpayCoreDemo {
         SpayConfig.registerParamConverter(SpayChannelType.WECHAT, new WxPayConverter());
         WxPayFilter wxPayFilter = new WxPayFilter();
 
-        int times = 1;
+        int times = 1000;
         long sumTime = 0;
 
         String bizOrderId = null;
@@ -69,17 +69,17 @@ public class WxSpayCoreDemo {
         }
         log.info("平均耗时：{}", sumTime / times);
 
-        long s = System.currentTimeMillis();
-        // 查询支付订单
-        WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(bizOrderId).build();
-        SpayPayContext<WxPayOrderQueryRequest, WxPayOrderQueryResponse> qCtx = SpayPayContext.<WxPayOrderQueryRequest, WxPayOrderQueryResponse>builder()
-                .channelConfig(SpayConfig.getPayConfig("wxf4a7649a7bf71c11"))
-                .request(qReq)
-                .build();
-
-        SpayCore.queryPayOrder(qCtx);
-
-        log.debug("查询结果：{}", qCtx.getResponse());
+//        long s = System.currentTimeMillis();
+//        // 查询支付订单
+//        WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(bizOrderId).build();
+//        SpayPayContext<WxPayOrderQueryRequest, WxPayOrderQueryResponse> qCtx = SpayPayContext.<WxPayOrderQueryRequest, WxPayOrderQueryResponse>builder()
+//                .channelConfig(SpayConfig.getPayConfig("wxf4a7649a7bf71c11"))
+//                .request(qReq)
+//                .build();
+//
+//        SpayCore.queryPayOrder(qCtx);
+//
+//        log.debug("查询结果：{}", qCtx.getResponse());
     }
 
 

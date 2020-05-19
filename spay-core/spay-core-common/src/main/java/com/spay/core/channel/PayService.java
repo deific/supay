@@ -33,7 +33,7 @@ public interface PayService {
      * @param ctx
      * @return
      */
-    default SpayContext<Request, Response> confirm(SpayContext<Request, Response> ctx) {
+    default SpayContext<? extends Request, ? extends Response> confirm(SpayContext<? extends Request, ? extends Response> ctx) {
         return ctx.fail("不支持该方法");
     }
 
@@ -42,7 +42,7 @@ public interface PayService {
      * @param ctx
      * @return
      */
-    default SpayContext<Request, Response> refund(SpayContext<Request, Response> ctx) {
+    default SpayContext<? extends Request, ? extends Response> refund(SpayContext<? extends Request, ? extends Response> ctx) {
         return ctx.fail("不支持该方法");
     }
 
@@ -60,7 +60,7 @@ public interface PayService {
      * @param ctx
      * @return
      */
-    default SpayContext<Request, Response> sendRedPackage(SpayContext<Request, Response> ctx) {
+    default SpayContext<? extends Request, ? extends Response> sendRedPackage(SpayContext<? extends Request, ? extends Response> ctx) {
         return ctx.fail("不支持该方法");
     }
 }

@@ -34,7 +34,7 @@ public class WxPayFilter implements SpayFilter {
     @Override
     public SpayContext<? extends Request, ? extends Response> after(SpayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
         // 如果是支付
-        if (ctx instanceof SpayPayContext) {
+        if (ctx.getResponse() instanceof WxPayUnifiedOrderResponse) {
             WxPayUnifiedOrderResponse response = (WxPayUnifiedOrderResponse) ctx.getResponse();
             SpayPayType payType = SpayPayType.valueOfByCode(response.getTradeType());
             // 解析和封装微信返回数据
