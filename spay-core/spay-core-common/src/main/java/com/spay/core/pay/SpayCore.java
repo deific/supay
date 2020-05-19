@@ -59,4 +59,36 @@ public class SpayCore {
             log.debug("[支付] 支付耗时：{} 结果：{}", ctx.duration(), ctx.getResponse());
         }
     }
+
+
+    /**
+     * 直接支付
+     * @param ctx 支付上下文
+     * @return 支付上下文
+     */
+    public static SpayContext<? extends Request, ? extends Response> queryPayOrder(SpayContext<? extends Request, ? extends Response> ctx) {
+        SpayChannelConfig channelConfig = ctx.getChannelConfig();
+        if (channelConfig == null) {
+            return ctx.fail("请配置支付渠道参数");
+        }
+        ctx.setStartTime(new Date());
+        try {
+            PayChannelService payService = SpayConfig.getPayService(channelConfig.getChannelType());
+            if (payService != null) {
+                // 拦截器
+                ctx.nextBefore(ctx);
+                payService.queryTradeInfo(ctx);
+                ctx.nextAfter(ctx);
+                return ctx;
+            } else {
+                return ctx.fail("不支持该渠道支付");
+            }
+        } catch (Exception e) {
+            log.error("支付异常：", e);
+            return ctx.fail("支付异常：" + e.getMessage());
+        } finally {
+            ctx.setEndTime(new Date());
+            log.debug("[支付] 支付耗时：{} 结果：{}", ctx.duration(), ctx.getResponse());
+        }
+    }
 }

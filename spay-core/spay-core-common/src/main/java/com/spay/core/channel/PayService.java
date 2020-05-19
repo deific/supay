@@ -51,7 +51,7 @@ public interface PayService {
      * @param ctx
      * @return
      */
-    default SpayContext<Request, Response> queryTradeInfo(SpayContext<Request, Response> ctx) {
+    default SpayContext<? extends Request, ? extends Response> queryTradeInfo(SpayContext<? extends Request, ? extends Response> ctx) {
         return ctx.fail("不支持该方法");
     }
 

@@ -11,9 +11,7 @@ import com.spay.core.channel.filter.SpayFilter;
 import com.spay.core.channel.wx.WxPayApiType;
 import com.spay.core.channel.wx.WxPayChannelService;
 import com.spay.core.channel.wx.convert.WxPayConverter;
-import com.spay.core.channel.wx.data.WxAppPayData;
-import com.spay.core.channel.wx.data.WxPayUnifiedOrderRequest;
-import com.spay.core.channel.wx.data.WxPayUnifiedOrderResponse;
+import com.spay.core.channel.wx.data.*;
 import com.spay.core.channel.wx.filter.WxPayFilter;
 import com.spay.core.config.SpayChannelConfig;
 import com.spay.core.config.SpayConfig;
@@ -57,16 +55,31 @@ public class WxSpayCoreDemo {
         SpayConfig.registerParamConverter(SpayChannelType.WECHAT, new WxPayConverter());
         WxPayFilter wxPayFilter = new WxPayFilter();
 
-        int times = 3;
+        int times = 1;
         long sumTime = 0;
+
+        String bizOrderId = null;
         for (int i = 0; i < times; i++) {
             SpayPayContext<WxPayUnifiedOrderRequest, WxPayUnifiedOrderResponse<WxAppPayData>> cxt = buildPayContext(wxPayFilter);
             cxt = (SpayPayContext) SpayCore.pay(cxt);
             log.debug("交易状态：{} 信息：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.getResponse());
             sumTime = sumTime + cxt.duration();
-        }
 
+            bizOrderId = cxt.getRequest().getOutTradeNo();
+        }
         log.info("平均耗时：{}", sumTime / times);
+
+        long s = System.currentTimeMillis();
+        // 查询支付订单
+        WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(bizOrderId).build();
+        SpayPayContext<WxPayOrderQueryRequest, WxPayOrderQueryResponse> qCtx = SpayPayContext.<WxPayOrderQueryRequest, WxPayOrderQueryResponse>builder()
+                .channelConfig(SpayConfig.getPayConfig("wxf4a7649a7bf71c11"))
+                .request(qReq)
+                .build();
+
+        SpayCore.queryPayOrder(qCtx);
+
+        log.debug("查询结果：{}", qCtx.getResponse());
     }
 
 
