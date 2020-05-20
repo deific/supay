@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.codegarden</groupId>
-    <artifactId>spay</artifactId>
+    <groupId>cn.org.supay</groupId>
+    <artifactId>supay</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>spay-core</module>
-        <module>spay-demo</module>
+        <module>supay-core</module>
+        <module>supay-demo</module>
 
     </modules>
 
@@ -18,7 +18,7 @@
         <jdk.version>1.8</jdk.version>
         <lombook.version>1.18.12</lombook.version>
 
-        <spay.version>1.0.0-SNAPSHOT</spay.version>
+        <supay.version>1.0.0-SNAPSHOT</supay.version>
         <hutool.version>5.3.4</hutool.version>
         <validation.version>2.0.1.Final</validation.version>
         <slf4j.version>1.7.30</slf4j.version>
