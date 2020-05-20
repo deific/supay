@@ -7,6 +7,7 @@ package cn.org.supay.core.channel.wx;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.channel.BasePayChannelService;
+import cn.org.supay.core.channel.PayChannelApiType;
 import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
 import cn.org.supay.core.channel.wx.data.WxPayBaseResponse;
 import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
@@ -40,8 +41,11 @@ public class WxPayChannelService implements BasePayChannelService {
      * @param wxApiType {@link WxPayApiTypePay} 支付 API 接口枚举
      * @return {@link String} 返回完整的接口请求URL
      */
-    public static String getReqUrl(SupayChannelConfig config, WxPayApiTypePay wxApiType) {
-        return config.getApiBaseUrl().concat(config.isSandBox()? WxPayApiTypePay.SAND_BOX_URL.getUrl():wxApiType.getUrl());
+    @Override
+    public String getReqUrl(SupayChannelConfig config, PayChannelApiType wxApiType, Boolean isSandBox) {
+        boolean useSandBox = config.isSandBox();
+        useSandBox = useSandBox || isSandBox;
+        return config.getApiBaseUrl().concat(useSandBox? WxPayApiTypePay.SAND_BOX_URL.getUrl() + wxApiType.getUrl():wxApiType.getUrl());
     }
 
     @Override
@@ -63,7 +67,9 @@ public class WxPayChannelService implements BasePayChannelService {
      * @return
      */
     private SupayContext<? extends Request, ? extends Response> callApi(SupayContext<? extends Request, ? extends Response> ctx,
-                                                                        Class<? extends WxPayBaseRequest> requestClass, Class<? extends WxPayBaseResponse> responseClass, WxPayApiTypePay apiType) {
+                                                                        Class<? extends WxPayBaseRequest> requestClass,
+                                                                        Class<? extends WxPayBaseResponse> responseClass,
+                                                                        WxPayApiTypePay apiType) {
         // 检查并转换类型
         SupayContext<WxPayBaseRequest, WxPayBaseResponse> thisCtx = checkAndConvertType(ctx,
                 requestClass, responseClass);
@@ -82,11 +88,12 @@ public class WxPayChannelService implements BasePayChannelService {
             return ctx;
         }
         String reqXml = ctx.toRequestStr();
+        String targetUrl = getReqUrl(ctx.getChannelConfig(), apiType, ctx.isSandBox());
 
-        log.debug("[微信渠道] 接口：{} 请求参数：{}", apiType.getUrl(), reqXml);
+        log.debug("[微信渠道] 接口：{} 请求参数：{}", targetUrl, reqXml);
         long startCallTime = System.currentTimeMillis();
-        String resXml = HttpUtils.post(getReqUrl(ctx.getChannelConfig(), apiType), reqXml);
-        log.debug("[微信渠道] 接口：{} 耗时：{} 请求响应：{}", apiType.getUrl(), System.currentTimeMillis() - startCallTime, resXml);
+        String resXml = HttpUtils.post(targetUrl, reqXml);
+        log.debug("[微信渠道] 接口：{} 耗时：{} 请求响应：{}", targetUrl, System.currentTimeMillis() - startCallTime, resXml);
         ctx.parseResponseStr(resXml, responseClass);
         return ctx;
     }

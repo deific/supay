@@ -24,9 +24,10 @@ public interface  BasePayChannelService extends PayChannelService {
      * 获取请求url地址
      * @param config
      * @param wxApiType
+     * @param isSandBox
      * @return 返回渠道方请求地址
      */
-    default String getReqUrl(SupayChannelConfig config, PayChannelApiType wxApiType) {
+    default String getReqUrl(SupayChannelConfig config, PayChannelApiType wxApiType, Boolean isSandBox) {
         return config.getApiBaseUrl().concat(wxApiType.getUrl());
     }
     /**

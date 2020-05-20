@@ -31,7 +31,8 @@ import java.util.Date;
 public class SupayContext<R extends Request, S extends Response> extends SupayFilterChain {
     /** 交易流水号 */
     protected String tradeId;
-
+    /** 是否沙盒 */
+    protected boolean isSandBox;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
     /** 开始时间 */
