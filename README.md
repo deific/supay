@@ -7,7 +7,65 @@
 ## 特性
 ```java
 1. 极少依赖，轻量级可扩展的工具包（SDK)，可嵌入任何系统
-2. 聚合接口和第三方接口灵活切换使用，可自由定制和扩展
+2. 统一支付入口，简化调用,只使用SupayCore类即可
 3. 高性能异步线程处理请求和异步通知
+4. 支持多商户多应用
+5. 支持调用过滤器机制，可以灵活扩展调用逻辑,第三方接口灵活切换使用55
+6. 支付Context设计，统一封装请求响应参数，可以灵活控制每一笔支付交易
+
+```
+
+## 示例
+```java
+    // 初始化渠道配置
+    SupayChannelConfig channelConfig = SupayChannelConfig.builder()
+            .appId("appId").appSecret("appSecret").appName("微信公众号-测试")
+            .mchId("123").mchSecretKey("cccccccccc").mchName("测试")
+            .channelType(SupayChannelType.WECHAT).apiBaseUrl(WxPayApiTypePay.BASE_URL_CHINA1.getUrl())
+            .build().register();
+    // 注册渠道服务实现
+    SupayConfig.registerPayService(SupayChannelType.WECHAT, new WxPayChannelService());
+    // 注册渠道参数转换器，默认为JSON格式
+    SupayConfig.registerParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
+    // 注册调用过滤器，非必须
+    WxPayFilter wxPayFilter = new WxPayFilter();
+
+
+    String orderCode = IdUtil.fastSimpleUUID();
+    // 微信支付
+
+    // 构建支付上下文
+    // 构建支付上下文参数
+    WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.builder()
+            .body("测试微信支付订单")
+            .outTradeNo(orderCode)
+            .productId("12")
+            .notifyUrl("https://www.spay.org.cn/notify")
+            .totalFee("100")
+            .timeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"))
+            .timeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"))
+            .tradeType(SupayPayType.WX_MP_PAY.getCode())
+            .openid("aaaaaaaaaaaaaaaaaaaaa")
+            .spbillCreateIp("127.0.0.1")
+            .nonceStr(String.valueOf(System.currentTimeMillis()))
+            .build();
+
+    // 构建微信支付上下文
+    SupayContext cxt = SupayContext.buildContext(channelConfig, request, false, wxPayFilter);
+    // 调用支付接口
+    cxt = (SupayContext) SupayCore.pay(cxt);
+    log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), cxt.getResponse());
+
+    // 查询支付订单
+    WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(orderCode).build();
+    SupayContext qCtx = SupayContext.builder()
+            .channelConfig(SupayConfig.getPayConfig("wxf4a7649a7bf71c11"))
+            .request(qReq)
+            .build();
+
+    SupayCore.queryPayOrder(qCtx);
+
+    log.debug("查询结果：{}", qCtx.getResponse());
+
 
 ```

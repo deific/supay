@@ -4,6 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.context;
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.IdUtil;
+import cn.org.supay.core.channel.filter.SupayFilter;
 import cn.org.supay.core.channel.filter.SupayFilterChain;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
@@ -107,5 +111,23 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
      */
     public long duration() {
         return this.endTime.getTime() - this.startTime.getTime();
+    }
+
+    /**
+     * 构建上下文
+     * @param channelConfig
+     * @param request
+     * @param isSandBox
+     * @return
+     */
+    public static SupayContext buildContext(SupayChannelConfig channelConfig, Request request, boolean isSandBox, SupayFilter... filters) {
+        SupayContext cxt = SupayContext.builder()
+                .tradeId(IdUtil.fastUUID())
+                .channelConfig(channelConfig)
+                .isSandBox(isSandBox)
+                .request(request)
+                .filters(ListUtil.toList(filters))
+                .build();
+        return cxt;
     }
 }
