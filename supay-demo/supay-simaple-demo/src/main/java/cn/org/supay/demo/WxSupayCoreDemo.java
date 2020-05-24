@@ -8,6 +8,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.setting.dialect.Props;
+import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.channel.filter.SupayFilter;
 import cn.org.supay.core.channel.wx.WxPayApiTypePay;
 import cn.org.supay.core.channel.wx.WxPayChannelService;
@@ -41,7 +42,7 @@ public class WxSupayCoreDemo {
 
     // 初始化
     static {
-        props = new Props("config/wx-pay.conf");
+        props = new Props("config/my-wx-pay.conf");
         // 初始化配置
         channelConfig = SupayChannelConfig.builder()
                 .appId(props.getStr("wx.appId")).appSecret(props.getStr("wx.appSecret")).appName("微信公众号-支付")
@@ -91,7 +92,10 @@ public class WxSupayCoreDemo {
                 .request(qReq)
                 .build();
 
-        SupayCore.queryPayOrder(qCtx);
+//        SupayCore.queryPayOrder(qCtx);
+        // 获取具体渠道支付服务
+        PayChannelService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
+        wxPayChannelService.queryTradeInfo(qCtx);
 
         log.debug("查询结果：{}", qCtx.getResponse());
     }

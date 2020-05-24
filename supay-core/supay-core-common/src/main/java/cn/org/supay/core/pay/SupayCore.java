@@ -43,14 +43,11 @@ public class SupayCore implements InvocationHandler {
     }
 
     /**
-     * 获取并缓存动态代理类
-     * @param ctx
+     * 获取渠道支付服务
+     * @param channelType
      * @return
      */
-    private static PayChannelService getProxyChannelService(SupayContext<? extends Request, ? extends Response> ctx) {
-        ctx.setStartTime(new Date());
-        SupayChannelConfig channelConfig = ctx.getChannelConfig();
-        SupayChannelType channelType = channelConfig == null?null:channelConfig.getChannelType();
+    public static PayChannelService getPayChannelService(SupayChannelType channelType) {
         PayChannelService proxyService = proxyMap.get(channelType);
         if(proxyService == null) {
             PayChannelService targetService = SupayConfig.getPayService(channelType);
@@ -64,9 +61,20 @@ public class SupayCore implements InvocationHandler {
             }
             SupayCore proxy = new SupayCore(targetService);
             proxyService = (PayChannelService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), targetService.getClass().getInterfaces(), proxy);
-            proxyMap.put(ctx.getChannelConfig().getChannelType(), proxyService);
+            proxyMap.put(channelType, proxyService);
         }
         return proxyService;
+    }
+    /**
+     * 根据上下文获取渠道支付服务
+     * @param ctx
+     * @return
+     */
+    public static PayChannelService getPayChannelService(SupayContext<? extends Request, ? extends Response> ctx) {
+        ctx.setStartTime(new Date());
+        SupayChannelConfig channelConfig = ctx.getChannelConfig();
+        SupayChannelType channelType = channelConfig == null?null:channelConfig.getChannelType();
+        return getPayChannelService(channelType);
     }
 
     @Override
@@ -76,6 +84,8 @@ public class SupayCore implements InvocationHandler {
         if (channelConfig == null) {
             return ctx.fail("请配置支付渠道参数");
         }
+        // 开始时间
+        ctx.setStartTime(ctx.getStartTime() == null?new Date():ctx.getStartTime());
         try {
             PayChannelService payService = SupayConfig.getPayService(channelConfig.getChannelType());
             if (payService != null) {
@@ -102,7 +112,7 @@ public class SupayCore implements InvocationHandler {
      * @return 支付上下文
      */
     public static SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getProxyChannelService(ctx);
+        PayChannelService proxyService = getPayChannelService(ctx);
         return proxyService.pay(ctx);
     }
 
@@ -113,7 +123,7 @@ public class SupayCore implements InvocationHandler {
      * @return 支付上下文
      */
     public static SupayContext<? extends Request, ? extends Response> queryPayOrder(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getProxyChannelService(ctx);
+        PayChannelService proxyService = getPayChannelService(ctx);
         return proxyService.queryTradeInfo(ctx);
     }
 
@@ -123,7 +133,7 @@ public class SupayCore implements InvocationHandler {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> confirm(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getProxyChannelService(ctx);
+        PayChannelService proxyService = getPayChannelService(ctx);
         return proxyService.confirm(ctx);
     }
 
@@ -133,7 +143,7 @@ public class SupayCore implements InvocationHandler {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> refund(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getProxyChannelService(ctx);
+        PayChannelService proxyService = getPayChannelService(ctx);
         return proxyService.refund(ctx);
     }
 
@@ -143,7 +153,7 @@ public class SupayCore implements InvocationHandler {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getProxyChannelService(ctx);
+        PayChannelService proxyService = getPayChannelService(ctx);
         return proxyService.queryTradeInfo(ctx);
     }
 
@@ -153,7 +163,7 @@ public class SupayCore implements InvocationHandler {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> sendRedPackage(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getProxyChannelService(ctx);
+        PayChannelService proxyService = getPayChannelService(ctx);
         return proxyService.sendRedPackage(ctx);
     }
 }

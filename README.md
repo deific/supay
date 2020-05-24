@@ -69,3 +69,27 @@
 
 
 ```
+
+## 统一支付入口SupayCore
+抽象各个第三方渠道支付接口和调用过程，统一支付SupayCore提供入口，对于不同的第三方渠道支付，SupayCore的方法入参和返回值不同。并且调用过程中增加了过滤器设计，可以灵活扩展各渠道调用过程。
+```java
+    
+    // 构建微信支付上下文
+    SupayContext cxt = SupayContext.buildContext(channelConfig, request, false, wxPayFilter);
+    // 调用支付接口
+    cxt = (SupayContext) SupayCore.pay(cxt);
+    // 支付结果
+    cxt.getResponse()
+
+    // 查询支付订单
+    SupayContext qCtx = SupayContext.buildContext(。。。);
+    // 查询订单
+    qCtx = SupayCore.queryPayOrder(qCtx);
+
+
+    // 切换为具体的渠道服务
+   PayChannelService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
+   wxPayChannelService.queryTradeInfo(qCtx);
+
+
+```
