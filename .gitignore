@@ -26,4 +26,4 @@ hs_err_pid*
 /**/*/target
 *.iml
 
-/**/*/wx-pay.conf
+/supay-demo/supay-simaple-demo/src/main/resources/config/my-wx-pay.conf
