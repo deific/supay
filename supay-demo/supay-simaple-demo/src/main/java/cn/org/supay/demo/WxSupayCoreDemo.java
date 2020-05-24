@@ -87,11 +87,7 @@ public class WxSupayCoreDemo {
 
         // 查询支付订单
         WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(orderCode).build();
-        SupayContext qCtx = SupayContext.builder()
-                .channelConfig(SupayConfig.getPayConfig("wxf4a7649a7bf71c11"))
-                .request(qReq)
-                .build();
-
+        SupayContext qCtx = SupayContext.buildContext(channelConfig, qReq, false);
 //        SupayCore.queryPayOrder(qCtx);
         // 获取具体渠道支付服务
         PayChannelService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
