@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @(#)WxTradeType.java 2017年04月18日 17:33
- * Copyright 2017 明医众禾科技（北京）有限责任公司. All rights reserved.
+ * Copyright 2020 supay.org.cn. All rights reserved.
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.data;
 

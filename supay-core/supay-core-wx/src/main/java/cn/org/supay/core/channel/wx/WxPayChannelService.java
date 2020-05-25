@@ -38,24 +38,24 @@ public class WxPayChannelService implements BasePayChannelService {
     /**
      * 获取接口请求的 URL
      *
-     * @param wxApiType {@link WxPayApiTypePay} 支付 API 接口枚举
+     * @param wxApiType {@link WxPayApiType} 支付 API 接口枚举
      * @return {@link String} 返回完整的接口请求URL
      */
     @Override
     public String getReqUrl(SupayChannelConfig config, PayChannelApiType wxApiType, Boolean isSandBox) {
         boolean useSandBox = config.isSandBox();
         useSandBox = useSandBox || isSandBox;
-        return config.getApiBaseUrl().concat(useSandBox? WxPayApiTypePay.SAND_BOX_URL.getUrl() + wxApiType.getUrl():wxApiType.getUrl());
+        return config.getApiBaseUrl().concat(useSandBox? WxPayApiType.SAND_BOX_URL.getUrl() + wxApiType.getUrl():wxApiType.getUrl());
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
-        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiTypePay.UNIFIED_ORDER);
+        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiType.UNIFIED_ORDER);
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
-        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiTypePay.PAY_QUERY);
+        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiType.PAY_QUERY);
     }
 
     /**
@@ -69,7 +69,7 @@ public class WxPayChannelService implements BasePayChannelService {
     private SupayContext<? extends Request, ? extends Response> callApi(SupayContext<? extends Request, ? extends Response> ctx,
                                                                         Class<? extends WxPayBaseRequest> requestClass,
                                                                         Class<? extends WxPayBaseResponse> responseClass,
-                                                                        WxPayApiTypePay apiType) {
+                                                                        WxPayApiType apiType) {
         // 检查并转换类型
         SupayContext<WxPayBaseRequest, WxPayBaseResponse> thisCtx = checkAndConvertType(ctx,
                 requestClass, responseClass);

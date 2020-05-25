@@ -11,5 +11,12 @@
 
     <artifactId>supay-core-alipay</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.org.supay</groupId>
+            <artifactId>supay-core-common</artifactId>
+            <version>${supay.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
