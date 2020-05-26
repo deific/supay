@@ -17,6 +17,12 @@
             <artifactId>supay-core-common</artifactId>
             <version>${supay.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-easysdk</artifactId>
+            <version>${ali.easysdk.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>
