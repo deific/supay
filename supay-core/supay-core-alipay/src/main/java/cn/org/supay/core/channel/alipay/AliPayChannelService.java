@@ -5,11 +5,11 @@
 package cn.org.supay.core.channel.alipay;
 
 import cn.org.supay.core.channel.BasePayChannelService;
+import cn.org.supay.core.channel.alipay.sdk.Factory;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.data.Request;
 import cn.org.supay.core.data.Response;
-import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.kernel.BaseClient;
 import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +39,10 @@ public class AliPayChannelService implements BasePayChannelService {
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
         try {
-            // 快捷支付
-            AlipayTradeCreateResponse response = Factory.Payment.Common().create("", "null", "null", "null");
+            // 简易支付
+
+            AlipayTradeCreateResponse response = Factory.Payment.Common(ctx.getChannelConfig().getAppId())
+                    .create("", "null", "null", "null");
             if ("10000".equals(response.code)) {
                 log.debug("支付成功");
             }
