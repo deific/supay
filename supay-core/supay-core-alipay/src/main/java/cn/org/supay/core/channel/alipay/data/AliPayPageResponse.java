@@ -1,29 +1,21 @@
 /*******************************************************************************
- * @(#)AliPayBaseRequest.java 2017年04月18日 17:33
- * Copyright 2020 supay.org.cn. All rights reserved.
+ * @(#)AliPayPageRequest.java 2020年05月29日 12:26
+ * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 
 /**
- * <b>Application name：</b> AliPayBaseRequest.java <br>
+ * <b>Application name：</b> AliPayPageRequest.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
- * <b>@Date：</b> 2020年05月16日 09:37 <br>
+ * <b>@Date：</b> 2020年05月29日 12:26 <br>
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class AliPayBaseRequest extends Request {
-    /**
-     * 支付类型
-     */
-    private SupayPayType payType;
-    private String subject;
-    private String outTradeNo;
-    private String totalAmount;
+public class AliPayPageResponse extends AlipayBaseResponse {
+
 }

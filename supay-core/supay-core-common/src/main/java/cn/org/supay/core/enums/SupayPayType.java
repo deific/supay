@@ -20,6 +20,11 @@ public enum SupayPayType {
     WX_MICRO_PAY("MICROPAY", "刷卡付"),
     WX_H5_PAY("MWEB", "H5支付"),
     WX_FACE_PAY("FACEPAY", "刷脸付"),
+
+    ALI_PAGE_PAY("PAGE", "网页支付"),
+    ALI_APP_PAY("APP", "APP支付"),
+    ALI_FACE_PAY("FACEPAY", "刷脸付"),
+
     ;
 
     /** 编码 */
