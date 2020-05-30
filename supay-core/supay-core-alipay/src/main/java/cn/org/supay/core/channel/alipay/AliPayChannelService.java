@@ -36,8 +36,6 @@ import java.util.Map;
  */
 @Slf4j
 public class AliPayChannelService implements BasePayChannelService {
-    /** 阿里支付客户端 */
-    private Map<String, Factory> factoryMap = new HashMap<>();
 
     @Override
     public String getPayServiceName() {
@@ -53,6 +51,8 @@ public class AliPayChannelService implements BasePayChannelService {
             return thisCtx;
         }
         try {
+            // 初始化
+            init(ctx.getChannelConfig());
             // 简易支付
             SupayPayType payType = thisCtx.getRequest().getPayType();
             switch (payType) {
@@ -75,6 +75,7 @@ public class AliPayChannelService implements BasePayChannelService {
             }
         } catch (Exception e) {
             thisCtx.fail("调用阿里支付接口异常:" + e.getMessage());
+            log.error("调用阿里支付接口异常",e);
         }
         return thisCtx;
     }
@@ -112,14 +113,14 @@ public class AliPayChannelService implements BasePayChannelService {
 
         // 请更换为您的AppId
         config.appId = channelConfig.getAppId();
-        // 请更换为您的应用公钥证书文件路径
-        config.merchantCertPath = "/home/foo/appCertPublicKey_2019051064521003.crt";
-        // 请更换为您的支付宝公钥证书文件路径
-        config.alipayCertPath = "/home/foo/alipayCertPublicKey_RSA2.crt";
-        // 请更换为您的支付宝根证书文件路径
-        config.alipayRootCertPath = "/home/foo/alipayRootCert.crt";
+//        // 请更换为您的应用公钥证书文件路径
+//        config.merchantCertPath = "/home/foo/appCertPublicKey_2019051064521003.crt";
+//        // 请更换为您的支付宝公钥证书文件路径
+//        config.alipayCertPath = "/home/foo/alipayCertPublicKey_RSA2.crt";
+//        // 请更换为您的支付宝根证书文件路径
+//        config.alipayRootCertPath = "/home/foo/alipayRootCert.crt";
         // 请更换为您的PKCS8格式的应用私钥
-        config.merchantPrivateKey = "MIIEvQIBADANB ... ...";
+        config.merchantPrivateKey = channelConfig.getMchSecretKey();
 
         // 如果采用非证书模式，则无需赋值上面的三个证书路径，改为赋值如下的支付宝公钥字符串即可
         // config.alipayPublicKey = "MIIBIjANBg...";

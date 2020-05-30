@@ -6,6 +6,7 @@ package cn.org.supay.core.data;
 
 import cn.org.supay.core.context.SupayContext;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * <b>Application name：</b> Response.java <br>
@@ -17,6 +18,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@ToString
 public class Response<T> {
 
     /**

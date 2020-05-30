@@ -27,3 +27,5 @@ hs_err_pid*
 *.iml
 
 /supay-demo/supay-simaple-demo/src/main/resources/config/my-wx-pay.conf
+/pay-file
+/supay-demo/supay-simaple-demo/src/main/resources/config/my-ali-pay.conf

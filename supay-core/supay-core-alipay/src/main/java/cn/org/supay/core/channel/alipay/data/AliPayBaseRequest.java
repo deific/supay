@@ -7,6 +7,8 @@ package cn.org.supay.core.channel.alipay.data;
 import cn.org.supay.core.data.Request;
 import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <b>Application name：</b> AliPayBaseRequest.java <br>
@@ -18,12 +20,14 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
 public class AliPayBaseRequest extends Request {
     /**
      * 支付类型
      */
-    private SupayPayType payType;
-    private String subject;
-    private String outTradeNo;
-    private String totalAmount;
+    protected SupayPayType payType;
+    protected String subject;
+    protected String outTradeNo;
+    protected String totalAmount;
 }

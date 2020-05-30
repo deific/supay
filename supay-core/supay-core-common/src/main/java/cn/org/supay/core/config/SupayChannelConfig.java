@@ -35,11 +35,22 @@ public class SupayChannelConfig {
     /** 第三方渠道商户秘钥 */
     private String mchSecretKey;
     /** 第三方渠道证书路径 */
-    private String certFile;
+    private String appCertFile;
     /** 合作方证书密码 */
-    private String certPassword;
+    private String appCertPassword;
     /** 合作方证书格式 */
-    private String certFormat;
+    private String appCertFormat;
+
+    /** 第三方渠道证书路径 */
+    private String mchCertFile;
+    /** 合作方证书密码 */
+    private String mchCertPassword;
+    /** 合作方证书格式 */
+    private String mchCertFormat;
+
+    /** 根证书 */
+    private String rootCertFile;
+
     /** 合作方基本接口地址 */
     private String apiBaseUrl;
     /** 是否启用沙箱环境 */

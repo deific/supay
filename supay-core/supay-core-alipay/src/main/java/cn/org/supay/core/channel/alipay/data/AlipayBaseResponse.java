@@ -6,6 +6,7 @@ package cn.org.supay.core.channel.alipay.data;
 
 import cn.org.supay.core.data.Response;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * <b>Application name：</b> AlipayBaseResponse.java <br>
@@ -17,6 +18,8 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@ToString
 public class AlipayBaseResponse extends Response {
-    private String body;
+
+    protected String body;
 }

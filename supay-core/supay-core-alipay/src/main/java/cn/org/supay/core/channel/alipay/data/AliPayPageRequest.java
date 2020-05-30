@@ -5,6 +5,7 @@
 package cn.org.supay.core.channel.alipay.data;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <b>Application name：</b> AliPayPageRequest.java <br>
@@ -16,6 +17,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@SuperBuilder
 public class AliPayPageRequest extends AliPayBaseRequest {
 
     String returnUrl;

@@ -7,6 +7,7 @@ package cn.org.supay.core.data;
 import cn.org.supay.core.context.SupayContext;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
@@ -21,6 +22,7 @@ import java.io.Serializable;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 public class Request implements Serializable {

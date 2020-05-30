@@ -37,6 +37,10 @@ public class Factory  {
      */
     public static void setOptions(BaseClient.Config options) {
         try {
+            ClientInfo clientInfo = clients.get(options.appId);
+            if (clientInfo != null) {
+                return;
+            }
             registerClient(options.appId, new com.alipay.easysdk.base.image.Client(options));
             registerClient(options.appId, new com.alipay.easysdk.base.video.Client(options));
             registerClient(options.appId, new com.alipay.easysdk.base.oauth.Client(options));
@@ -59,11 +63,17 @@ public class Factory  {
         }
     }
 
+    /**
+     * 注册客户端
+     * @param appId
+     * @param client
+     */
     private static void registerClient(String appId, BaseClient client) {
         ClientInfo clientInfo = clients.get(appId);
         if (clientInfo == null) {
             clientInfo = new ClientInfo();
             clientInfo.setAppId(appId);
+            clients.put(appId, clientInfo);
         }
         clientInfo.registerClient(client.getClass().getCanonicalName(), client);
     }
