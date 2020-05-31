@@ -17,16 +17,15 @@ import lombok.ToString;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-@Data
-@ToString
-public class Response<T> {
+
+public interface Response<T> {
 
     /**
      * 验证响应结果
      * @param ctx
      * @return
      */
-    public SupayContext<? extends Request, ? extends Response> checkResult(SupayContext<? extends Request, ? extends Response> ctx) {
+    default SupayContext<? extends Request, ? extends Response> checkResult(SupayContext<? extends Request, ? extends Response> ctx) {
         return ctx;
     }
 }

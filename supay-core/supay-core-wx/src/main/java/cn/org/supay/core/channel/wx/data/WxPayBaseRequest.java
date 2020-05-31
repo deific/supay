@@ -25,7 +25,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
-public class WxPayBaseRequest extends Request {
+public class WxPayBaseRequest implements Request {
     /** 微信分配的应用ID（公众号、小程序、app） */
     @XmlField("appid")
     private String appid;

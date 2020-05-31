@@ -24,7 +24,7 @@ import java.util.Map;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class WxPayBaseResponse<T extends WxPayData> extends Response {
+public class WxPayBaseResponse<T extends WxPayData> implements Response {
     /** 返回状态码 */
     @XmlField("return_code")
     protected String returnCode;

@@ -22,6 +22,7 @@ import lombok.Data;
 public class SupayChannelConfig {
     /** 渠道类型 {@link SupayChannelType} */
     private SupayChannelType channelType;
+
     /** 第三方渠道appappId */
     private String appId;
     /** 第三方渠道app秘钥 */
@@ -48,6 +49,8 @@ public class SupayChannelConfig {
     /** 合作方证书格式 */
     private String mchCertFormat;
 
+    /** 根密钥 */
+    private String rootSecretKey;
     /** 根证书 */
     private String rootCertFile;
 

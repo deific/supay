@@ -13,6 +13,8 @@ import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.channel.alipay.AliPayChannelService;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
+import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
+import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.channel.wx.WxPayApiType;
 import cn.org.supay.core.channel.wx.WxPayChannelService;
 import cn.org.supay.core.channel.wx.convert.WxPayConverter;
@@ -46,9 +48,10 @@ public class AliSupayCoreDemo {
 
     // 初始化
     static {
-        props = new Props("config/ali-pay.conf");
+        props = new Props("config/my-ali-pay.conf");
         // 初始化配置
         channelConfig = SupayChannelConfig.builder()
+                .rootSecretKey(props.getStr("ali.publicKey"))
                 .appId(props.getStr("ali.appId")).appSecret(props.getStr("ali.appSecret")).appName("支付宝应用-支付")
                 .mchId(props.getStr("ali.mchId")).mchName("支付宝商户").mchSecretKey(props.getStr("ali.mchSecretKey"))
                 .channelType(SupayChannelType.ALIPAY).apiBaseUrl("https://openapi.alipaydev.com/gateway.do")
@@ -60,8 +63,9 @@ public class AliSupayCoreDemo {
         // 注册渠道服务实现
         SupayConfig.registerPayService(SupayChannelType.ALIPAY, new AliPayChannelService());
 
+        AliPayFilter filter = new AliPayFilter();
+
         String orderCode = IdUtil.fastSimpleUUID();
-        // 微信支付
 
         // 构建支付上下文
         // 构建支付上下文参数
@@ -74,10 +78,17 @@ public class AliSupayCoreDemo {
                 .build();
 
         // 构建微信支付上下文
-        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false);
+        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false, filter);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), cxt.getResponse());
+        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
+
+        // 查询支付订单
+        AliPayQueryRequest queryRequest = AliPayQueryRequest.builder().outTradeNo(orderCode).build();
+        cxt = SupayContext.buildContext(channelConfig, queryRequest, false, filter);
+        // 调用支付接口
+        cxt = (SupayContext) SupayCore.queryPayOrder(cxt);
+        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
 
     }
 }

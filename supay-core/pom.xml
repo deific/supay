@@ -16,6 +16,7 @@
         <module>supay-core-wx</module>
         <module>supay-core-alipay</module>
         <module>supay-core-aggregate</module>
+        <module>supay-core-all</module>
     </modules>
 
 

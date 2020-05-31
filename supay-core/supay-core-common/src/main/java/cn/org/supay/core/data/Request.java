@@ -21,18 +21,14 @@ import java.io.Serializable;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-@Data
-@ToString
-@SuperBuilder
-@NoArgsConstructor
-public class Request implements Serializable {
+public interface Request {
 
     /**
      * 参数检查并签名
      * @param ctx
      * @return
      */
-    public SupayContext<? extends Request, ? extends Response> checkAndSign(SupayContext<? extends Request, ? extends Response> ctx) {
+    default SupayContext<? extends Request, ? extends Response> checkAndSign(SupayContext<? extends Request, ? extends Response> ctx) {
         return ctx;
     }
 }
