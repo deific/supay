@@ -83,8 +83,7 @@ public class AliPayChannelService implements BasePayChannelService {
         AliPayRefundRequest refundRequest = thisCtx.getRequest();
         try {
             AlipayTradeRefundResponse refundResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).refund(refundRequest.getOutTradeNo(), refundRequest.getOutTradeNo());
-            AliPayRefundResponse response = new AliPayRefundResponse();
-            BeanUtil.copyProperties(refundResponse, response);
+            AliPayRefundResponse response = AliPayRefundResponse.build(refundResponse.toMap());
             thisCtx.setResponse(response);
         } catch (Exception e) {
             log.error("调用阿里退款接口异常：", e);
@@ -104,8 +103,7 @@ public class AliPayChannelService implements BasePayChannelService {
         AliPayQueryRequest queryRequest = thisCtx.getRequest();
         try {
             AlipayTradeQueryResponse queryResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).query(queryRequest.getOutTradeNo());
-            AliPayQueryResponse response = new AliPayQueryResponse();
-            BeanUtil.copyProperties(queryResponse.toMap(), response);
+            AliPayQueryResponse response = AliPayQueryResponse.build(queryResponse.toMap());
             thisCtx.setResponse(response);
         } catch (Exception e) {
             log.error("调用阿里支付查询接口异常：", e);

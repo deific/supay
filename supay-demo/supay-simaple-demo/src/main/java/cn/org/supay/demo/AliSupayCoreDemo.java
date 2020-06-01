@@ -14,6 +14,7 @@ import cn.org.supay.core.channel.alipay.AliPayChannelService;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
+import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.channel.wx.WxPayApiType;
 import cn.org.supay.core.channel.wx.WxPayChannelService;
@@ -88,7 +89,7 @@ public class AliSupayCoreDemo {
         cxt = SupayContext.buildContext(channelConfig, queryRequest, false, filter);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.queryPayOrder(cxt);
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
+        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), ((AliPayQueryResponse)cxt.getResponse()));
 
     }
 }

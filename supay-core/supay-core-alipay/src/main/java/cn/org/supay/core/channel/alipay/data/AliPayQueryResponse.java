@@ -4,11 +4,15 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
+import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.data.Response;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
+import com.aliyun.tea.TeaModel;
 import lombok.Data;
 import lombok.Setter;
+
+import java.util.Arrays;
 
 /**
  * <b>Application name：</b> AliPayRefundResponse.java <br>
@@ -21,4 +25,19 @@ import lombok.Setter;
  */
 @Data
 public class AliPayQueryResponse extends AlipayTradeQueryResponse implements Response {
+
+    public static AliPayQueryResponse build(java.util.Map<String, ?> map) throws Exception {
+        AliPayQueryResponse self = new AliPayQueryResponse();
+        return TeaModel.toModel(map, self);
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return JSONUtil.toJsonStr(this.toMap());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
