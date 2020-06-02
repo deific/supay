@@ -40,8 +40,8 @@ public class AliPayChannelService implements BasePayChannelService {
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
-        SupayContext<AliPayBaseRequest, AlipayBaseResponse> thisCtx = checkAndConvertType(ctx,
-                AliPayBaseRequest.class, AlipayBaseResponse.class);
+        SupayContext<AliPayBaseRequest, Response> thisCtx = checkAndConvertType(ctx,
+                AliPayBaseRequest.class, Response.class);
         if (thisCtx.hasError()) {
             return thisCtx;
         }
@@ -70,7 +70,7 @@ public class AliPayChannelService implements BasePayChannelService {
                     AlipayTradePayResponse faceResponse = Factory.Payment.FaceToFace(ctx.getChannelConfig().getAppId())
                             .pay(faceRequest.getSubject(), faceRequest.getOutTradeNo(), faceRequest.getTotalAmount(), faceRequest.getAuthCode());
                     AliPayFaceResponse facePayResponse = AliPayFaceResponse.build(faceResponse.toMap());
-                    ctx.setResponse(facePayResponse);
+                    thisCtx.setResponse(facePayResponse);
                     return ctx;
             }
         } catch (Exception e) {
