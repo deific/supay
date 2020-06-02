@@ -16,6 +16,7 @@ import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
+import com.alipay.easysdk.payment.facetoface.models.AlipayTradePayResponse;
 import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,13 +58,20 @@ public class AliPayChannelService implements BasePayChannelService {
                     thisCtx.setResponse(pageResponse);
                     return thisCtx;
                 case ALI_APP_PAY:
-                    AliPayBaseRequest appRequest = thisCtx.getRequest();
+                    AliPayAppRequest appRequest = (AliPayAppRequest)thisCtx.getRequest();
                     AlipayTradeAppPayResponse appResponse = Factory.Payment.App(ctx.getChannelConfig().getAppId())
                             .pay(appRequest.getSubject(), appRequest.getOutTradeNo(), appRequest.getTotalAmount());
-                    AlipayBaseResponse appPayResponse = new AliPayPageResponse();
+                    AliPayAppResponse appPayResponse = new AliPayAppResponse();
                     appPayResponse.setBody(appResponse.body);
                     thisCtx.setResponse(appPayResponse);
                     return thisCtx;
+                case ALI_FACE_PAY:
+                    AliPayFaceRequest faceRequest = (AliPayFaceRequest) thisCtx.getRequest();
+                    AlipayTradePayResponse faceResponse = Factory.Payment.FaceToFace(ctx.getChannelConfig().getAppId())
+                            .pay(faceRequest.getSubject(), faceRequest.getOutTradeNo(), faceRequest.getTotalAmount(), faceRequest.getAuthCode());
+                    AliPayFaceResponse facePayResponse = AliPayFaceResponse.build(faceResponse.toMap());
+                    ctx.setResponse(facePayResponse);
+                    return ctx;
             }
         } catch (Exception e) {
             thisCtx.fail("调用阿里支付接口异常:" + e.getMessage());

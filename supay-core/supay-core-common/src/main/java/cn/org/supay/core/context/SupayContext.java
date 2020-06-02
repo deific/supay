@@ -99,7 +99,7 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
      */
     public Response parseResponseStr(String respStr, Class<? extends Response> targetClass) {
         SupayConverter converter = SupayConfig.getApiParamConverter(this.channelConfig.getChannelType());
-        this.setResponse((S) converter.convert(respStr, targetClass));
+        this.setResponse((S)converter.convert(respStr, targetClass));
         // 检查结果
         this.getResponse().checkResult(this);
         return this.response;
