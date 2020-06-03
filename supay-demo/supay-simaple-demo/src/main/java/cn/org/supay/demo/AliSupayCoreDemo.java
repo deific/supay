@@ -72,7 +72,7 @@ public class AliSupayCoreDemo {
         // 构建支付上下文参数
         AliPayPageRequest request = AliPayPageRequest.builder()
                 .outTradeNo(orderCode)
-                .payType(SupayPayType.ALI_APP_PAY)
+                .payType(SupayPayType.ALI_PAGE_PAY)
                 .subject("测试网页支付")
                 .totalAmount("1")
                 .returnUrl("http://taobao.com")
