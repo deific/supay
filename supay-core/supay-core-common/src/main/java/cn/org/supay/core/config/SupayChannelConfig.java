@@ -4,9 +4,13 @@
  *******************************************************************************/
 package cn.org.supay.core.config;
 
+import cn.org.supay.core.channel.filter.SupayFilter;
 import cn.org.supay.core.enums.SupayChannelType;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <b>Application name：</b> SupayChannelConfig.java <br>
@@ -58,6 +62,22 @@ public class SupayChannelConfig {
     private String apiBaseUrl;
     /** 是否启用沙箱环境 */
     private boolean sandBox;
+
+    /** 渠道过滤器 */
+    private List<SupayFilter> filterList;
+
+    /**
+     * 添加过滤器
+     * @param filter
+     */
+    public SupayChannelConfig addFilter(SupayFilter filter) {
+        if (filterList == null) {
+             filterList = new ArrayList<>();
+        }
+        filterList.add(filter);
+        return this;
+    }
+
 
     /**
      * 注册渠道参数配置

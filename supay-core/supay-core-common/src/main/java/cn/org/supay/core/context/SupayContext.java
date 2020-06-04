@@ -19,6 +19,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <b>Application name：</b> SupayContext.java <br>
@@ -121,13 +122,19 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
      * @return
      */
     public static SupayContext buildContext(SupayChannelConfig channelConfig, Request request, boolean isSandBox, SupayFilter... filters) {
+        // 合并过滤器
+        List<SupayFilter> filterList = channelConfig.getFilterList();
+        filterList.addAll(ListUtil.toList(filters));
+
         SupayContext cxt = SupayContext.builder()
                 .tradeId(IdUtil.fastUUID())
                 .channelConfig(channelConfig)
                 .isSandBox(isSandBox)
                 .request(request)
-                .filters(ListUtil.toList(filters))
+                .filters(filterList)
                 .build();
+
+
         return cxt;
     }
 }

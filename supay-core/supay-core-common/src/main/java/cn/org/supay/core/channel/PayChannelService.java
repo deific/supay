@@ -4,6 +4,8 @@
  *******************************************************************************/
 package cn.org.supay.core.channel;
 
+import cn.org.supay.core.enums.SupayChannelType;
+
 /**
  * <b>Application name：</b> ChannelPayService.java <br>
  * <b>Application describing： </b> <br>
@@ -19,4 +21,10 @@ public interface PayChannelService extends PayService {
      * @return
      */
     String getPayServiceName();
+
+    /**
+     * 获取支持的渠道类型
+     * @return
+     */
+    SupayChannelType getSupportType();
 }

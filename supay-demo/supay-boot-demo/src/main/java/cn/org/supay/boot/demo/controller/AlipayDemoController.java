@@ -1,27 +1,18 @@
 /*******************************************************************************
- * @(#)AliSupayCoreDemo.java 2020年05月30日 09:07
+ * @(#)AlipayDemoController.java 2020年05月30日 09:07
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.demo;
+package cn.org.supay.boot.demo.controller;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
-import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.channel.alipay.AliPayChannelService;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
-import cn.org.supay.core.channel.wx.WxPayApiType;
-import cn.org.supay.core.channel.wx.WxPayChannelService;
-import cn.org.supay.core.channel.wx.convert.WxPayConverter;
-import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
-import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderRequest;
-import cn.org.supay.core.channel.wx.filter.WxPayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
@@ -29,11 +20,14 @@ import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.pay.SupayCore;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
- * <b>Application name：</b> AliSupayCoreDemo.java <br>
+ * <b>Application name：</b> AlipayDemoController.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
@@ -42,7 +36,8 @@ import java.util.Date;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class AliSupayCoreDemo {
+@Controller
+public class AlipayDemoController {
 
     private static Props props;
     private static  SupayChannelConfig channelConfig;
@@ -58,11 +53,41 @@ public class AliSupayCoreDemo {
                 .channelType(SupayChannelType.ALIPAY).apiBaseUrl("https://openapi.alipaydev.com/gateway.do")
                 .build()
                 .addFilter(new AliPayFilter())
-                .register();
+                .register()
+        ;
+    }
 
+
+    /**
+     * 跳到支付页面
+     * 针对实时支付,即时付款
+     *
+     * @param price       金额
+     * @return 跳到支付页面
+     */
+    @RequestMapping(value = "toPay.html", produces = "text/html;charset=UTF-8")
+    public String toPay( BigDecimal price) {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+        // 构建支付上下文参数
+        AliPayPageRequest request = AliPayPageRequest.builder()
+                .outTradeNo(orderCode)
+                .payType(SupayPayType.ALI_PAGE_PAY)
+                .subject("测试网页支付")
+                .totalAmount("1")
+                .returnUrl("http://taobao.com")
+                .build();
+
+        // 构建微信支付上下文
+        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false);
+        // 调用支付接口
+        cxt = (SupayContext) SupayCore.pay(cxt);
+
+        return ((AliPayPageResponse)cxt.getResponse()).getBody();
     }
 
     public static void main(String[] args) {
+
 
         String orderCode = IdUtil.fastSimpleUUID();
 

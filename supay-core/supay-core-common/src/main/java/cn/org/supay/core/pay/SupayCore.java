@@ -7,6 +7,7 @@ package cn.org.supay.core.pay;
 import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayConfiguration;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.data.Request;
 import cn.org.supay.core.data.Response;
@@ -31,17 +32,19 @@ import java.util.Map;
  */
 @Slf4j
 public class SupayCore implements InvocationHandler {
-    /** 实际执行服务 */
-    private PayChannelService targetService;
+    /** 代理 */
+    private PayChannelService proxyService;
 
     /** 动态代理map */
     private static Map<SupayChannelType, PayChannelService> proxyMap = new HashMap<>();
 
-    /** 私有构造函数 */
-    private SupayCore(PayChannelService targetService) {
-        this.targetService = targetService;
+    static {
+        SupayConfiguration.initPayService();
     }
 
+    private SupayCore(PayChannelService proxyService) {
+        this.proxyService = proxyService;
+    }
     /**
      * 获取渠道支付服务
      * @param channelType
@@ -53,6 +56,11 @@ public class SupayCore implements InvocationHandler {
             PayChannelService targetService = SupayConfig.getPayService(channelType);
             if (targetService == null) {
                 targetService = new PayChannelService() {
+                    @Override
+                    public SupayChannelType getSupportType() {
+                        return null;
+                    }
+
                     @Override
                     public String getPayServiceName() {
                         return "NonePayChannelService";
@@ -91,7 +99,7 @@ public class SupayCore implements InvocationHandler {
             if (payService != null) {
                 // 拦截器
                 ctx.nextBefore(ctx);
-                ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(targetService, ctx);
+                ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(payService, ctx);
                 ctx.nextAfter(ctx);
                 return ctx;
             } else {

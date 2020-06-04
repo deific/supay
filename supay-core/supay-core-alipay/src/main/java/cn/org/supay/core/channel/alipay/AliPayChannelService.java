@@ -11,6 +11,7 @@ import cn.org.supay.core.channel.alipay.sdk.Factory;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.data.Request;
 import cn.org.supay.core.data.Response;
+import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
@@ -35,6 +36,11 @@ public class AliPayChannelService implements BasePayChannelService {
     @Override
     public String getPayServiceName() {
         return "aliPayChannelService";
+    }
+
+    @Override
+    public SupayChannelType getSupportType() {
+        return SupayChannelType.ALIPAY;
     }
 
     @Override

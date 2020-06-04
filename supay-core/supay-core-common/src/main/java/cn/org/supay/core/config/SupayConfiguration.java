@@ -1,0 +1,45 @@
+/*******************************************************************************
+ * @(#)SupayChannelConfig.java 2020年05月15日 23:05
+ * Copyright 2020 http://supay.org.cn All rights reserved.
+ *******************************************************************************/
+package cn.org.supay.core.config;
+
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.org.supay.core.channel.PayChannelService;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Set;
+
+/**
+ * <b>Application name：</b> SupayServerConfig.java <br>
+ * <b>Application describing： </b> <br>
+ * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
+ * <b>Company：</b> supay.org.cn/ <br>
+ * <b>@Date：</b> 2020年05月15日 23:05 <br>
+ * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
+ * <b>@version：</b>V1.0.0 <br>
+ */
+@Slf4j
+public class SupayConfiguration {
+
+    /**
+     * 初始化
+     */
+    public static void initPayService() {
+        Set<Class<?>> channelServiceSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", PayChannelService.class);
+        if (ObjectUtil.isNotEmpty(channelServiceSet)) {
+            channelServiceSet.forEach(aClass -> {
+                try {
+                    if (!ClassUtil.isAbstract(aClass)) {
+                        PayChannelService channelService = (PayChannelService) aClass.newInstance();
+                       SupayConfig.registerPayService(channelService.getSupportType(), channelService);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("初始化渠道服务异常：", e);
+                }
+            });
+        }
+    }
+}
