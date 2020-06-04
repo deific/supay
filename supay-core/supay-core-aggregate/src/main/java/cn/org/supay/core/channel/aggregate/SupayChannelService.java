@@ -9,6 +9,7 @@ import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.BasePayChannelService;
 import cn.org.supay.core.data.Request;
 import cn.org.supay.core.data.Response;
+import cn.org.supay.core.enums.SupayChannelType;
 
 /**
  * <b>Application name：</b> SupayChannelService.java <br>
@@ -28,4 +29,8 @@ public class SupayChannelService implements BasePayChannelService {
         return "supayChannelService";
     }
 
+    @Override
+    public SupayChannelType getSupportType() {
+        return null;
+    }
 }

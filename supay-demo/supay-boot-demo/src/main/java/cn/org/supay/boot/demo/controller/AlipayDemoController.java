@@ -37,6 +37,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Controller
+@RequestMapping("/alipay")
 public class AlipayDemoController {
 
     private static Props props;
@@ -44,7 +45,7 @@ public class AlipayDemoController {
 
     // 初始化
     static {
-        props = new Props("config/my-ali-pay.conf");
+        props = new Props("./config/my-ali-pay.conf");
         // 初始化配置
         channelConfig = SupayChannelConfig.builder()
                 .rootSecretKey(props.getStr("ali.publicKey"))
@@ -83,7 +84,9 @@ public class AlipayDemoController {
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
 
-        return ((AliPayPageResponse)cxt.getResponse()).getBody();
+        String result = ((AliPayPageResponse)cxt.getResponse()).getBody();
+
+        return result;
     }
 
     public static void main(String[] args) {

@@ -8,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * <b>Application name：</b> DemoApplication.java <br>
@@ -22,9 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @Slf4j
 @SpringBootApplication
-@ComponentScan(basePackages = {"cn.org.supay.*"})
-@EnableAspectJAutoProxy
-@EnableScheduling
+@ComponentScan(basePackages = {"cn.org.supay"})
 public class DemoApplication {
 
     public static void main(String[] args) {

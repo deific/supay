@@ -17,7 +17,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class SupayResponse extends Response {
+public class SupayResponse implements Response {
     /** 业务处理编码 */
     protected String resultCode;
     /** 业务处理信息 */

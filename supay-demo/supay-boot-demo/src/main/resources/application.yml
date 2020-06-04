@@ -1,0 +1,21 @@
+spring:
+  resources:
+    static-locations: /static/,classpath:/static/
+
+server:
+  port: 15888
+
+
+supay:
+  channel:
+    alipay:
+      appId:
+      appSecret:
+      mchId:
+      mchSecretKey:
+      rootKey:
+    wechat:
+      appId:
+      appSecret:
+      mchId:
+      mchSecretKey:
