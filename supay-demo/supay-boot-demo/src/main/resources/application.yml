@@ -1,10 +1,11 @@
 spring:
-  resources:
-    static-locations: /static/,classpath:/static/
-
+  application:
+    name: supay-boot-demo
 server:
   port: 15888
 
+logging:
+  config: classpath:log4j2.xml
 
 supay:
   channel:
