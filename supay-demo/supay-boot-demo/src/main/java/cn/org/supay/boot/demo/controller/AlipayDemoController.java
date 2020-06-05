@@ -20,6 +20,7 @@ import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.pay.SupayCore;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,13 +69,14 @@ public class AlipayDemoController {
      * @return 跳到支付页面
      */
     @RequestMapping(value = "toPay.html", produces = "text/html;charset=UTF-8")
-    public String toPay( BigDecimal price) {
+    public HttpEntity<String> toPay(BigDecimal price) {
         //及时收款
         String orderCode = IdUtil.fastSimpleUUID();
         // 构建支付上下文参数
         AliPayPageRequest request = AliPayPageRequest.builder()
                 .outTradeNo(orderCode)
-                .payType(SupayPayType.ALI_PAGE_PAY)
+//                .payType(SupayPayType.ALI_PAGE_PAY)
+                .payType(SupayPayType.ALI_WAP_PAY)
                 .subject("测试网页支付")
                 .totalAmount("1")
                 .returnUrl("http://taobao.com")
@@ -87,7 +89,7 @@ public class AlipayDemoController {
 
         String result = ((AliPayPageResponse)cxt.getResponse()).getBody();
 
-        return result;
+        return new HttpEntity<>(result);
     }
 
     public static void main(String[] args) {
@@ -99,7 +101,8 @@ public class AlipayDemoController {
         // 构建支付上下文参数
         AliPayPageRequest request = AliPayPageRequest.builder()
                 .outTradeNo(orderCode)
-                .payType(SupayPayType.ALI_PAGE_PAY)
+//                .payType(SupayPayType.ALI_PAGE_PAY)
+                .payType(SupayPayType.ALI_WAP_PAY)
                 .subject("测试网页支付")
                 .totalAmount("1")
                 .returnUrl("http://taobao.com")

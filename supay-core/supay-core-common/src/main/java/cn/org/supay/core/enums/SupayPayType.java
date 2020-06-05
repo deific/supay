@@ -21,7 +21,8 @@ public enum SupayPayType {
     WX_H5_PAY("MWEB", "H5支付"),
     WX_FACE_PAY("FACEPAY", "刷脸付"),
 
-    ALI_PAGE_PAY("PAGE", "网页支付"),
+    ALI_PAGE_PAY("PAGE", "PC端网页支付"),
+    ALI_WAP_PAY("WAP", "手机端网页支付"),
     ALI_APP_PAY("APP", "APP支付"),
     ALI_FACE_PAY("FACEPAY", "刷脸付"),
 

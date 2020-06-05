@@ -19,6 +19,7 @@ import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePayResponse;
 import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
+import com.alipay.easysdk.payment.wap.models.AlipayTradeWapPayResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -62,6 +63,14 @@ public class AliPayChannelService implements BasePayChannelService {
                     AliPayPageResponse pageResponse = new AliPayPageResponse();
                     pageResponse.setBody(response.body);
                     thisCtx.setResponse(pageResponse);
+                    return thisCtx;
+                case ALI_WAP_PAY:
+                    AliPayPageRequest wapRequest = (AliPayPageRequest) thisCtx.getRequest();
+                    AlipayTradeWapPayResponse wapResponse = Factory.Payment.Wap(ctx.getChannelConfig().getAppId()).pay(wapRequest.getSubject(), wapRequest.getOutTradeNo(),
+                            wapRequest.getTotalAmount(), wapRequest.getReturnUrl(), wapRequest.getReturnUrl());
+                    AliPayPageResponse wapPayResponse = new AliPayPageResponse();
+                    wapPayResponse.setBody(wapResponse.body);
+                    thisCtx.setResponse(wapPayResponse);
                     return thisCtx;
                 case ALI_APP_PAY:
                     AliPayAppRequest appRequest = (AliPayAppRequest)thisCtx.getRequest();
