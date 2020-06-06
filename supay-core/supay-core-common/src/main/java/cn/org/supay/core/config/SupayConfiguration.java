@@ -7,6 +7,7 @@ package cn.org.supay.core.config;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.org.supay.core.channel.PayChannelService;
+import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
@@ -38,6 +39,26 @@ public class SupayConfiguration {
                 } catch (Exception e) {
                     e.printStackTrace();
                     log.error("初始化渠道服务异常：", e);
+                }
+            });
+        }
+    }
+
+    /**
+     * 初始化渠道异步通知处理器
+     */
+    public static void initNotifyHandler() {
+        Set<Class<?>> notifyHandlerSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", NotifyCallbackHandler.class);
+        if (ObjectUtil.isNotEmpty(notifyHandlerSet)) {
+            notifyHandlerSet.forEach(aClass -> {
+                try {
+                    if (!ClassUtil.isAbstract(aClass)) {
+                        NotifyCallbackHandler notifyHandler = (NotifyCallbackHandler) aClass.newInstance();
+                        SupayConfig.registerNotifyHandler(notifyHandler.getSupportType(), notifyHandler);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("初始化渠道异步通知处理器异常：", e);
                 }
             });
         }
