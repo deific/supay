@@ -4,6 +4,8 @@
  *******************************************************************************/
 package cn.org.supay.core.data;
 
+import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,15 @@ import java.io.Serializable;
 public interface Request {
 
     /**
+     * 转换为上下文
+     * @param appId
+     * @param isSandbox
+     * @return
+     */
+    default SupayContext<? extends Request, ? extends Response> toContext(String appId, boolean isSandbox) {
+        return SupayContext.buildContext(SupayConfig.getPayConfig(appId), this, isSandbox);
+    }
+    /**
      * 参数检查并签名
      * @param ctx
      * @return
@@ -31,4 +42,6 @@ public interface Request {
     default SupayContext<? extends Request, ? extends Response> checkAndSign(SupayContext<? extends Request, ? extends Response> ctx) {
         return ctx;
     }
+
+
 }

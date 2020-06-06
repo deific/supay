@@ -48,7 +48,7 @@ public class AlipayDemoController {
     // 初始化
     static {
         props = new Props("./config/my-ali-pay.conf");
-        // 初始化配置
+        // 初始化渠道参数配置
         channelConfig = SupayChannelConfig.builder()
                 .rootSecretKey(props.getStr("ali.publicKey"))
                 .appId(props.getStr("ali.appId")).appSecret(props.getStr("ali.appSecret")).appName("支付宝应用-支付")
@@ -72,20 +72,20 @@ public class AlipayDemoController {
     public HttpEntity<String> toPay(BigDecimal price) {
         //及时收款
         String orderCode = IdUtil.fastSimpleUUID();
+
         // 构建支付上下文参数
-        AliPayPageRequest request = AliPayPageRequest.builder()
+        SupayContext cxt = AliPayPageRequest.builder()
                 .outTradeNo(orderCode)
 //                .payType(SupayPayType.ALI_PAGE_PAY)
                 .payType(SupayPayType.ALI_WAP_PAY)
                 .subject("测试网页支付")
-                .totalAmount("1")
+                .totalAmount(price.toString())
                 .returnUrl("http://taobao.com")
-                .build();
+                .build()
+                .toContext(channelConfig.getAppId(), false);
 
-        // 构建微信支付上下文
-        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false);
         // 调用支付接口
-        cxt = (SupayContext) SupayCore.pay(cxt);
+        cxt = SupayCore.pay(cxt);
 
         String result = ((AliPayPageResponse)cxt.getResponse()).getBody();
 
