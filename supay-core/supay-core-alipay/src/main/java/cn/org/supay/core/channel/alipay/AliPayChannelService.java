@@ -4,23 +4,31 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay;
 
-import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.org.supay.core.channel.BasePayChannelService;
 import cn.org.supay.core.channel.alipay.data.*;
+import cn.org.supay.core.channel.alipay.notify.AliPayNotifyData;
 import cn.org.supay.core.channel.alipay.sdk.Factory;
+import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
+import cn.org.supay.core.channel.notify.NotifyData;
+import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.data.Request;
 import cn.org.supay.core.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
-import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
+import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePayResponse;
 import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
 import com.alipay.easysdk.payment.wap.models.AlipayTradeWapPayResponse;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <b>Application name：</b> AliPayChannelService.java <br>
@@ -87,6 +95,13 @@ public class AliPayChannelService implements BasePayChannelService {
                     AliPayFaceResponse facePayResponse = AliPayFaceResponse.build(faceResponse.toMap());
                     thisCtx.setResponse(facePayResponse);
                     return ctx;
+                case ALI_COMMON_PAY:
+                    AliPayCommonRequest commonRequest = (AliPayCommonRequest)thisCtx.getRequest();
+                    AlipayTradeCreateResponse commonResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId())
+                            .create(commonRequest.getSubject(), commonRequest.getOutTradeNo(), commonRequest.getTotalAmount(), commonRequest.getBuyerId());
+                    AliPayCommonResponse commonPayResponse = AliPayCommonResponse.build(commonResponse.toMap());
+                    thisCtx.setResponse(commonPayResponse);
+                    return ctx;
             }
         } catch (Exception e) {
             thisCtx.fail("调用阿里支付接口异常:" + e.getMessage());
@@ -135,24 +150,33 @@ public class AliPayChannelService implements BasePayChannelService {
         return thisCtx;
     }
 
+
     @Override
-    public SupayContext<? extends Request, ? extends Response> sendRedPackage(SupayContext<? extends Request, ? extends Response> ctx) {
-        // 检查并转换类型
-        SupayContext<AliPayRefundQueryRequest, AliPayRefundQueryResponse> thisCtx = checkAndConvertType(ctx,
-                AliPayRefundQueryRequest.class, AliPayRefundQueryResponse.class);
-        if (thisCtx.hasError()) {
-            return thisCtx;
-        }
-        AliPayRefundQueryRequest refundQueryRequest = thisCtx.getRequest();
+    public String asyncNotifyCallback(Map formParam, InputStream body) {
+        // 参数校验
+        String appId = (String) formParam.get("app_id");
         try {
-            AlipayTradeFastpayRefundQueryResponse queryResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).queryRefund(refundQueryRequest.getOutTradeNo(), refundQueryRequest.getOutRefundNo());
-            AliPayRefundQueryResponse response = new AliPayRefundQueryResponse();
-            BeanUtil.copyProperties(queryResponse, response);
-            thisCtx.setResponse(response);
+            boolean isOk = Factory.Payment.Common(appId).verifyNotify(formParam);
+            if (!isOk) {
+                return "验证失败";
+            }
         } catch (Exception e) {
-            log.error("调用阿里退款查询接口异常：", e);
-            thisCtx.fail("调用阿里退款查询接口异常:" + e.getMessage());
+            log.error("异步回调验证失败：", e);
+            return "验证异常";
         }
-        return thisCtx;
+
+        // 解析参数
+        AliPayNotifyData notifyData = new AliPayNotifyData() {
+            @Override
+            public Map getNotifyOriginData() {
+                return formParam;
+            }
+        };
+
+        NotifyCallbackHandler callbackHandler = SupayConfig.getNotifyHandler(getSupportType());
+        if (callbackHandler != null) {
+            return callbackHandler.handle(notifyData, this);
+        }
+        return "不支持该通知";
     }
 }

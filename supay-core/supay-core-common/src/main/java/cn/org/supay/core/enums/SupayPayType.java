@@ -25,7 +25,7 @@ public enum SupayPayType {
     ALI_WAP_PAY("WAP", "手机端网页支付"),
     ALI_APP_PAY("APP", "APP支付"),
     ALI_FACE_PAY("FACEPAY", "刷脸付"),
-
+    ALI_COMMON_PAY("COMMON", "统一收单交易支付接口"),
     ;
 
     /** 编码 */
