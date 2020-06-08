@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.org.supay.core.channel.BasePayChannelService;
 import cn.org.supay.core.channel.alipay.data.*;
@@ -17,6 +18,8 @@ import cn.org.supay.core.data.Request;
 import cn.org.supay.core.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
+import cn.org.supay.core.utils.BeanUtils;
+import com.alibaba.fastjson.JSON;
 import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
@@ -172,6 +175,9 @@ public class AliPayChannelService implements BasePayChannelService {
                 return formParam;
             }
         };
+
+        // 填充参数
+        BeanUtils.fillBeanWithMap(formParam, notifyData, true);
 
         NotifyCallbackHandler callbackHandler = SupayConfig.getNotifyHandler(getSupportType());
         if (callbackHandler != null) {
