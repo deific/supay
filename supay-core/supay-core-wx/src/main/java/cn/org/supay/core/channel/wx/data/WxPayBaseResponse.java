@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.data;
 
+import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.data.Request;
@@ -11,6 +12,7 @@ import cn.org.supay.core.data.Response;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.SignUtils;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import java.util.Map;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Slf4j
 @Data
 public class WxPayBaseResponse<T extends WxPayData> implements Response {
     /** 返回状态码 */
@@ -70,11 +73,24 @@ public class WxPayBaseResponse<T extends WxPayData> implements Response {
     /**
      * 校验返回结果签名
      */
+    public boolean checkSign(SupayChannelConfig channelConfig) {
+        //校验返回结果签名
+        Map<String, Object> map = BeanUtils.xmlBean2Map(this);
+        if (getSign() != null && !SignUtils.checkSignForMap(map, channelConfig.getMchSecretKey())) {
+            log.debug("校验结果签名失败，参数：{} {}", map, channelConfig.getMchSecretKey());
+            return false;
+        }
+        //校验结果是否成功
+        return true;
+    }
+
+    /**
+     * 校验返回结果签名
+     */
     @Override
     public SupayContext<Request, Response> checkResult(SupayContext ctx) {
         //校验返回结果签名
-        Map<String, Object> map = BeanUtils.xmlBean2Map(this);
-        if (getSign() != null && !SignUtils.checkSignForMap(map, ctx.getChannelConfig().getMchSecretKey())) {
+        if (!checkSign(ctx.getChannelConfig())) {
             ctx.fail("微信返回报文签名校验失败");
         }
 

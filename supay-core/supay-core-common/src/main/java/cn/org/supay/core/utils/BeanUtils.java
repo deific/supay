@@ -6,6 +6,7 @@ package cn.org.supay.core.utils;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.XmlUtil;
 import cn.org.supay.core.annotation.XmlField;
 
 import java.lang.reflect.Field;
@@ -63,6 +64,17 @@ public class BeanUtils extends BeanUtil {
         return result;
     }
 
+    /**
+     * xml字符串转换为bean对象
+     * @param xml
+     * @param targetClass
+     * @param <T>
+     * @return
+     */
+    public static <T> T xmlToBean(String xml, Class<T> targetClass) {
+        Map<String, Object> xmlMap = XmlUtil.xmlToMap(xml);
+        return map2XmlBean(xmlMap, targetClass);
+    }
     /**
      *
      * 将bean按照@XmlAlias标识的字符串内容生成以之为key的map对象

@@ -163,25 +163,25 @@ public class AliPayChannelService implements BasePayChannelService {
             if (!isOk) {
                 return "验证失败";
             }
+
+            // 解析参数
+            AliPayNotifyData notifyData = new AliPayNotifyData() {
+                @Override
+                public Map getNotifyOriginData() {
+                    return formParam;
+                }
+            };
+
+            // 填充参数
+            BeanUtils.fillBeanWithMap(formParam, notifyData, true);
+
+            NotifyCallbackHandler callbackHandler = SupayConfig.getNotifyHandler(getSupportType());
+            if (callbackHandler != null) {
+                return callbackHandler.handle(notifyData, this);
+            }
         } catch (Exception e) {
             log.error("异步回调验证失败：", e);
             return "验证异常";
-        }
-
-        // 解析参数
-        AliPayNotifyData notifyData = new AliPayNotifyData() {
-            @Override
-            public Map getNotifyOriginData() {
-                return formParam;
-            }
-        };
-
-        // 填充参数
-        BeanUtils.fillBeanWithMap(formParam, notifyData, true);
-
-        NotifyCallbackHandler callbackHandler = SupayConfig.getNotifyHandler(getSupportType());
-        if (callbackHandler != null) {
-            return callbackHandler.handle(notifyData, this);
         }
         return "不支持该通知";
     }
