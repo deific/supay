@@ -13,6 +13,8 @@ import cn.org.supay.core.enums.SupayChannelType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Map;
 
 /**

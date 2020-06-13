@@ -72,6 +72,7 @@ public class AliSupayCoreDemo {
         // 查询支付订单
         AliPayQueryRequest queryRequest = AliPayQueryRequest.builder().outTradeNo(orderCode).build();
         cxt = SupayContext.buildContext(channelConfig, queryRequest, false);
+        cxt.setLocalMock(true);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.queryPayOrder(cxt);
         log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), ((AliPayQueryResponse)cxt.getResponse()));
