@@ -6,8 +6,8 @@ package cn.org.supay.core.channel.filter;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;

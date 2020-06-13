@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Response;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePayResponse;
 import com.aliyun.tea.TeaModel;
 import lombok.Data;

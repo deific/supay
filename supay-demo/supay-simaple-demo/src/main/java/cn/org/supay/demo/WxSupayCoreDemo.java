@@ -18,7 +18,7 @@ import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
-import cn.org.supay.core.pay.SupayCore;
+import cn.org.supay.core.SupayCore;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;

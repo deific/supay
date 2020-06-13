@@ -7,26 +7,22 @@ package cn.org.supay.boot.demo.controller;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
-import cn.org.supay.core.channel.alipay.AliPayChannelService;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
-import cn.org.supay.core.pay.SupayCore;
+import cn.org.supay.core.SupayCore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * <b>Application name：</b> AlipayDemoController.java <br>

@@ -2,10 +2,10 @@
  * @(#)SupayConverter.java 2020年05月16日 11:00
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.converter;
+package cn.org.supay.core.channel.converter;
 
 import cn.hutool.json.JSONUtil;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Response;
 
 /**
  * <b>Application name：</b> SupayConverter.java <br>

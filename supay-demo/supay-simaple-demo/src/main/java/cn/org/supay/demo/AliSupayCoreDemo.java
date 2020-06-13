@@ -4,33 +4,19 @@
  *******************************************************************************/
 package cn.org.supay.demo;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
-import cn.org.supay.core.channel.PayChannelService;
-import cn.org.supay.core.channel.alipay.AliPayChannelService;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
-import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
-import cn.org.supay.core.channel.wx.WxPayApiType;
-import cn.org.supay.core.channel.wx.WxPayChannelService;
-import cn.org.supay.core.channel.wx.convert.WxPayConverter;
-import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
-import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderRequest;
-import cn.org.supay.core.channel.wx.filter.WxPayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
-import cn.org.supay.core.pay.SupayCore;
+import cn.org.supay.core.SupayCore;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
 
 /**
  * <b>Application name：</b> AliSupayCoreDemo.java <br>
@@ -77,7 +63,8 @@ public class AliSupayCoreDemo {
                 .build();
 
         // 构建微信支付上下文
-        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false);
+        SupayContext cxt = request.toContext(channelConfig.getAppId(), false);
+        cxt.setLocalMock(true);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
         log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));

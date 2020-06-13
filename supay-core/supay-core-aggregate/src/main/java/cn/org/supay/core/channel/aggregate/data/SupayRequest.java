@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
 
-import cn.org.supay.core.data.Request;
+import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;

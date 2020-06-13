@@ -4,8 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 

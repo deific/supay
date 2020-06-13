@@ -7,7 +7,7 @@ package cn.org.supay.core.config;
 import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
 import cn.org.supay.core.enums.SupayChannelType;
-import cn.org.supay.core.converter.SupayConverter;
+import cn.org.supay.core.channel.converter.SupayConverter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

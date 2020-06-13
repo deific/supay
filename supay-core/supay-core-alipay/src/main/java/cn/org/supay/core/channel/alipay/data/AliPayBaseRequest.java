@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
-import cn.org.supay.core.data.Request;
+import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 import lombok.NoArgsConstructor;

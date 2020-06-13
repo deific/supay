@@ -2,11 +2,9 @@
  * @(#)Response.java 2020年05月15日 22:40
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.data;
+package cn.org.supay.core.channel.data;
 
 import cn.org.supay.core.context.SupayContext;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * <b>Application name：</b> Response.java <br>

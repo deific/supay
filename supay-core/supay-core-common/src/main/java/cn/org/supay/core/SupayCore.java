@@ -2,15 +2,15 @@
  * @(#)SupayCore.java 2020年05月16日 08:49
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.pay;
+package cn.org.supay.core;
 
 import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.config.SupayConfiguration;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -94,8 +94,16 @@ public class SupayCore implements InvocationHandler {
         }
         // 开始时间
         ctx.setStartTime(ctx.getStartTime() == null?new Date():ctx.getStartTime());
+        SupayChannelType channelType = null;
+        PayChannelService payService = null;
+        // 是否使用本地模拟
+        if (ctx.isLocalMock()) {
+            channelType = SupayChannelType.MOCK;
+        } else {
+            channelType = channelConfig.getChannelType();
+        }
+        payService = SupayConfig.getPayService(channelType);
         try {
-            PayChannelService payService = SupayConfig.getPayService(channelConfig.getChannelType());
             if (payService != null) {
                 // 拦截器
                 ctx.nextBefore(ctx);
@@ -103,7 +111,7 @@ public class SupayCore implements InvocationHandler {
                 ctx.nextAfter(ctx);
                 return ctx;
             } else {
-                return ctx.fail("不支持该渠道支付");
+                return ctx.fail("不支持该渠道支付:" + channelType + "，请确认是否已引入该渠道实现依赖");
             }
         } catch (Exception e) {
             log.error("支付异常：", e);

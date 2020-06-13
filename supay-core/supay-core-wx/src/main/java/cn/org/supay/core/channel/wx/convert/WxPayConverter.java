@@ -5,8 +5,8 @@
 package cn.org.supay.core.channel.wx.convert;
 
 import cn.hutool.core.util.XmlUtil;
-import cn.org.supay.core.converter.SupayConverter;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.converter.SupayConverter;
+import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.utils.BeanUtils;
 
 /**

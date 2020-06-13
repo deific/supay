@@ -5,15 +5,14 @@
 package cn.org.supay.core.context;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
 import cn.org.supay.core.channel.filter.SupayFilter;
 import cn.org.supay.core.channel.filter.SupayFilterChain;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
-import cn.org.supay.core.converter.SupayConverter;
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.converter.SupayConverter;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -36,8 +35,7 @@ import java.util.List;
 public class SupayContext<R extends Request, S extends Response> extends SupayFilterChain {
     /** 交易流水号 */
     protected String tradeId;
-    /** 是否沙盒 */
-    protected boolean isSandBox;
+
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
     /** 开始时间 */
@@ -48,6 +46,10 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
     protected  R request;
     /** 支付结果 */
     protected S response;
+    /** 是否启动本地模拟支付 */
+    protected boolean isLocalMock;
+    /** 是否使用渠道沙盒环境 */
+    protected boolean isSandBox;
     /** 交易是否成功 */
     protected boolean success = true;
     /** 交易信息 */
@@ -59,6 +61,19 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
      * @return
      */
     public SupayContext success(String msg) {
+        this.setMsg(msg);
+        this.setSuccess(true);
+        return this;
+    }
+
+    /**
+     * 成功
+     * @param response
+     * @param msg
+     * @return
+     */
+    public SupayContext success(S response, String msg) {
+        this.response = response;
         this.setMsg(msg);
         this.setSuccess(true);
         return this;
@@ -132,6 +147,7 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
                 .isSandBox(isSandBox)
                 .request(request)
                 .filters(filterList)
+                .isLocalMock(false)
                 .build();
 
 

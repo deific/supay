@@ -5,10 +5,8 @@
 package cn.org.supay.core.channel.alipay.data;
 
 import cn.hutool.json.JSONUtil;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Response;
 import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
-import com.alipay.easysdk.payment.common.models.PresetPayToolInfo;
-import com.alipay.easysdk.payment.common.models.TradeFundBill;
 import com.aliyun.tea.TeaModel;
 import lombok.Data;
 

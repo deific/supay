@@ -9,8 +9,8 @@ import cn.org.supay.core.channel.filter.FilterChain;
 import cn.org.supay.core.channel.filter.SupayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import com.alipay.easysdk.kernel.BaseClient;
 import lombok.extern.slf4j.Slf4j;
 

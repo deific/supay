@@ -4,11 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate;
 
-import cn.org.supay.core.config.SupayConfig;
-import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.BasePayChannelService;
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 
 /**

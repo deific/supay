@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
 
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Response;
 import lombok.Data;
 
 /**

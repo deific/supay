@@ -17,15 +17,14 @@ import cn.org.supay.core.channel.wx.notify.WxPayNotifyData;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.data.Request;
-import cn.org.supay.core.data.Response;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

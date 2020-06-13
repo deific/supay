@@ -2,17 +2,10 @@
  * @(#)Request.java 2020年05月15日 22:44
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.data;
+package cn.org.supay.core.channel.data;
 
-import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serializable;
 
 /**
  * <b>Application name：</b> Request.java <br>
