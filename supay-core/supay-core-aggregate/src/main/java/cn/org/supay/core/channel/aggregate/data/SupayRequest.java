@@ -4,10 +4,13 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
 
+import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
 
 /**
  * <b>Application name：</b> SuPayRequest.java <br>
@@ -22,5 +25,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class SupayRequest implements Request {
-
+    /** 业务支付单号 */
+    private String bizPayNo;
+    /** 交易金额 */
+    private BigDecimal amount;
+    /** 异步回调通知url */
+    private String notifyUrl;
+    /** 同步返回url */
+    private String returnUrl;
 }

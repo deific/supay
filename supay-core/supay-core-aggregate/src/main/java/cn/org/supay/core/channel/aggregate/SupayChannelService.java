@@ -4,8 +4,22 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate;
 
+import cn.hutool.core.date.DateUtil;
+import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.BasePayChannelService;
+import cn.org.supay.core.channel.aggregate.data.SupayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayResponse;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
+import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderRequest;
+import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderResponse;
+import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.enums.SupayPayType;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <b>Application name：</b> SupayChannelService.java <br>
@@ -27,6 +41,31 @@ public class SupayChannelService implements BasePayChannelService {
 
     @Override
     public SupayChannelType getSupportType() {
+        return SupayChannelType.AGGREGATE_PAY;
+    }
+
+    @Override
+    public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
+        return SupayCore.getPayChannelService(ctx.getChannelConfig().getChannelType()).pay(ctx);
+    }
+
+    @Override
+    public SupayContext<? extends Request, ? extends Response> confirm(SupayContext<? extends Request, ? extends Response> ctx) {
+        return null;
+    }
+
+    @Override
+    public SupayContext<? extends Request, ? extends Response> refund(SupayContext<? extends Request, ? extends Response> ctx) {
+        return null;
+    }
+
+    @Override
+    public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
+        return null;
+    }
+
+    @Override
+    public SupayContext<? extends Request, ? extends Response> sendRedPackage(SupayContext<? extends Request, ? extends Response> ctx) {
         return null;
     }
 }

@@ -13,6 +13,7 @@ import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.channel.converter.SupayConverter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -35,7 +36,8 @@ import java.util.List;
 public class SupayContext<R extends Request, S extends Response> extends SupayFilterChain {
     /** 交易流水号 */
     protected String tradeId;
-
+    /** 支付类型 */
+    protected SupayPayType payType;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
     /** 开始时间 */
@@ -43,9 +45,9 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
     /** 结束时间 */
     private Date endTime;
     /** 支付请求参数 */
-    protected  R request;
+    protected R request;
     /** 支付结果 */
-    protected S response;
+    protected Response response;
     /** 是否启动本地模拟支付 */
     protected boolean isLocalMock;
     /** 是否使用渠道沙盒环境 */
@@ -54,6 +56,22 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
     protected boolean success = true;
     /** 交易信息 */
     protected String msg;
+
+    /**
+     * 设置请求
+     * @param r
+     */
+    public void setRequest(Request r) {
+        this.request = (R) r;
+    }
+
+    /**
+     * 设置响应
+     * @param r
+     */
+    public void setResponse(Response s) {
+        this.response = (S) s;
+    }
 
     /**
      * 成功

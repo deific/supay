@@ -16,6 +16,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.utils.BeanUtils;
+import cn.org.supay.core.utils.SupayUtils;
 import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
@@ -53,7 +54,7 @@ public class AliPayChannelService implements BasePayChannelService {
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
-        SupayContext<AliPayBaseRequest, Response> thisCtx = checkAndConvertType(ctx,
+        SupayContext<AliPayBaseRequest, Response> thisCtx = SupayUtils.checkAndConvertType(ctx,
                 AliPayBaseRequest.class, Response.class);
         if (thisCtx.hasError()) {
             return thisCtx;
@@ -111,7 +112,7 @@ public class AliPayChannelService implements BasePayChannelService {
     @Override
     public SupayContext<? extends Request, ? extends Response> refund(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
-        SupayContext<AliPayRefundRequest, AliPayRefundResponse> thisCtx = checkAndConvertType(ctx,
+        SupayContext<AliPayRefundRequest, AliPayRefundResponse> thisCtx = SupayUtils.checkAndConvertType(ctx,
                 AliPayRefundRequest.class, AliPayRefundResponse.class);
         if (thisCtx.hasError()) {
             return thisCtx;
@@ -131,7 +132,7 @@ public class AliPayChannelService implements BasePayChannelService {
     @Override
     public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
-        SupayContext<AliPayQueryRequest, AliPayQueryResponse> thisCtx = checkAndConvertType(ctx,
+        SupayContext<AliPayQueryRequest, AliPayQueryResponse> thisCtx = SupayUtils.checkAndConvertType(ctx,
                 AliPayQueryRequest.class, AliPayQueryResponse.class);
         if (thisCtx.hasError()) {
             return thisCtx;

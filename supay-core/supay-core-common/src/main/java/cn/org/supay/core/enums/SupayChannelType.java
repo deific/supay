@@ -19,6 +19,7 @@ public enum SupayChannelType {
     UNION_PAY("3", "银联"),
     QQ_PAY("4", "QQ支付"),
     JD_PAY("5", "京东支付"),
+    AGGREGATE_PAY("98", "聚合支付"),
     MOCK("99", "模拟支付")
  ;
 

@@ -30,22 +30,6 @@ public interface  BasePayChannelService extends PayChannelService {
     default String getReqUrl(SupayChannelConfig config, PayChannelApiType wxApiType, Boolean isSandBox) {
         return config.getApiBaseUrl().concat(wxApiType.getUrl());
     }
-    /**
-     * 检查上下文参数类型
-     * @param ctx 上下文
-     * @param r 请求参数类型
-     * @param s 响应参数类型
-     * @return 返回转换后的指定类型对象
-     */
-    default  <T> T checkAndConvertType(SupayContext<? extends Request, ? extends Response> ctx, Class<? extends Request> r, Class<? extends Response> s) {
-        // 判断类型是否匹配
-        boolean isMatch = (ctx.getRequest() != null && !ctx.getRequest().getClass().isInstance(r))
-                || (ctx.getResponse() != null && !ctx.getResponse().getClass().isInstance(s));
-        if (!isMatch) {
-            ctx.fail("请求参数类型或响应类型与当前渠道要求类型不匹配");
-        }
-        // 参数检查
-        return (T)ctx;
-    }
+
 
 }

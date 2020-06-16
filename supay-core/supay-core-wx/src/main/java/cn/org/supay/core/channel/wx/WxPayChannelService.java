@@ -22,6 +22,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.HttpUtils;
+import cn.org.supay.core.utils.SupayUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -84,7 +85,7 @@ public class WxPayChannelService implements BasePayChannelService {
                                                                         Class<? extends WxPayBaseResponse> responseClass,
                                                                         WxPayApiType apiType) {
         // 检查并转换类型
-        SupayContext<WxPayBaseRequest, WxPayBaseResponse> thisCtx = checkAndConvertType(ctx,
+        SupayContext<WxPayBaseRequest, WxPayBaseResponse> thisCtx = SupayUtils.checkAndConvertType(ctx,
                 requestClass, responseClass);
         if (ctx.hasError()) {
             return ctx;

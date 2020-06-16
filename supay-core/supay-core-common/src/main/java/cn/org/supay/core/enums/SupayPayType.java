@@ -14,22 +14,24 @@ package cn.org.supay.core.enums;
  * <b>@version：</b>V1.0.0 <br>
  */
 public enum SupayPayType {
-    WX_SCAN_PAY("NATIVE", "扫码支付"),
-    WX_MP_PAY("JSAPI", "公众号支付"),
-    WX_APP_PAY("APP", "APP支付"),
-    WX_MICRO_PAY("MICROPAY", "刷卡付"),
-    WX_H5_PAY("MWEB", "H5支付"),
-    WX_FACE_PAY("FACEPAY", "刷脸付"),
+    WX_SCAN_PAY("NATIVE", SupayChannelType.WECHAT,"扫码支付"),
+    WX_MP_PAY("JSAPI", SupayChannelType.WECHAT,"公众号支付"),
+    WX_APP_PAY("APP", SupayChannelType.WECHAT,"APP支付"),
+    WX_MICRO_PAY("MICROPAY", SupayChannelType.WECHAT,"刷卡付"),
+    WX_H5_PAY("MWEB", SupayChannelType.WECHAT,"H5支付"),
+    WX_FACE_PAY("FACEPAY", SupayChannelType.WECHAT,"刷脸付"),
 
-    ALI_PAGE_PAY("PAGE", "PC端网页支付"),
-    ALI_WAP_PAY("WAP", "手机端网页支付"),
-    ALI_APP_PAY("APP", "APP支付"),
-    ALI_FACE_PAY("FACEPAY", "刷脸付"),
-    ALI_COMMON_PAY("COMMON", "统一收单交易支付接口"),
+    ALI_PAGE_PAY("PAGE", SupayChannelType.ALIPAY,"PC端网页支付"),
+    ALI_WAP_PAY("WAP", SupayChannelType.ALIPAY,"手机端网页支付"),
+    ALI_APP_PAY("APP", SupayChannelType.ALIPAY,"APP支付"),
+    ALI_FACE_PAY("FACEPAY", SupayChannelType.ALIPAY,"刷脸付"),
+    ALI_COMMON_PAY("COMMON", SupayChannelType.ALIPAY,"统一收单交易支付接口"),
     ;
 
     /** 编码 */
     private String code;
+    /** 渠道 */
+    private SupayChannelType channel;
     /** 名称 */
     private String name;
 
@@ -38,8 +40,9 @@ public enum SupayPayType {
      * @param code
      * @param name
      */
-    SupayPayType(String code, String name) {
+    SupayPayType(String code, SupayChannelType channel, String name) {
         this.code = code;
+        this.channel = channel;
         this.name = name;
     }
 
@@ -49,6 +52,10 @@ public enum SupayPayType {
 
     public String getName() {
         return name;
+    }
+
+    public SupayChannelType getChannel() {
+        return channel;
     }
 
     /**

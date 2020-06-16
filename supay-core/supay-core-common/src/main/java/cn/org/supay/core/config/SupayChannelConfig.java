@@ -26,7 +26,6 @@ import java.util.List;
 public class SupayChannelConfig {
     /** 渠道类型 {@link SupayChannelType} */
     private SupayChannelType channelType;
-
     /** 第三方渠道appappId */
     private String appId;
     /** 第三方渠道app秘钥 */
