@@ -30,11 +30,6 @@ import java.util.Map;
 public class MockPayChannelService implements BasePayChannelService {
 
     @Override
-    public String getPayServiceName() {
-        return "mockPayChannelService";
-    }
-
-    @Override
     public SupayChannelType getSupportType() {
         return SupayChannelType.MOCK;
     }

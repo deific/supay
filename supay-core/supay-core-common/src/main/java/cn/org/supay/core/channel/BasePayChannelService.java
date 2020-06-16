@@ -31,5 +31,4 @@ public interface  BasePayChannelService extends PayChannelService {
         return config.getApiBaseUrl().concat(wxApiType.getUrl());
     }
 
-
 }

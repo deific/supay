@@ -4,13 +4,17 @@
  *******************************************************************************/
 package cn.org.supay.core.config;
 
+import cn.org.supay.core.SupayCore;
+import cn.org.supay.core.channel.PayChannelProxy;
 import cn.org.supay.core.channel.PayChannelService;
+import cn.org.supay.core.channel.filter.SupayFilter;
 import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.channel.converter.SupayConverter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,9 +55,16 @@ public class SupayConfig {
      * @param channelType 渠道类型
      * @param channelService 渠道服务实例
      */
-    public static void registerPayService(SupayChannelType channelType, PayChannelService channelService) {
+    public static void registerPayService(SupayChannelType channelType, PayChannelService channelService, SupayFilter... filters) {
         log.debug("[注册] 注册渠道支付服务：channelType={} channelService={}", channelType, channelService.getClass().getName());
-        channelServiceMap.put(channelType, channelService);
+        // 通过代理服务注册
+        PayChannelProxy proxy = new PayChannelProxy(channelService);
+        if (filters != null) {
+            proxy.addFilter(filters);
+        }
+
+        PayChannelService proxyService = (PayChannelService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), channelService.getClass().getInterfaces(), proxy);
+        channelServiceMap.put(channelType, proxyService);
     }
 
     /**

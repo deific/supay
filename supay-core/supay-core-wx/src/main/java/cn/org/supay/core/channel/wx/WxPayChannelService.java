@@ -13,6 +13,7 @@ import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
 import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
 import cn.org.supay.core.channel.wx.data.WxPayBaseResponse;
 import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
+import cn.org.supay.core.channel.wx.filter.WxPayFilter;
 import cn.org.supay.core.channel.wx.notify.WxPayNotifyData;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
@@ -41,13 +42,13 @@ import java.util.Map;
 public class WxPayChannelService implements BasePayChannelService {
 
     @Override
-    public String getPayServiceName() {
-        return "wxPayChannelService";
+    public SupayChannelType getSupportType() {
+        return SupayChannelType.WECHAT;
     }
 
     @Override
-    public SupayChannelType getSupportType() {
-        return SupayChannelType.WECHAT;
+    public void register() {
+        SupayConfig.registerPayService(getSupportType(), this, new WxPayFilter());
     }
     /**
      * 获取接口请求的 URL

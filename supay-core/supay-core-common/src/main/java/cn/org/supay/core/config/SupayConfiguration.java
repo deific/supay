@@ -34,7 +34,9 @@ public class SupayConfiguration {
                 try {
                     if (!ClassUtil.isAbstract(aClass)) {
                         PayChannelService channelService = (PayChannelService) aClass.newInstance();
-                       SupayConfig.registerPayService(channelService.getSupportType(), channelService);
+
+                        channelService.register();
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

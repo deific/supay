@@ -9,11 +9,14 @@ import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.BasePayChannelService;
 import cn.org.supay.core.channel.aggregate.data.SupayRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayResponse;
+import cn.org.supay.core.channel.aggregate.filter.AlipayAggregateFilter;
+import cn.org.supay.core.channel.aggregate.filter.WxAggregateFilter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
 import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderRequest;
 import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderResponse;
+import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
@@ -34,14 +37,15 @@ import java.util.Date;
  * <b>@version：</b>V1.0.0 <br>
  */
 public class SupayChannelService implements BasePayChannelService {
-    @Override
-    public String getPayServiceName() {
-        return "supayChannelService";
-    }
 
     @Override
     public SupayChannelType getSupportType() {
         return SupayChannelType.AGGREGATE_PAY;
+    }
+
+    @Override
+    public void register() {
+        SupayConfig.registerPayService(getSupportType(), this, new AlipayAggregateFilter(), new WxAggregateFilter(), new AlipayAggregateFilter());
     }
 
     @Override

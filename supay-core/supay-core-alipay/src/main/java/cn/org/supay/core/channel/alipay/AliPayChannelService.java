@@ -6,6 +6,7 @@ package cn.org.supay.core.channel.alipay;
 
 import cn.org.supay.core.channel.BasePayChannelService;
 import cn.org.supay.core.channel.alipay.data.*;
+import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.channel.alipay.notify.AliPayNotifyData;
 import cn.org.supay.core.channel.alipay.sdk.Factory;
 import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
@@ -42,13 +43,13 @@ import java.util.Map;
 public class AliPayChannelService implements BasePayChannelService {
 
     @Override
-    public String getPayServiceName() {
-        return "aliPayChannelService";
+    public SupayChannelType getSupportType() {
+        return SupayChannelType.ALIPAY;
     }
 
     @Override
-    public SupayChannelType getSupportType() {
-        return SupayChannelType.ALIPAY;
+    public void register() {
+        SupayConfig.registerPayService(getSupportType(), this, new AliPayFilter());
     }
 
     @Override

@@ -27,10 +27,11 @@ import java.util.Set;
  */
 public interface PayChannelService extends PayService {
     /**
-     * 获取服务名称
-     * @return
+     * 注册自己的渠道服务
      */
-    String getPayServiceName();
+    default void register() {
+        SupayConfig.registerPayService(getSupportType(), this);
+    }
 
     /**
      * 获取支持的渠道类型

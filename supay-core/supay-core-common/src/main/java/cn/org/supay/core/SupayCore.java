@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core;
 
+import cn.org.supay.core.channel.PayChannelProxy;
 import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayConfig;
@@ -31,45 +32,26 @@ import java.util.Map;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class SupayCore implements InvocationHandler {
-    /** 代理 */
-    private PayChannelService proxyService;
-
-    /** 动态代理map */
-    private static Map<SupayChannelType, PayChannelService> proxyMap = new HashMap<>();
+public class SupayCore {
 
     static {
         SupayConfiguration.initPayService();
     }
 
-    private SupayCore(PayChannelService proxyService) {
-        this.proxyService = proxyService;
-    }
     /**
      * 获取渠道支付服务
      * @param channelType
      * @return
      */
     public static PayChannelService getPayChannelService(SupayChannelType channelType) {
-        PayChannelService proxyService = proxyMap.get(channelType);
+        PayChannelService proxyService = SupayConfig.getPayService(channelType);
         if(proxyService == null) {
-            PayChannelService targetService = SupayConfig.getPayService(channelType);
-            if (targetService == null) {
-                targetService = new PayChannelService() {
-                    @Override
-                    public SupayChannelType getSupportType() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getPayServiceName() {
-                        return "NonePayChannelService";
-                    }
-                };
-            }
-            SupayCore proxy = new SupayCore(targetService);
-            proxyService = (PayChannelService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), targetService.getClass().getInterfaces(), proxy);
-            proxyMap.put(channelType, proxyService);
+            proxyService = new PayChannelService() {
+                @Override
+                public SupayChannelType getSupportType() {
+                    return null;
+                }
+            };
         }
         return proxyService;
     }
@@ -81,45 +63,14 @@ public class SupayCore implements InvocationHandler {
     public static PayChannelService getPayChannelService(SupayContext<? extends Request, ? extends Response> ctx) {
         ctx.setStartTime(new Date());
         SupayChannelConfig channelConfig = ctx.getChannelConfig();
-        SupayChannelType channelType = channelConfig == null?null:channelConfig.getChannelType();
-        return getPayChannelService(channelType);
-    }
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) {
-        SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>) args[0];
-        SupayChannelConfig channelConfig = ctx.getChannelConfig();
-        if (channelConfig == null) {
-            return ctx.fail("请配置支付渠道参数");
-        }
-        // 开始时间
-        ctx.setStartTime(ctx.getStartTime() == null?new Date():ctx.getStartTime());
-        SupayChannelType channelType = null;
-        PayChannelService payService = null;
-        // 是否使用本地模拟
+        // 如果启用本地模拟
+        SupayChannelType channelType = channelConfig.getChannelType();
         if (ctx.isLocalMock()) {
             channelType = SupayChannelType.MOCK;
-        } else {
-            channelType = channelConfig.getChannelType();
+            log.debug("[调用]启动了本地模拟，调用模拟渠道服务：{}", channelType);
         }
-        payService = SupayConfig.getPayService(channelType);
-        try {
-            if (payService != null) {
-                // 拦截器
-                ctx.nextBefore(ctx);
-                ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(payService, ctx);
-                ctx.nextAfter(ctx);
-                return ctx;
-            } else {
-                return ctx.fail("不支持该渠道支付:" + channelType + "，请确认是否已引入该渠道实现依赖");
-            }
-        } catch (Exception e) {
-            log.error("支付异常：", e);
-            return ctx.fail("支付异常：" + e.getMessage());
-        } finally {
-            ctx.setEndTime(new Date());
-            log.debug("[支付] 支付耗时：{} 结果：{}", ctx.duration(), ctx.getResponse());
-        }
+        return getPayChannelService(channelType);
     }
 
     /**

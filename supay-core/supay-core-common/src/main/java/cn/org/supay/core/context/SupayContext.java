@@ -33,13 +33,15 @@ import java.util.List;
 @Data
 @SuperBuilder
 @ToString(callSuper = true)
-public class SupayContext<R extends Request, S extends Response> extends SupayFilterChain {
+public class SupayContext<R extends Request, S extends Response> {
     /** 交易流水号 */
     protected String tradeId;
     /** 支付类型 */
     protected SupayPayType payType;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
+    /** 过滤器 */
+    protected List<SupayFilter> filters;
     /** 开始时间 */
     private Date startTime;
     /** 结束时间 */
@@ -155,16 +157,13 @@ public class SupayContext<R extends Request, S extends Response> extends SupayFi
      * @return
      */
     public static SupayContext buildContext(SupayChannelConfig channelConfig, Request request, boolean isSandBox, SupayFilter... filters) {
-        // 合并过滤器
-        List<SupayFilter> filterList = channelConfig.getFilterList();
-        filterList.addAll(ListUtil.toList(filters));
 
         SupayContext cxt = SupayContext.builder()
                 .tradeId(IdUtil.fastUUID())
                 .channelConfig(channelConfig)
                 .isSandBox(isSandBox)
                 .request(request)
-                .filters(filterList)
+                .filters(ListUtil.toList(filters))
                 .isLocalMock(false)
                 .build();
 
