@@ -2,7 +2,7 @@
  * @(#)SupayFilterChain.java 2020年05月18日 21:52
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.channel.filter;
+package cn.org.supay.core.filter;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.org.supay.core.context.SupayContext;

@@ -5,7 +5,7 @@
 package cn.org.supay.core.channel.mock;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.org.supay.core.channel.BasePayChannelService;
+import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
@@ -13,12 +13,10 @@ import cn.org.supay.core.enums.SupayChannelType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.Map;
 
 /**
- * <b>Application name：</b> MockPayChannelService.java <br>
+ * <b>Application name：</b> MockChannelPayService.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 codegarden.com/ 版权所有。<br>
  * <b>Company：</b> codegarden.com/ <br>
@@ -27,7 +25,7 @@ import java.util.Map;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class MockPayChannelService implements BasePayChannelService {
+public class MockChannelPayService implements BaseChannelPayService {
 
     @Override
     public SupayChannelType getSupportType() {

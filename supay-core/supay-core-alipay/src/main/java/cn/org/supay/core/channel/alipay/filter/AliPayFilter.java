@@ -5,8 +5,8 @@
 package cn.org.supay.core.channel.alipay.filter;
 
 import cn.org.supay.core.channel.alipay.sdk.Factory;
-import cn.org.supay.core.channel.filter.FilterChain;
-import cn.org.supay.core.channel.filter.SupayFilter;
+import cn.org.supay.core.filter.FilterChain;
+import cn.org.supay.core.filter.SupayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;

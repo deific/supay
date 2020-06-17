@@ -5,12 +5,9 @@
 package cn.org.supay.core.channel;
 
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.channel.data.Request;
-import cn.org.supay.core.channel.data.Response;
 
 /**
- * <b>Application name：</b> BasePayChannelService.java <br>
+ * <b>Application name：</b> BaseChannelPayService.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
@@ -18,7 +15,7 @@ import cn.org.supay.core.channel.data.Response;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public interface  BasePayChannelService extends PayChannelService {
+public interface BaseChannelPayService extends ChannelPayService {
 
     /**
      * 获取请求url地址
@@ -27,7 +24,7 @@ public interface  BasePayChannelService extends PayChannelService {
      * @param isSandBox
      * @return 返回渠道方请求地址
      */
-    default String getReqUrl(SupayChannelConfig config, PayChannelApiType wxApiType, Boolean isSandBox) {
+    default String getReqUrl(SupayChannelConfig config, ChannelApiType wxApiType, Boolean isSandBox) {
         return config.getApiBaseUrl().concat(wxApiType.getUrl());
     }
 

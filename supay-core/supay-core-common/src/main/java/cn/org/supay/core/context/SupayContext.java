@@ -4,12 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.context;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.org.supay.core.channel.filter.SupayFilter;
+import cn.org.supay.core.channel.converter.ChannelDataConverter;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
-import cn.org.supay.core.channel.converter.SupayConverter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayPayType;
@@ -18,7 +16,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * <b>Application name：</b> SupayContext.java <br>
@@ -120,7 +117,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public String toRequestStr() {
-        SupayConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        ChannelDataConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
         return converter.convert(this.getRequest());
     }
 
@@ -131,7 +128,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public Response parseResponseStr(String respStr, Class<? extends Response> targetClass) {
-        SupayConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        ChannelDataConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
         this.setResponse((S)converter.convert(respStr, targetClass));
         // 检查结果
         this.getResponse().checkResult(this);

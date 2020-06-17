@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core;
 
-import cn.org.supay.core.channel.PayChannelService;
+import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.config.SupayConfiguration;
@@ -37,7 +37,7 @@ public class SupayCore {
      * @param ctx
      * @return
      */
-    public static PayChannelService getPayChannelService(SupayContext<? extends Request, ? extends Response> ctx) {
+    public static ChannelPayService getPayChannelService(SupayContext<? extends Request, ? extends Response> ctx) {
         ctx.setStartTime(new Date());
         SupayChannelConfig channelConfig = ctx.getChannelConfig();
 
@@ -55,7 +55,7 @@ public class SupayCore {
      * @param channelType
      * @return
      */
-    public static PayChannelService getPayChannelService(SupayChannelType channelType) {
+    public static ChannelPayService getPayChannelService(SupayChannelType channelType) {
         return SupayCoreConfig.getPayChannelService(channelType);
     }
 
@@ -65,7 +65,7 @@ public class SupayCore {
      * @return 支付上下文
      */
     public static SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getPayChannelService(ctx);
+        ChannelPayService proxyService = getPayChannelService(ctx);
         return proxyService.pay(ctx);
     }
 
@@ -76,7 +76,7 @@ public class SupayCore {
      * @return 支付上下文
      */
     public static SupayContext<? extends Request, ? extends Response> queryPayOrder(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getPayChannelService(ctx);
+        ChannelPayService proxyService = getPayChannelService(ctx);
         return proxyService.queryTradeInfo(ctx);
     }
 
@@ -86,7 +86,7 @@ public class SupayCore {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> confirm(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getPayChannelService(ctx);
+        ChannelPayService proxyService = getPayChannelService(ctx);
         return proxyService.confirm(ctx);
     }
 
@@ -96,7 +96,7 @@ public class SupayCore {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> refund(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getPayChannelService(ctx);
+        ChannelPayService proxyService = getPayChannelService(ctx);
         return proxyService.refund(ctx);
     }
 
@@ -106,7 +106,7 @@ public class SupayCore {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getPayChannelService(ctx);
+        ChannelPayService proxyService = getPayChannelService(ctx);
         return proxyService.queryTradeInfo(ctx);
     }
 
@@ -116,7 +116,7 @@ public class SupayCore {
      * @return
      */
     public static SupayContext<? extends Request, ? extends Response> sendRedPackage(SupayContext<? extends Request, ? extends Response> ctx) {
-        PayChannelService proxyService = getPayChannelService(ctx);
+        ChannelPayService proxyService = getPayChannelService(ctx);
         return proxyService.sendRedPackage(ctx);
     }
 }

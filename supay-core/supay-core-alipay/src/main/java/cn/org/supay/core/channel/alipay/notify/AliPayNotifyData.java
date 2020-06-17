@@ -4,12 +4,11 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.notify;
 
-import cn.org.supay.core.channel.notify.NotifyData;
+import cn.org.supay.core.channel.notify.ChannelNotifyData;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * <b>Application name：</b> AliPayNotifyData.java <br>
@@ -20,7 +19,7 @@ import java.util.Map;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public class AliPayNotifyData implements NotifyData {
+public class AliPayNotifyData implements ChannelNotifyData {
     /**
      * 通知时间
       */

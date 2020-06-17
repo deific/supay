@@ -7,9 +7,9 @@ package cn.org.supay.core.channel.wx;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.org.supay.core.channel.BasePayChannelService;
-import cn.org.supay.core.channel.PayChannelApiType;
-import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
+import cn.org.supay.core.channel.BaseChannelPayService;
+import cn.org.supay.core.channel.ChannelApiType;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
 import cn.org.supay.core.channel.wx.data.WxPayBaseResponse;
 import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * <b>Application name：</b> WxPayChannelService.java <br>
+ * <b>Application name：</b> WxChannelPayService.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
@@ -39,7 +39,7 @@ import java.util.Map;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class WxPayChannelService implements BasePayChannelService {
+public class WxChannelPayService implements BaseChannelPayService {
 
     @Override
     public SupayChannelType getSupportType() {
@@ -50,27 +50,28 @@ public class WxPayChannelService implements BasePayChannelService {
     public void register() {
         SupayCoreConfig.registerPayService(getSupportType(), this, new WxPayFilter());
     }
+
     /**
      * 获取接口请求的 URL
      *
-     * @param wxApiType {@link WxPayApiType} 支付 API 接口枚举
+     * @param wxApiType {@link WxApiType} 支付 API 接口枚举
      * @return {@link String} 返回完整的接口请求URL
      */
     @Override
-    public String getReqUrl(SupayChannelConfig config, PayChannelApiType wxApiType, Boolean isSandBox) {
+    public String getReqUrl(SupayChannelConfig config, ChannelApiType wxApiType, Boolean isSandBox) {
         boolean useSandBox = config.isSandBox();
         useSandBox = useSandBox || isSandBox;
-        return config.getApiBaseUrl().concat(useSandBox? WxPayApiType.SAND_BOX_URL.getUrl() + wxApiType.getUrl():wxApiType.getUrl());
+        return config.getApiBaseUrl().concat(useSandBox? WxApiType.SAND_BOX_URL.getUrl() + wxApiType.getUrl():wxApiType.getUrl());
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
-        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiType.UNIFIED_ORDER);
+        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxApiType.UNIFIED_ORDER);
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
-        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxPayApiType.PAY_QUERY);
+        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxApiType.PAY_QUERY);
     }
 
     /**
@@ -84,7 +85,7 @@ public class WxPayChannelService implements BasePayChannelService {
     private SupayContext<? extends Request, ? extends Response> callApi(SupayContext<? extends Request, ? extends Response> ctx,
                                                                         Class<? extends WxPayBaseRequest> requestClass,
                                                                         Class<? extends WxPayBaseResponse> responseClass,
-                                                                        WxPayApiType apiType) {
+                                                                        WxApiType apiType) {
         // 检查并转换类型
         SupayContext<WxPayBaseRequest, WxPayBaseResponse> thisCtx = SupayUtils.checkAndConvertType(ctx,
                 requestClass, responseClass);
@@ -131,7 +132,7 @@ public class WxPayChannelService implements BasePayChannelService {
                 return "验签失败";
             }
 
-            NotifyCallbackHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
+            ChannelNotifyHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
             if (callbackHandler != null) {
                 return callbackHandler.handle(notifyData, this);
             }

@@ -6,7 +6,7 @@ package cn.org.supay.core.channel;
 
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
-import cn.org.supay.core.channel.filter.SupayFilterChain;
+import cn.org.supay.core.filter.SupayFilterChain;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +25,12 @@ import java.util.Date;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class PayChannelProxy extends SupayFilterChain implements InvocationHandler  {
+public class ChannelPayProxy extends SupayFilterChain implements InvocationHandler  {
 
     /** 代理 */
-    private PayChannelService proxyService;
+    private ChannelPayService proxyService;
 
-    public PayChannelProxy(PayChannelService proxyService) {
+    public ChannelPayProxy(ChannelPayService proxyService) {
         this.proxyService = proxyService;
     }
 

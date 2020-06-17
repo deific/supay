@@ -5,9 +5,12 @@
 package cn.org.supay.core.channel;
 
 import cn.hutool.core.io.IoUtil;
-import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
-import cn.org.supay.core.channel.notify.NotifyData;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.channel.notify.ChannelNotifyData;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayCoreConfig;
+import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 
 import java.io.InputStream;
@@ -23,7 +26,7 @@ import java.util.Map;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public interface PayChannelService extends PayService {
+public interface ChannelPayService {
     /**
      * 注册自己的渠道服务
      */
@@ -45,7 +48,7 @@ public interface PayChannelService extends PayService {
      */
     default String asyncNotifyCallback(Map formParam, InputStream body) {
         // 解析参数
-        NotifyData notifyData = new NotifyData() {
+        ChannelNotifyData notifyData = new ChannelNotifyData() {
             @Override
             public Map getNotifyOriginData() {
                 // 解析form数据
@@ -63,10 +66,55 @@ public interface PayChannelService extends PayService {
             }
         };
 
-        NotifyCallbackHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
+        ChannelNotifyHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
         if (callbackHandler != null) {
             return callbackHandler.handle(notifyData, this);
         }
         return "不支持该通知";
+    }
+
+    /**
+     * 直接支付
+     * @param ctx
+     * @return
+     */
+    default SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
+        return ctx.fail("不支持该方法");
+    }
+
+    /**
+     * 确认支付
+     * @param ctx
+     * @return
+     */
+    default SupayContext<? extends Request, ? extends Response> confirm(SupayContext<? extends Request, ? extends Response> ctx) {
+        return ctx.fail("不支持该方法");
+    }
+
+    /**
+     * 退款
+     * @param ctx
+     * @return
+     */
+    default SupayContext<? extends Request, ? extends Response> refund(SupayContext<? extends Request, ? extends Response> ctx) {
+        return ctx.fail("不支持该方法");
+    }
+
+    /**
+     * 批量查询交易信息
+     * @param ctx
+     * @return
+     */
+    default SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
+        return ctx.fail("不支持该方法");
+    }
+
+    /**
+     * 发送红包
+     * @param ctx
+     * @return
+     */
+    default SupayContext<? extends Request, ? extends Response> sendRedPackage(SupayContext<? extends Request, ? extends Response> ctx) {
+        return ctx.fail("不支持该方法");
     }
 }

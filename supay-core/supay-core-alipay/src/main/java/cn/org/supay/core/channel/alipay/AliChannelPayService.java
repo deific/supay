@@ -4,12 +4,12 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay;
 
-import cn.org.supay.core.channel.BasePayChannelService;
+import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.alipay.data.*;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.channel.alipay.notify.AliPayNotifyData;
 import cn.org.supay.core.channel.alipay.sdk.Factory;
-import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * <b>Application name：</b> AliPayChannelService.java <br>
+ * <b>Application name：</b> AliChannelPayService.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
@@ -40,7 +40,7 @@ import java.util.Map;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class AliPayChannelService implements BasePayChannelService {
+public class AliChannelPayService implements BaseChannelPayService {
 
     @Override
     public SupayChannelType getSupportType() {
@@ -172,7 +172,7 @@ public class AliPayChannelService implements BasePayChannelService {
             // 填充参数
             BeanUtils.fillBeanWithMap(formParam, notifyData, true);
 
-            NotifyCallbackHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
+            ChannelNotifyHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
             if (callbackHandler != null) {
                 return callbackHandler.handle(notifyData, this);
             }

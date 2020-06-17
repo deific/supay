@@ -5,13 +5,12 @@
 package cn.org.supay.core.config;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.org.supay.core.SupayCore;
-import cn.org.supay.core.channel.PayChannelProxy;
-import cn.org.supay.core.channel.PayChannelService;
-import cn.org.supay.core.channel.filter.SupayFilter;
-import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
+import cn.org.supay.core.channel.ChannelPayService;
+import cn.org.supay.core.channel.ChannelPayProxy;
+import cn.org.supay.core.channel.converter.ChannelDataConverter;
+import cn.org.supay.core.filter.SupayFilter;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.enums.SupayChannelType;
-import cn.org.supay.core.channel.converter.SupayConverter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,12 +36,12 @@ public class SupayCoreConfig {
     /** 支付渠道参数配置列表 */
     private static Map<String, SupayChannelConfig> channelConfigMap = new HashMap<>();
     /** 支付渠道服务配置列表 */
-    private static Map<SupayChannelType, PayChannelService> channelServiceMap = new HashMap<>();
+    private static Map<SupayChannelType, ChannelPayService> channelServiceMap = new HashMap<>();
     /** 支付渠道异步通知处理列表 */
-    private static Map<SupayChannelType, NotifyCallbackHandler> notifyHandlerMap = new HashMap<>();
+    private static Map<SupayChannelType, ChannelNotifyHandler> notifyHandlerMap = new HashMap<>();
     /** 参数转换器 */
-    private static Map<SupayChannelType, SupayConverter> converterMap = new HashMap() {{
-        put(null, new SupayConverter() {});
+    private static Map<SupayChannelType, ChannelDataConverter> converterMap = new HashMap() {{
+        put(null, new ChannelDataConverter() {});
     }};
     /** 全局过滤器 */
     private static List<SupayFilter> filters = new ArrayList<>();
@@ -60,10 +59,10 @@ public class SupayCoreConfig {
      * @param channelType 渠道类型
      * @param channelService 渠道服务实例
      */
-    public static void registerPayService(SupayChannelType channelType, PayChannelService channelService, SupayFilter... filters) {
+    public static void registerPayService(SupayChannelType channelType, ChannelPayService channelService, SupayFilter... filters) {
         log.debug("[注册] 注册渠道支付服务：channelType={} channelService={}", channelType, channelService.getClass().getName());
         // 通过代理服务注册
-        PayChannelProxy proxy = new PayChannelProxy(channelService);
+        ChannelPayProxy proxy = new ChannelPayProxy(channelService);
         // 如果全局filter存在
         if (!SupayCoreConfig.filters.isEmpty()) {
             proxy.addFilter(SupayCoreConfig.filters);
@@ -74,7 +73,7 @@ public class SupayCoreConfig {
             proxy.addFilter(filters);
         }
 
-        PayChannelService proxyService = (PayChannelService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), channelService.getClass().getInterfaces(), proxy);
+        ChannelPayService proxyService = (ChannelPayService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), channelService.getClass().getInterfaces(), proxy);
         channelServiceMap.put(channelType, proxyService);
     }
 
@@ -83,7 +82,7 @@ public class SupayCoreConfig {
      * @param channelType 渠道类型
      * @param notifyHandler 渠道服务实例
      */
-    public static void registerNotifyHandler(SupayChannelType channelType, NotifyCallbackHandler notifyHandler) {
+    public static void registerNotifyHandler(SupayChannelType channelType, ChannelNotifyHandler notifyHandler) {
         log.debug("[注册] 注册渠道异步通知处理器：channelType={} notifyHandler={}", channelType, notifyHandler.getClass().getName());
         notifyHandlerMap.put(channelType, notifyHandler);
     }
@@ -93,7 +92,7 @@ public class SupayCoreConfig {
      * @param channelType 渠道类型
      * @param converter 转换器
      */
-    public static void registerParamConverter(SupayChannelType channelType, SupayConverter converter) {
+    public static void registerParamConverter(SupayChannelType channelType, ChannelDataConverter converter) {
         log.debug("[注册] 注册渠道接口参数转换器：channelType={} converter={}", channelType, converter.getClass().getName());
         converterMap.put(channelType, converter);
     }
@@ -120,10 +119,10 @@ public class SupayCoreConfig {
      * @param channelType
      * @return
      */
-    public static PayChannelService getPayChannelService(SupayChannelType channelType) {
-        PayChannelService proxyService = channelServiceMap.get(channelType);
+    public static ChannelPayService getPayChannelService(SupayChannelType channelType) {
+        ChannelPayService proxyService = channelServiceMap.get(channelType);
         if(proxyService == null) {
-            proxyService = new PayChannelService() {
+            proxyService = new ChannelPayService() {
                 @Override
                 public SupayChannelType getSupportType() {
                     return null;
@@ -138,7 +137,7 @@ public class SupayCoreConfig {
      * @param channelType
      * @return
      */
-    public static NotifyCallbackHandler getNotifyHandler(SupayChannelType channelType) {
+    public static ChannelNotifyHandler getNotifyHandler(SupayChannelType channelType) {
         return notifyHandlerMap.get(channelType);
     }
 
@@ -147,8 +146,8 @@ public class SupayCoreConfig {
      * @param channelType
      * @return
      */
-    public static SupayConverter getApiParamConverter(SupayChannelType channelType) {
-        SupayConverter converter = converterMap.get(channelType);
+    public static ChannelDataConverter getApiParamConverter(SupayChannelType channelType) {
+        ChannelDataConverter converter = converterMap.get(channelType);
         converter = converter == null?converterMap.get(null):converter;
         return converter;
     }

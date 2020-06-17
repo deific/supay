@@ -6,8 +6,8 @@ package cn.org.supay.core.config;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.org.supay.core.channel.PayChannelService;
-import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
+import cn.org.supay.core.channel.ChannelPayService;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
@@ -33,12 +33,12 @@ public class SupayConfiguration {
      * 初始化
      */
     public static void initPayChannelService() {
-        Set<Class<?>> channelServiceSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", PayChannelService.class);
+        Set<Class<?>> channelServiceSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", ChannelPayService.class);
         if (ObjectUtil.isNotEmpty(channelServiceSet)) {
             channelServiceSet.forEach(aClass -> {
                 try {
                     if (!ClassUtil.isAbstract(aClass)) {
-                        PayChannelService channelService = (PayChannelService) aClass.newInstance();
+                        ChannelPayService channelService = (ChannelPayService) aClass.newInstance();
                         channelService.register();
                     }
                 } catch (Exception e) {
@@ -53,12 +53,12 @@ public class SupayConfiguration {
      * 初始化渠道异步通知处理器
      */
     public static void initNotifyHandler() {
-        Set<Class<?>> notifyHandlerSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", NotifyCallbackHandler.class);
+        Set<Class<?>> notifyHandlerSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", ChannelNotifyHandler.class);
         if (ObjectUtil.isNotEmpty(notifyHandlerSet)) {
             notifyHandlerSet.forEach(aClass -> {
                 try {
                     if (!ClassUtil.isAbstract(aClass)) {
-                        NotifyCallbackHandler notifyHandler = (NotifyCallbackHandler) aClass.newInstance();
+                        ChannelNotifyHandler notifyHandler = (ChannelNotifyHandler) aClass.newInstance();
                         SupayCoreConfig.registerNotifyHandler(notifyHandler.getSupportType(), notifyHandler);
                     }
                 } catch (Exception e) {

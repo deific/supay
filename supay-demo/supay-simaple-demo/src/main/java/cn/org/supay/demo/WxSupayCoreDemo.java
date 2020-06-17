@@ -7,12 +7,11 @@ package cn.org.supay.demo;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.setting.dialect.Props;
-import cn.org.supay.core.channel.PayChannelService;
-import cn.org.supay.core.channel.wx.WxPayApiType;
-import cn.org.supay.core.channel.wx.WxPayChannelService;
+import cn.org.supay.core.channel.ChannelPayService;
+import cn.org.supay.core.channel.wx.WxApiType;
+import cn.org.supay.core.channel.wx.WxChannelPayService;
 import cn.org.supay.core.channel.wx.convert.WxPayConverter;
 import cn.org.supay.core.channel.wx.data.*;
-import cn.org.supay.core.channel.wx.filter.WxPayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
@@ -45,14 +44,14 @@ public class WxSupayCoreDemo {
         channelConfig = SupayChannelConfig.builder()
                 .appId(props.getStr("wx.appId")).appSecret(props.getStr("wx.appSecret")).appName("微信公众号-支付")
                 .mchId(props.getStr("wx.mchId")).mchSecretKey(props.getStr("wx.mchSecretKey")).mchName("微信商户")
-                .channelType(SupayChannelType.WECHAT).apiBaseUrl(WxPayApiType.BASE_URL_CHINA1.getUrl())
+                .channelType(SupayChannelType.WECHAT).apiBaseUrl(WxApiType.BASE_URL_CHINA1.getUrl())
                 .build().register();
 
     }
 
     public static void main(String[] args) {
         // 注册渠道服务实现
-        SupayCoreConfig.registerPayService(SupayChannelType.WECHAT, new WxPayChannelService());
+        SupayCoreConfig.registerPayService(SupayChannelType.WECHAT, new WxChannelPayService());
         // 注册渠道参数转换器，默认为JSON格式
         SupayCoreConfig.registerParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
 
@@ -88,7 +87,7 @@ public class WxSupayCoreDemo {
         SupayContext qCtx = SupayContext.buildContext(channelConfig, qReq, false);
 //        SupayCore.queryPayOrder(qCtx);
         // 获取具体渠道支付服务
-        PayChannelService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
+        ChannelPayService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
         wxPayChannelService.queryTradeInfo(qCtx);
 
         log.debug("查询结果：{}", qCtx.getResponse());

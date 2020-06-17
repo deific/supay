@@ -5,7 +5,7 @@
 package cn.org.supay.core.channel.wx.notify;
 
 import cn.org.supay.core.annotation.XmlField;
-import cn.org.supay.core.channel.notify.NotifyData;
+import cn.org.supay.core.channel.notify.ChannelNotifyData;
 import cn.org.supay.core.channel.wx.data.WxPayBaseResponse;
 import cn.org.supay.core.channel.wx.data.WxPayCoupon;
 import lombok.Data;
@@ -22,7 +22,7 @@ import java.util.List;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class WxPayNotifyData extends WxPayBaseResponse implements NotifyData {
+public class WxPayNotifyData extends WxPayBaseResponse implements ChannelNotifyData {
     /**
      * <pre>
      * 设备号

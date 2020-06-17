@@ -5,12 +5,12 @@
 package cn.org.supay.core.channel.wx.convert;
 
 import cn.hutool.core.util.XmlUtil;
-import cn.org.supay.core.channel.converter.SupayConverter;
+import cn.org.supay.core.channel.converter.ChannelDataConverter;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.utils.BeanUtils;
 
 /**
- * <b>Application name：</b> WxPayChannelService.java <br>
+ * <b>Application name：</b> WxChannelPayService.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
@@ -18,7 +18,7 @@ import cn.org.supay.core.utils.BeanUtils;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public class WxPayConverter implements SupayConverter {
+public class WxPayConverter implements ChannelDataConverter {
 
     @Override
     public String convert(Object request) {

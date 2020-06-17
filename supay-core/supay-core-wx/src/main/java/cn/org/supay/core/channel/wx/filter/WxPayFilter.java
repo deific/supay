@@ -4,8 +4,8 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.filter;
 
-import cn.org.supay.core.channel.filter.FilterChain;
-import cn.org.supay.core.channel.filter.SupayFilter;
+import cn.org.supay.core.filter.FilterChain;
+import cn.org.supay.core.filter.SupayFilter;
 import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderResponse;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Response;
