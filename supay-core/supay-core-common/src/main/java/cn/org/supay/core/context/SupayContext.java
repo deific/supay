@@ -7,9 +7,8 @@ package cn.org.supay.core.context;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.org.supay.core.channel.filter.SupayFilter;
-import cn.org.supay.core.channel.filter.SupayFilterChain;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.channel.converter.SupayConverter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
@@ -40,8 +39,6 @@ public class SupayContext<R extends Request, S extends Response> {
     protected SupayPayType payType;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
-    /** 过滤器 */
-    protected List<SupayFilter> filters;
     /** 开始时间 */
     private Date startTime;
     /** 结束时间 */
@@ -69,7 +66,7 @@ public class SupayContext<R extends Request, S extends Response> {
 
     /**
      * 设置响应
-     * @param r
+     * @param s
      */
     public void setResponse(Response s) {
         this.response = (S) s;
@@ -123,7 +120,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public String toRequestStr() {
-        SupayConverter converter = SupayConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        SupayConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
         return converter.convert(this.getRequest());
     }
 
@@ -134,7 +131,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public Response parseResponseStr(String respStr, Class<? extends Response> targetClass) {
-        SupayConverter converter = SupayConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        SupayConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
         this.setResponse((S)converter.convert(respStr, targetClass));
         // 检查结果
         this.getResponse().checkResult(this);
@@ -156,17 +153,15 @@ public class SupayContext<R extends Request, S extends Response> {
      * @param isSandBox
      * @return
      */
-    public static SupayContext buildContext(SupayChannelConfig channelConfig, Request request, boolean isSandBox, SupayFilter... filters) {
+    public static SupayContext buildContext(SupayChannelConfig channelConfig, Request request, boolean isSandBox) {
 
         SupayContext cxt = SupayContext.builder()
                 .tradeId(IdUtil.fastUUID())
                 .channelConfig(channelConfig)
                 .isSandBox(isSandBox)
                 .request(request)
-                .filters(ListUtil.toList(filters))
                 .isLocalMock(false)
                 .build();
-
 
         return cxt;
     }

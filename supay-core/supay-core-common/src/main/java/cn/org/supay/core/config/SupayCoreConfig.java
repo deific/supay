@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.config;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.PayChannelProxy;
 import cn.org.supay.core.channel.PayChannelService;
@@ -15,7 +16,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +32,7 @@ import java.util.Map;
  */
 @Slf4j
 @Data
-public class SupayConfig {
+public class SupayCoreConfig {
 
     /** 支付渠道参数配置列表 */
     private static Map<String, SupayChannelConfig> channelConfigMap = new HashMap<>();
@@ -41,6 +44,8 @@ public class SupayConfig {
     private static Map<SupayChannelType, SupayConverter> converterMap = new HashMap() {{
         put(null, new SupayConverter() {});
     }};
+    /** 全局过滤器 */
+    private static List<SupayFilter> filters = new ArrayList<>();
 
     /**
      * 注册渠道支付参数
@@ -59,6 +64,12 @@ public class SupayConfig {
         log.debug("[注册] 注册渠道支付服务：channelType={} channelService={}", channelType, channelService.getClass().getName());
         // 通过代理服务注册
         PayChannelProxy proxy = new PayChannelProxy(channelService);
+        // 如果全局filter存在
+        if (!SupayCoreConfig.filters.isEmpty()) {
+            proxy.addFilter(SupayCoreConfig.filters);
+        }
+
+        // 渠道过滤器
         if (filters != null) {
             proxy.addFilter(filters);
         }
@@ -86,12 +97,21 @@ public class SupayConfig {
         log.debug("[注册] 注册渠道接口参数转换器：channelType={} converter={}", channelType, converter.getClass().getName());
         converterMap.put(channelType, converter);
     }
+
+    /**
+     * 注册全局filter,对所有渠道服务起作用
+     * @param filter
+     */
+    public static void registerFilter(SupayFilter... filter) {
+        filters.addAll(ListUtil.toList(filter));
+    }
+
     /**
      * 获取支付参数
      * @param appId appId
      * @return 支付参数对象
      */
-    public static SupayChannelConfig getPayConfig(String appId) {
+    public static SupayChannelConfig getChannelConfig(String appId) {
         return channelConfigMap.get(appId);
     }
 
@@ -100,8 +120,17 @@ public class SupayConfig {
      * @param channelType
      * @return
      */
-    public static PayChannelService getPayService(SupayChannelType channelType) {
-        return channelServiceMap.get(channelType);
+    public static PayChannelService getPayChannelService(SupayChannelType channelType) {
+        PayChannelService proxyService = channelServiceMap.get(channelType);
+        if(proxyService == null) {
+            proxyService = new PayChannelService() {
+                @Override
+                public SupayChannelType getSupportType() {
+                    return null;
+                }
+            };
+        }
+        return proxyService;
     }
 
     /**

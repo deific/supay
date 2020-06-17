@@ -8,9 +8,7 @@ import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.channel.filter.SupayFilterChain;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayConfig;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.enums.SupayChannelType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -43,6 +41,8 @@ public class PayChannelProxy extends SupayFilterChain implements InvocationHandl
         if (channelConfig == null) {
             return ctx.fail("请配置支付渠道参数");
         }
+        // 如果本次请求有追加过滤器
+
         // 开始时间
         ctx.setStartTime(ctx.getStartTime() == null?new Date():ctx.getStartTime());
 

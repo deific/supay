@@ -4,25 +4,15 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate;
 
-import cn.hutool.core.date.DateUtil;
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.BasePayChannelService;
-import cn.org.supay.core.channel.aggregate.data.SupayRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayResponse;
 import cn.org.supay.core.channel.aggregate.filter.AlipayAggregateFilter;
 import cn.org.supay.core.channel.aggregate.filter.WxAggregateFilter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
-import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
-import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderRequest;
-import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderResponse;
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
-import cn.org.supay.core.enums.SupayPayType;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * <b>Application name：</b> SupayChannelService.java <br>
@@ -45,7 +35,7 @@ public class SupayChannelService implements BasePayChannelService {
 
     @Override
     public void register() {
-        SupayConfig.registerPayService(getSupportType(), this, new AlipayAggregateFilter(), new WxAggregateFilter(), new AlipayAggregateFilter());
+        SupayCoreConfig.registerPayService(getSupportType(), this, new AlipayAggregateFilter(), new WxAggregateFilter(), new AlipayAggregateFilter());
     }
 
     @Override

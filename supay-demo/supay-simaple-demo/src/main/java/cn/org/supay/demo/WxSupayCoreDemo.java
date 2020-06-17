@@ -14,7 +14,7 @@ import cn.org.supay.core.channel.wx.convert.WxPayConverter;
 import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.channel.wx.filter.WxPayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
@@ -52,11 +52,9 @@ public class WxSupayCoreDemo {
 
     public static void main(String[] args) {
         // 注册渠道服务实现
-        SupayConfig.registerPayService(SupayChannelType.WECHAT, new WxPayChannelService());
+        SupayCoreConfig.registerPayService(SupayChannelType.WECHAT, new WxPayChannelService());
         // 注册渠道参数转换器，默认为JSON格式
-        SupayConfig.registerParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
-        // 注册调用过滤器，非必须
-        WxPayFilter wxPayFilter = new WxPayFilter();
+        SupayCoreConfig.registerParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
 
         String orderCode = IdUtil.fastSimpleUUID();
         // 微信支付
@@ -77,8 +75,10 @@ public class WxSupayCoreDemo {
                 .nonceStr(String.valueOf(System.currentTimeMillis()))
                 .build();
 
+        // 自定义filter
+
         // 构建微信支付上下文
-        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false, wxPayFilter);
+        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
         log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), cxt.getResponse());

@@ -16,7 +16,7 @@ import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
 import cn.org.supay.core.channel.wx.filter.WxPayFilter;
 import cn.org.supay.core.channel.wx.notify.WxPayNotifyData;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
@@ -48,7 +48,7 @@ public class WxPayChannelService implements BasePayChannelService {
 
     @Override
     public void register() {
-        SupayConfig.registerPayService(getSupportType(), this, new WxPayFilter());
+        SupayCoreConfig.registerPayService(getSupportType(), this, new WxPayFilter());
     }
     /**
      * 获取接口请求的 URL
@@ -126,12 +126,12 @@ public class WxPayChannelService implements BasePayChannelService {
                 notifyData = BeanUtils.xmlToBean(bodyStr, WxPayNotifyData.class);
             }
             // 校验
-            if (notifyData != null && !notifyData.checkSign(SupayConfig.getPayConfig(notifyData.getAppid()))) {
+            if (notifyData != null && !notifyData.checkSign(SupayCoreConfig.getChannelConfig(notifyData.getAppid()))) {
                 log.error("异步回调验签失败：{}", bodyStr);
                 return "验签失败";
             }
 
-            NotifyCallbackHandler callbackHandler = SupayConfig.getNotifyHandler(getSupportType());
+            NotifyCallbackHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
             if (callbackHandler != null) {
                 return callbackHandler.handle(notifyData, this);
             }

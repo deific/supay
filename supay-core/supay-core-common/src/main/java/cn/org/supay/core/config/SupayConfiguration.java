@@ -24,19 +24,22 @@ import java.util.Set;
 @Slf4j
 public class SupayConfiguration {
 
+    public static void init() {
+        initPayChannelService();
+        initNotifyHandler();
+    }
+
     /**
      * 初始化
      */
-    public static void initPayService() {
+    public static void initPayChannelService() {
         Set<Class<?>> channelServiceSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", PayChannelService.class);
         if (ObjectUtil.isNotEmpty(channelServiceSet)) {
             channelServiceSet.forEach(aClass -> {
                 try {
                     if (!ClassUtil.isAbstract(aClass)) {
                         PayChannelService channelService = (PayChannelService) aClass.newInstance();
-
                         channelService.register();
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -56,7 +59,7 @@ public class SupayConfiguration {
                 try {
                     if (!ClassUtil.isAbstract(aClass)) {
                         NotifyCallbackHandler notifyHandler = (NotifyCallbackHandler) aClass.newInstance();
-                        SupayConfig.registerNotifyHandler(notifyHandler.getSupportType(), notifyHandler);
+                        SupayCoreConfig.registerNotifyHandler(notifyHandler.getSupportType(), notifyHandler);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

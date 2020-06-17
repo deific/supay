@@ -4,13 +4,9 @@
  *******************************************************************************/
 package cn.org.supay.core.config;
 
-import cn.org.supay.core.channel.filter.SupayFilter;
 import cn.org.supay.core.enums.SupayChannelType;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <b>Application name：</b> SupayChannelConfig.java <br>
@@ -66,7 +62,7 @@ public class SupayChannelConfig {
      * 注册渠道参数配置
      */
     public SupayChannelConfig register() {
-        SupayConfig.registerPayConfig(appId, this);
+        SupayCoreConfig.registerPayConfig(appId, this);
         return this;
     }
 }

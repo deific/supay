@@ -92,4 +92,18 @@ public class SupayFilterChain implements FilterChain {
         return this;
     }
 
+    /**
+     * 添加过滤器
+     * @param filters
+     * @return 过滤器链
+     */
+    public SupayFilterChain addFilter(List<SupayFilter> filters) {
+        if (filters == null) {
+            filters = new ArrayList<>();
+        }
+        if (filters != null && !filters.isEmpty()) {
+            filters.addAll(ListUtil.toList(filters));
+        }
+        return this;
+    }
 }

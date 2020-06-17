@@ -7,14 +7,12 @@ package cn.org.supay.core.channel;
 import cn.hutool.core.io.IoUtil;
 import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
 import cn.org.supay.core.channel.notify.NotifyData;
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.enums.SupayChannelType;
 
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * <b>Application name：</b> ChannelPayService.java <br>
@@ -30,7 +28,7 @@ public interface PayChannelService extends PayService {
      * 注册自己的渠道服务
      */
     default void register() {
-        SupayConfig.registerPayService(getSupportType(), this);
+        SupayCoreConfig.registerPayService(getSupportType(), this);
     }
 
     /**
@@ -65,7 +63,7 @@ public interface PayChannelService extends PayService {
             }
         };
 
-        NotifyCallbackHandler callbackHandler = SupayConfig.getNotifyHandler(getSupportType());
+        NotifyCallbackHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
         if (callbackHandler != null) {
             return callbackHandler.handle(notifyData, this);
         }

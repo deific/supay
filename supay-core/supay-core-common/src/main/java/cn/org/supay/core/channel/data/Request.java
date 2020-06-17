@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.data;
 
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 
 /**
@@ -25,7 +25,7 @@ public interface Request {
      * @return
      */
     default SupayContext<? extends Request, ? extends Response> toContext(String appId, boolean isSandbox) {
-        return SupayContext.buildContext(SupayConfig.getPayConfig(appId), this, isSandbox);
+        return SupayContext.buildContext(SupayCoreConfig.getChannelConfig(appId), this, isSandbox);
     }
     /**
      * 参数检查并签名

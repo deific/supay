@@ -4,10 +4,9 @@
  *******************************************************************************/
 package cn.org.supay.core;
 
-import cn.org.supay.core.channel.PayChannelProxy;
 import cn.org.supay.core.channel.PayChannelService;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.config.SupayConfiguration;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
@@ -15,12 +14,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <b>Application name：</b> SupayCore.java <br>
@@ -35,26 +29,9 @@ import java.util.Map;
 public class SupayCore {
 
     static {
-        SupayConfiguration.initPayService();
+        SupayConfiguration.init();
     }
 
-    /**
-     * 获取渠道支付服务
-     * @param channelType
-     * @return
-     */
-    public static PayChannelService getPayChannelService(SupayChannelType channelType) {
-        PayChannelService proxyService = SupayConfig.getPayService(channelType);
-        if(proxyService == null) {
-            proxyService = new PayChannelService() {
-                @Override
-                public SupayChannelType getSupportType() {
-                    return null;
-                }
-            };
-        }
-        return proxyService;
-    }
     /**
      * 根据上下文获取渠道支付服务
      * @param ctx
@@ -70,7 +47,16 @@ public class SupayCore {
             channelType = SupayChannelType.MOCK;
             log.debug("[调用]启动了本地模拟，调用模拟渠道服务：{}", channelType);
         }
-        return getPayChannelService(channelType);
+        return SupayCoreConfig.getPayChannelService(channelType);
+    }
+
+    /**
+     * 根据上下文获取渠道支付服务
+     * @param channelType
+     * @return
+     */
+    public static PayChannelService getPayChannelService(SupayChannelType channelType) {
+        return SupayCoreConfig.getPayChannelService(channelType);
     }
 
     /**

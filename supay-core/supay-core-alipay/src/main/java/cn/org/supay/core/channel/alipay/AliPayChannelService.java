@@ -10,7 +10,7 @@ import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.channel.alipay.notify.AliPayNotifyData;
 import cn.org.supay.core.channel.alipay.sdk.Factory;
 import cn.org.supay.core.channel.notify.NotifyCallbackHandler;
-import cn.org.supay.core.config.SupayConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
@@ -49,7 +49,7 @@ public class AliPayChannelService implements BasePayChannelService {
 
     @Override
     public void register() {
-        SupayConfig.registerPayService(getSupportType(), this, new AliPayFilter());
+        SupayCoreConfig.registerPayService(getSupportType(), this, new AliPayFilter());
     }
 
     @Override
@@ -172,7 +172,7 @@ public class AliPayChannelService implements BasePayChannelService {
             // 填充参数
             BeanUtils.fillBeanWithMap(formParam, notifyData, true);
 
-            NotifyCallbackHandler callbackHandler = SupayConfig.getNotifyHandler(getSupportType());
+            NotifyCallbackHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
             if (callbackHandler != null) {
                 return callbackHandler.handle(notifyData, this);
             }
