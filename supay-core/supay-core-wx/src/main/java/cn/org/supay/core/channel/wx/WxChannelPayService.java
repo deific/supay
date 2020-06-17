@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.ChannelApiType;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
+import cn.org.supay.core.channel.wx.convert.WxPayConverter;
 import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
 import cn.org.supay.core.channel.wx.data.WxPayBaseResponse;
 import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
@@ -48,6 +49,8 @@ public class WxChannelPayService implements BaseChannelPayService {
 
     @Override
     public void register() {
+        // 注册渠道参数转换器，默认为JSON格式
+        SupayCoreConfig.registerParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
         SupayCoreConfig.registerPayService(getSupportType(), this, new WxPayFilter());
     }
 

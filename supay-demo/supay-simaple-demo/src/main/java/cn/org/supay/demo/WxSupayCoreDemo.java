@@ -50,17 +50,13 @@ public class WxSupayCoreDemo {
     }
 
     public static void main(String[] args) {
-        // 注册渠道服务实现
-        SupayCoreConfig.registerPayService(SupayChannelType.WECHAT, new WxChannelPayService());
-        // 注册渠道参数转换器，默认为JSON格式
-        SupayCoreConfig.registerParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
+
 
         String orderCode = IdUtil.fastSimpleUUID();
         // 微信支付
 
         // 构建支付上下文
-        // 构建支付上下文参数
-        WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.builder()
+        SupayContext cxt = WxPayUnifiedOrderRequest.builder()
                 .body("测试微信支付订单")
                 .outTradeNo(orderCode)
                 .productId("12")
@@ -72,19 +68,20 @@ public class WxSupayCoreDemo {
                 .openid(props.getStr("wx.openId"))
                 .spbillCreateIp("127.0.0.1")
                 .nonceStr(String.valueOf(System.currentTimeMillis()))
-                .build();
+                .build().toContext(channelConfig.getAppId(), false);
 
-        // 自定义filter
-
-        // 构建微信支付上下文
-        SupayContext cxt = SupayContext.buildContext(channelConfig, request, false);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
+        if (!cxt.hasError()) {
+            cxt.getResponse();
+        }
         log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), cxt.getResponse());
 
         // 查询支付订单
         WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(orderCode).build();
         SupayContext qCtx = SupayContext.buildContext(channelConfig, qReq, false);
+
+
 //        SupayCore.queryPayOrder(qCtx);
         // 获取具体渠道支付服务
         ChannelPayService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);

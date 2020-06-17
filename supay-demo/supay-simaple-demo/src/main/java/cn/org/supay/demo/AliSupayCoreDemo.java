@@ -52,21 +52,21 @@ public class AliSupayCoreDemo {
         String orderCode = IdUtil.fastSimpleUUID();
 
         // 构建支付上下文
-        // 构建支付上下文参数
-        AliPayPageRequest request = AliPayPageRequest.builder()
+        SupayContext cxt = AliPayPageRequest.builder()
                 .outTradeNo(orderCode)
                 .payType(SupayPayType.ALI_PAGE_PAY)
                 .subject("测试网页支付")
                 .totalAmount("1")
                 .returnUrl("http://taobao.com")
-                .build();
+                .build().toContext(channelConfig.getAppId(), false);
 
-        // 构建微信支付上下文
-        SupayContext cxt = request.toContext(channelConfig.getAppId(), false);
+        // 本地模拟支付
         cxt.setLocalMock(true);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
+
+        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(),
+                cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
 
         // 查询支付订单
         AliPayQueryRequest queryRequest = AliPayQueryRequest.builder().outTradeNo(orderCode).build();

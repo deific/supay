@@ -6,7 +6,7 @@
 
 ## 特性
 ```java
-1. 极少依赖,轻量级可扩展的工具包（SDK)，可嵌入任何系统
+1. 极少依赖,轻量级可扩展的工具包SDK，可嵌入任何系统
 2. 统一支付入口,简化调用,只使用SupayCore类即可
 3. 高性能异步线程处理请求和异步通知
 4. 支持多商户多应用
@@ -22,7 +22,7 @@
     ``` 
 - 参数要求不一样，传输格式不一样
     ```java
-        例如:同样一笔支付请求，微信和支付的支付参数要求不一样,简单点的可以几个参数,复杂的几十个参数.微信用xml传输，支付宝用json等
+        例如:同样一笔支付请求,微信和支付的支付参数要求不一样,简单点的可以几个参数,复杂的几十个参数.微信用xml传输,支付宝用json等
     ``` 
 - 接口交互方式不一样
     ```java
@@ -41,13 +41,31 @@
 
 ## 示例
 ```java
-    // 初始化渠道配置
+    String orderCode = IdUtil.fastSimpleUUID();
     
-
+    // 阿里支付调用
 
     // 构建支付上下文
-    // 构建支付上下文参数
-    WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.builder()
+    SupayContext cxt = AliPayPageRequest.builder()
+            .outTradeNo(orderCode)
+            .payType(SupayPayType.ALI_PAGE_PAY)
+            .subject("测试网页支付")
+            .totalAmount("1")
+            .returnUrl("http://taobao.com")
+            .build().toContext(channelConfig.getAppId(), false);
+
+    // 本地模拟支付
+    cxt.setLocalMock(true);
+    // 调用支付接口
+    cxt = (SupayContext) SupayCore.pay(cxt);
+    
+    log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(),
+            cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
+
+
+    // 微信支付调用
+    // 构建支付上下文
+    SupayContext cxt = WxPayUnifiedOrderRequest.builder()
             .body("测试微信支付订单")
             .outTradeNo(orderCode)
             .productId("12")
@@ -59,45 +77,27 @@
             .openid(props.getStr("wx.openId"))
             .spbillCreateIp("127.0.0.1")
             .nonceStr(String.valueOf(System.currentTimeMillis()))
-            .build();
+            .build().toContext(channelConfig.getAppId(), false);
 
-    // 构建微信支付上下文
-    SupayContext cxt = SupayContext.buildContext(channelConfig, request, false, wxPayFilter);
     // 调用支付接口
     cxt = (SupayContext) SupayCore.pay(cxt);
+    if (!cxt.hasError()) {
+        cxt.getResponse();
+    }
     log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), cxt.getResponse());
 
     // 查询支付订单
     WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(orderCode).build();
     SupayContext qCtx = SupayContext.buildContext(channelConfig, qReq, false);
+
+
 //        SupayCore.queryPayOrder(qCtx);
     // 获取具体渠道支付服务
-    PayChannelService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
+    ChannelPayService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
     wxPayChannelService.queryTradeInfo(qCtx);
 
-
+    log.debug("查询结果：{}", qCtx.getResponse());
 ```
 
 ## 统一支付入口SupayCore
 抽象各个第三方渠道支付接口和调用过程，统一支付SupayCore提供入口，对于不同的第三方渠道支付，SupayCore的方法入参和返回值不同。并且调用过程中增加了过滤器设计，可以灵活扩展各渠道调用过程。
-```java
-    
-    // 构建微信支付上下文
-    SupayContext cxt = SupayContext.buildContext(channelConfig, request, false, wxPayFilter);
-    // 调用支付接口
-    cxt = (SupayContext) SupayCore.pay(cxt);
-    // 支付结果
-    cxt.getResponse()
-
-    // 查询支付订单
-    SupayContext qCtx = SupayContext.buildContext(。。。);
-    // 查询订单
-    qCtx = SupayCore.queryPayOrder(qCtx);
-
-
-    // 切换为具体的渠道服务
-   PayChannelService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
-   wxPayChannelService.queryTradeInfo(qCtx);
-
-
-```
