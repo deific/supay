@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.filter;
 
-import cn.org.supay.core.channel.aggregate.data.SupayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
@@ -27,17 +27,25 @@ import lombok.extern.slf4j.Slf4j;
 public class AlipayAggregateFilter implements SupayFilter {
     @Override
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-
         SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
-        if (SupayChannelType.WECHAT.equals(targetChannel)) {
-            SupayRequest request = (SupayRequest) ctx.getRequest();
+        if (!SupayChannelType.ALIPAY.equals(targetChannel)) {
+            return chain.nextBefore(ctx);
+        }
+
+        Request request = ctx.getRequest();
+
+        // 转换方法参数
+        // 支付方法
+        if (request instanceof SupayPayRequest) {
+            SupayPayRequest payRequest = (SupayPayRequest) request;
             AliPayPageRequest pageRequest = AliPayPageRequest.builder()
-                    .outTradeNo(request.getBizPayNo())
-                    .subject(request.getBizPayNo())
-                    .totalAmount(request.getAmount().toString())
-                    .returnUrl(request.getReturnUrl()).build();
+                    .outTradeNo(payRequest.getBizPayNo())
+                    .subject(payRequest.getBizPayNo())
+                    .totalAmount(payRequest.getAmount().toString())
+                    .returnUrl(payRequest.getReturnUrl()).build();
             ctx.setRequest(pageRequest);
         }
+
         return chain.nextBefore(ctx);
     }
 

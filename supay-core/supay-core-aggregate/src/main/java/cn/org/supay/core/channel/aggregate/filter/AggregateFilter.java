@@ -4,7 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.filter;
 
-import cn.org.supay.core.channel.aggregate.data.SupayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayResponse;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
@@ -28,7 +28,7 @@ public class AggregateFilter implements SupayFilter {
     @Override
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
 
-        SupayContext<SupayRequest, SupayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayRequest.class, SupayResponse.class);
+        SupayContext<SupayPayRequest, SupayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayResponse.class);
         if (thisCtx.hasError()) {
             thisCtx.fail("错误的类型");
             return chain.nextBefore(thisCtx);

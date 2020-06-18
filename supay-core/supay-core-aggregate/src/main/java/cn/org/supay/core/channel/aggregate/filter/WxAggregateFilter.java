@@ -5,7 +5,7 @@
 package cn.org.supay.core.channel.aggregate.filter;
 
 import cn.hutool.core.date.DateUtil;
-import cn.org.supay.core.channel.aggregate.data.SupayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.filter.FilterChain;
@@ -36,7 +36,7 @@ public class WxAggregateFilter implements SupayFilter {
 
         SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
         if (SupayChannelType.WECHAT.equals(targetChannel)) {
-            SupayRequest request = (SupayRequest) ctx.getRequest();
+            SupayPayRequest request = (SupayPayRequest) ctx.getRequest();
             WxPayBaseRequest wxRequest = WxPayUnifiedOrderRequest.builder()
                     .body("测试微信支付订单")
                     .outTradeNo(request.getBizPayNo())
