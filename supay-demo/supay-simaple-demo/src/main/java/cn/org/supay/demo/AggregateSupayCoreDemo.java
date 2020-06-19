@@ -61,14 +61,22 @@ public class AggregateSupayCoreDemo {
                 .returnUrl("http://taobao.com")
                 .build().toContext(channelConfig.getAppId(), false);
 
+        SupayContext cxt2 = AliPayPageRequest.builder()
+                .outTradeNo(orderCode)
+                .payType(SupayPayType.ALI_PAGE_PAY)
+                .subject("测试网页支付")
+                .totalAmount("1")
+                .returnUrl("http://taobao.com")
+                .build().toContext(channelConfig.getAppId(), false);
+        cxt2.setAggregate(true);
         // 本地模拟支付
 //        cxt.setLocalMock(true);
-        cxt.setPayType(SupayPayType.ALI_PAGE_PAY);
+        cxt2.setPayType(SupayPayType.ALI_PAGE_PAY);
         // 调用支付接口
-        cxt = (SupayContext) SupayCore.pay(cxt);
+        cxt2 = (SupayContext) SupayCore.pay(cxt2);
 
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(),
-                cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
+        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt2.hasError(),
+                cxt2.getMsg(), cxt2.duration(), JSONUtil.toJsonStr(cxt2.getResponse()));
 
     }
 }

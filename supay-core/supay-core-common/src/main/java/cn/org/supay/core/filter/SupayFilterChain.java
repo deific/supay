@@ -40,7 +40,7 @@ public class SupayFilterChain implements FilterChain {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> nextBefore(SupayContext<? extends Request, ? extends Response> ctx) {
-        if (filters != null && chainPos < filters.size()) {
+        if (filters != null && chainPos < filters.size() && !ctx.hasError()) {
             SupayFilter filter = filters.get(chainPos);
             log.debug("[before-{}]执行过滤器before方法:{}", this.getCurrent(), filter.getClass().getName());
             chainPos ++;

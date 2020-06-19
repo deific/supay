@@ -111,7 +111,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public boolean hasError() {
-        return success;
+        return !success;
     }
 
     /**
@@ -138,10 +138,21 @@ public class SupayContext<R extends Request, S extends Response> {
     }
 
     /**
+     * 开始计时
+     */
+    public void startTimer() {
+        if (this.startTime == null) {
+            this.startTime = new Date();
+        }
+    }
+    /**
      * 耗时
      * @return
      */
     public long duration() {
+        if (this.endTime == null) {
+            this.endTime = new Date();
+        }
         return this.endTime.getTime() - this.startTime.getTime();
     }
 
@@ -160,6 +171,7 @@ public class SupayContext<R extends Request, S extends Response> {
                 .isSandBox(isSandBox)
                 .request(request)
                 .isLocalMock(false)
+                .success(true)
                 .build();
 
         return cxt;

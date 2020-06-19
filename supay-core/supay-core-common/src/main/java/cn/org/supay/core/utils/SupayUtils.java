@@ -28,10 +28,15 @@ public class SupayUtils {
      */
     public static  <T> T checkAndConvertType(SupayContext<? extends Request, ? extends Response> ctx, Class<? extends Request> r, Class<? extends Response> s) {
         // 判断类型是否匹配
-        boolean isMatch = (ctx.getRequest() != null && !ctx.getRequest().getClass().isInstance(r))
-                || (ctx.getResponse() != null && !ctx.getResponse().getClass().isInstance(s));
+        boolean isMatch = (ctx.getRequest() != null && ctx.getRequest().getClass().isInstance(r));
         if (!isMatch) {
-            ctx.fail("请求参数类型或响应类型与当前渠道要求类型不匹配");
+            ctx.fail("请求类型与当前渠道要求类型不匹配，要求类型：" + r.getName() + " 请求类型：" + ctx.getRequest().getClass());
+            return (T)ctx;
+        }
+        isMatch = ctx.getResponse() != null && ctx.getResponse().getClass().isInstance(s);
+        if (!isMatch) {
+            ctx.fail("响应类型与当前渠道要求类型不匹配，要求类型：" + s.getName() + " 响应类型：" + ctx.getResponse().getClass());
+            return (T)ctx;
         }
         // 参数检查
         return (T)ctx;

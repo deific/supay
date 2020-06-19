@@ -30,14 +30,16 @@ public class AggregateFilter implements SupayFilter {
 
         SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
         if (thisCtx.hasError()) {
-            thisCtx.fail("错误的类型");
-            return chain.nextBefore(thisCtx);
+            return thisCtx;
         }
         return chain.nextBefore(ctx);
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
+        SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
+        if (thisCtx.hasError()) {
+        }
         return chain.nextAfter(ctx);
     }
 }
