@@ -120,12 +120,14 @@ public class SupayCoreConfig {
      * @return
      */
     public static ChannelPayService getPayChannelService(SupayChannelType channelType) {
+        log.debug("[调用]调用渠道服务：{}", channelType);
         ChannelPayService proxyService = channelServiceMap.get(channelType);
         if(proxyService == null) {
+            log.error("[调用]渠道服务不存在或未注册，转调模拟服务");
             proxyService = new ChannelPayService() {
                 @Override
                 public SupayChannelType getSupportType() {
-                    return null;
+                    return SupayChannelType.MOCK;
                 }
             };
         }

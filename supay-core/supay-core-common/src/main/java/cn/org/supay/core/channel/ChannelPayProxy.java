@@ -36,20 +36,21 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
+        log.debug("[支付]调用渠道服务：{}", this.proxyService.getClass().getName());
         SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>) args[0];
+        if (ctx.getStartTime() == null) {
+            ctx.setStartTime(new Date());
+        }
+
         SupayChannelConfig channelConfig = ctx.getChannelConfig();
         if (channelConfig == null) {
             return ctx.fail("请配置支付渠道参数");
         }
-        // 如果本次请求有追加过滤器
 
-        // 开始时间
-        ctx.setStartTime(ctx.getStartTime() == null?new Date():ctx.getStartTime());
-
+        long startTime = System.currentTimeMillis();
         try {
             // 拦截器
             this.nextBefore(ctx);
-            log.debug("[支付]调用渠道服务：{}", this.proxyService.getClass().getName());
             ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(this.proxyService, ctx);
             this.nextAfter(ctx);
             return ctx;
@@ -58,7 +59,7 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
             return ctx.fail("支付异常：" + e.getMessage());
         } finally {
             ctx.setEndTime(new Date());
-            log.debug("[支付] 支付耗时：{} 结果：{}", ctx.duration(), ctx.getResponse());
+            log.debug("[支付] 支付耗时：{} 结果：{}", ctx.getEndTime().getTime() - startTime, ctx.getResponse());
         }
     }
 }

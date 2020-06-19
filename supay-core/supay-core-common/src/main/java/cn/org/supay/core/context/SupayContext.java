@@ -46,6 +46,8 @@ public class SupayContext<R extends Request, S extends Response> {
     protected Response response;
     /** 是否启动本地模拟支付 */
     protected boolean isLocalMock;
+    /** 是否聚合支付 */
+    protected boolean isAggregate;
     /** 是否使用渠道沙盒环境 */
     protected boolean isSandBox;
     /** 交易是否成功 */

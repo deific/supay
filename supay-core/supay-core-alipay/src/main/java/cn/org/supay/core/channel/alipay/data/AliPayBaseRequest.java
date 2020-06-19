@@ -23,9 +23,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class AliPayBaseRequest implements Request {
-    /**
-     * 支付类型
-     */
+    /** 支付类型 */
     protected SupayPayType payType;
     protected String subject;
     protected String outTradeNo;

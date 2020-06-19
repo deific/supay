@@ -5,7 +5,9 @@
 package cn.org.supay.core.channel.aggregate.filter;
 
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
+import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.filter.FilterChain;
@@ -32,15 +34,16 @@ public class AlipayAggregateFilter implements SupayFilter {
             return chain.nextBefore(ctx);
         }
 
+        // 转换方法参数
         Request request = ctx.getRequest();
 
-        // 转换方法参数
         // 支付方法
         if (request instanceof SupayPayRequest) {
             SupayPayRequest payRequest = (SupayPayRequest) request;
             AliPayPageRequest pageRequest = AliPayPageRequest.builder()
-                    .outTradeNo(payRequest.getBizPayNo())
-                    .subject(payRequest.getBizPayNo())
+                    .payType(ctx.getPayType())
+                    .outTradeNo(payRequest.getTradeNo())
+                    .subject(payRequest.getTradeName())
                     .totalAmount(payRequest.getAmount().toString())
                     .returnUrl(payRequest.getReturnUrl()).build();
             ctx.setRequest(pageRequest);
@@ -51,9 +54,21 @@ public class AlipayAggregateFilter implements SupayFilter {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
+        SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
+        if (!SupayChannelType.ALIPAY.equals(targetChannel)) {
+            return chain.nextAfter(ctx);
+        }
 
         // 将响应转换为
-
+        Response response = ctx.getResponse();
+        // 支付方法
+        if (response instanceof AliPayPageResponse) {
+            AliPayPageResponse pageResponse = (AliPayPageResponse) response;
+            SupayPayResponse payResponse = SupayPayResponse.builder()
+                    .redirectPageBody(pageResponse.getBody())
+                    .build();
+            ctx.setResponse(payResponse);
+        }
 
         return chain.nextAfter(ctx);
     }

@@ -45,7 +45,11 @@ public class SupayCore {
         SupayChannelType channelType = channelConfig.getChannelType();
         if (ctx.isLocalMock()) {
             channelType = SupayChannelType.MOCK;
-            log.debug("[调用]启动了本地模拟，调用模拟渠道服务：{}", channelType);
+            return SupayCoreConfig.getPayChannelService(channelType);
+        }
+        if (ctx.isAggregate()) {
+            channelType = SupayChannelType.AGGREGATE_PAY;
+            return SupayCoreConfig.getPayChannelService(channelType);
         }
         return SupayCoreConfig.getPayChannelService(channelType);
     }

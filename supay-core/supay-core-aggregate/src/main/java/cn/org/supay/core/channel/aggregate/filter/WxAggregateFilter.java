@@ -5,9 +5,12 @@
 package cn.org.supay.core.channel.aggregate.filter;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.channel.wx.data.WxPayUnifiedOrderResponse;
 import cn.org.supay.core.filter.FilterChain;
 import cn.org.supay.core.filter.SupayFilter;
 import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
@@ -31,22 +34,28 @@ import java.util.Date;
  */
 @Slf4j
 public class WxAggregateFilter implements SupayFilter {
+
     @Override
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-
+        // 判断是否可处理
         SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
         if (SupayChannelType.WECHAT.equals(targetChannel)) {
+            return chain.nextBefore(ctx);
+        }
+
+        // 转换支付参数
+        if (ctx.getRequest() instanceof SupayPayRequest) {
             SupayPayRequest request = (SupayPayRequest) ctx.getRequest();
             WxPayBaseRequest wxRequest = WxPayUnifiedOrderRequest.builder()
-                    .body("测试微信支付订单")
-                    .outTradeNo(request.getBizPayNo())
+                    .body(request.getTradeName())
+                    .outTradeNo(request.getTradeNo())
                     .notifyUrl(request.getNotifyUrl())
                     .totalFee(request.getAmount().multiply(new BigDecimal(100)).toString())
                     .timeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"))
                     .timeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"))
                     .tradeType(SupayPayType.WX_MP_PAY.getCode())
 //                        .openid(props.getStr("wx.openId"))
-                    .spbillCreateIp("127.0.0.1")
+                    .spbillCreateIp(NetUtil.getLocalhostStr())
                     .nonceStr(String.valueOf(System.currentTimeMillis()))
                     .build();
             ctx.setRequest(wxRequest);
@@ -56,9 +65,22 @@ public class WxAggregateFilter implements SupayFilter {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
+        // 判断是否可处理
+        SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
+        if (SupayChannelType.WECHAT.equals(targetChannel)) {
+            return chain.nextAfter(ctx);
+        }
 
-        // 将响应转换为
-
+        // 转换支付结果参数
+        if (ctx.getResponse() instanceof WxPayUnifiedOrderResponse) {
+            WxPayUnifiedOrderResponse wxResponse = (WxPayUnifiedOrderResponse) ctx.getResponse();
+            SupayPayResponse payResponse = SupayPayResponse.builder()
+                    .resultCode(wxResponse.getResultCode())
+                    .resultMsg(wxResponse.getReturnMsg())
+                    .redirectUrl(wxResponse.getMwebUrl())
+                    .build();
+            ctx.setResponse(payResponse);
+        }
 
         return chain.nextAfter(ctx);
     }
