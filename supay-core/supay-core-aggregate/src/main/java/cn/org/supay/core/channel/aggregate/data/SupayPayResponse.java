@@ -30,4 +30,5 @@ public class SupayPayResponse implements Response {
     protected String redirectUrl;
     /** 跳转页面内容 */
     protected String redirectPageBody;
+
 }

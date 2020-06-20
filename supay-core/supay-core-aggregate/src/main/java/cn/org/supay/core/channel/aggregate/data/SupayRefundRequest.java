@@ -18,6 +18,8 @@ import lombok.Data;
  */
 @Data
 public class SupayRefundRequest implements Request {
+    /**  业务订单号 */
     protected String outTradeNo;
+    /**  金额 */
     protected String totalAmount;
 }
