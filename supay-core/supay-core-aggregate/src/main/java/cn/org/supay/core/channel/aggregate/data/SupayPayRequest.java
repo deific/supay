@@ -39,7 +39,7 @@ public class SupayPayRequest implements Request {
     /** 同步返回url */
     private String returnUrl;
     /** 支付参数 */
-    private String payParam;
+    private SupayPayParam payParam;
 
 
     /**
