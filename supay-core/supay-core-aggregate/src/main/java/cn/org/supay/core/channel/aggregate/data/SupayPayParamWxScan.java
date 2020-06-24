@@ -13,5 +13,5 @@ package cn.org.supay.core.channel.aggregate.data;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public class SupayPayParamWxScan {
+public class SupayPayParamWxScan extends SupayPayParam {
 }

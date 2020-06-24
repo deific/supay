@@ -20,6 +20,6 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class SupayPayParamWxH5 {
+public class SupayPayParamWxH5 extends SupayPayParam {
 
 }
