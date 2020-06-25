@@ -32,14 +32,12 @@ import java.util.Date;
 public class SupayContext<R extends Request, S extends Response> {
     /** 交易流水号 */
     protected String tradeId;
-    /** 支付类型 */
-    protected SupayPayType payType;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
     /** 开始时间 */
-    private Date startTime;
+    protected Date startTime;
     /** 结束时间 */
-    private Date endTime;
+    protected Date endTime;
     /** 支付请求参数 */
     protected R request;
     /** 支付结果 */
@@ -164,7 +162,6 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public static SupayContext buildContext(SupayChannelConfig channelConfig, Request request, boolean isSandBox) {
-
         SupayContext cxt = SupayContext.builder()
                 .tradeId(IdUtil.fastUUID())
                 .channelConfig(channelConfig)

@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate;
 
+import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.aggregate.filter.AggregateFilter;
@@ -41,6 +42,7 @@ public class SupayChannelPayService implements BaseChannelPayService {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
+
         return SupayCore.getPayChannelService(ctx.getChannelConfig().getChannelType()).pay(ctx);
     }
 

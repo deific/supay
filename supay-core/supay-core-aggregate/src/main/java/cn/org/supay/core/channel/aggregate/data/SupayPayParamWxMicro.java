@@ -21,5 +21,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class SupayPayParamWxMicro extends SupayPayParam {
-
+    /** 微信付款授权码 */
+    private String authCode;
+    /** 线下扫码设备编号 */
+    private String terminalId;
+    /** 线下门店编号 */
+    private String storeId;
 }

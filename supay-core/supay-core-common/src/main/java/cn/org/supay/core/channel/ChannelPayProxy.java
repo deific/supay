@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel;
 
+import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.filter.SupayFilterChain;
@@ -37,22 +38,18 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         log.debug("[支付]调用渠道服务：{}#{}", this.proxyService.getClass().getName(), method.getName());
-        long startTime = System.currentTimeMillis();
-        SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>) args[0];
-        if (ctx.hasError()) {
+        SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
+        boolean isOk = checkContext(ctx);
+        if (!isOk) {
             return ctx;
         }
-        ctx.startTimer();
-        SupayChannelConfig channelConfig = ctx.getChannelConfig();
-        if (channelConfig == null) {
-            return ctx.fail("请配置支付渠道参数");
-        }
 
+        long startTime = System.currentTimeMillis();
         try {
             // 拦截器
-            this.nextBefore(ctx);
+            ctx = this.nextBefore(ctx);
             ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(this.proxyService, ctx);
-            this.nextAfter(ctx);
+            ctx = this.nextAfter(ctx);
             return ctx;
         } catch (Exception e) {
             log.error("支付异常：", e);
@@ -61,5 +58,30 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
             long duration = ctx.duration();
             log.debug("[支付] 累计耗时：{} 当前调用耗时：{} 结果：{}", duration, ctx.getEndTime().getTime() - startTime, ctx.getResponse());
         }
+    }
+
+    /**
+     * 检查请求上下文
+     * @param ctx
+     * @return
+     */
+    private boolean checkContext(SupayContext<? extends Request, ? extends Response> ctx) {
+        if (ctx.hasError()) {
+            return false;
+        }
+        ctx.startTimer();
+        SupayChannelConfig channelConfig = ctx.getChannelConfig();
+        if (channelConfig == null) {
+            ctx.fail("请配置支付渠道参数");
+            return false;
+        }
+
+        Request request = ctx.getRequest();
+        if (request == null) {
+            ctx.fail("请求配置请求参数");
+            return false;
+        }
+
+        return true;
     }
 }

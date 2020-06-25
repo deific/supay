@@ -41,7 +41,7 @@ public class AlipayAggregateFilter implements SupayFilter {
         if (request instanceof SupayPayRequest) {
             SupayPayRequest payRequest = (SupayPayRequest) request;
             AliPayPageRequest pageRequest = AliPayPageRequest.builder()
-                    .payType(ctx.getPayType())
+                    .payType(((SupayPayRequest) request).getPayType())
                     .outTradeNo(payRequest.getTradeNo())
                     .subject(payRequest.getTradeName())
                     .totalAmount(payRequest.getAmount().toString())

@@ -32,18 +32,15 @@ public class WxPayBaseRequest implements Request {
     /** 微信支付分配的商户号 */
     @XmlField("mch_id")
     protected String mchId;
-
     /** 服务商模式下的子商户应用（公众号、小程序、app）ID */
     @XmlField("sub_appid")
     protected String subAppId;
-
     /** 服务商模式下的子商户号 微信支付分配的子商户号，开发者模式下必填 */
     @XmlField("sub_mch_id")
     protected String subMchId;
     /** 随机字符串，不长于32位。推荐随机数生成算法 */
     @XmlField("nonce_str")
     protected String nonceStr;
-
     /** 签名 签名，详见签名生成算法 */
     @XmlField("sign")
     protected String sign;

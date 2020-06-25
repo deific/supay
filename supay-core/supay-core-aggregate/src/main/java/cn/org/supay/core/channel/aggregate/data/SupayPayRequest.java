@@ -9,6 +9,7 @@ import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -38,6 +39,8 @@ public class SupayPayRequest implements Request {
     private String notifyUrl;
     /** 同步返回url */
     private String returnUrl;
+    /** 支付方式 */
+    private SupayPayType payType;
     /** 支付参数 */
     private SupayPayParam payParam;
 

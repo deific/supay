@@ -6,6 +6,7 @@ package cn.org.supay.core.channel.data;
 
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayPayType;
 
 /**
  * <b>Application name：</b> Request.java <br>
@@ -24,7 +25,7 @@ public interface Request {
      * @param isSandbox
      * @return
      */
-    default SupayContext<? extends Request, ? extends Response> toContext(String appId, boolean isSandbox) {
+    default SupayContext<? extends Request, ? extends Response> toContext(String appId,  boolean isSandbox) {
         return SupayContext.buildContext(SupayCoreConfig.getChannelConfig(appId), this, isSandbox);
     }
     /**

@@ -39,7 +39,7 @@ public class WxAggregateFilter implements SupayFilter {
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
         // 判断是否可处理
         SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
-        if (SupayChannelType.WECHAT.equals(targetChannel)) {
+        if (!SupayChannelType.WECHAT.equals(targetChannel)) {
             return chain.nextBefore(ctx);
         }
 

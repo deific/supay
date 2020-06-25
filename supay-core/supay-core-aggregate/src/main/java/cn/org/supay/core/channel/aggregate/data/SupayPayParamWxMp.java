@@ -21,5 +21,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class SupayPayParamWxMp extends SupayPayParam {
-
+    /** 微信公众号appID */
+    private String appId;
+    /** 微信用户open ID */
+    private String openId;
 }
