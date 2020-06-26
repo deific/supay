@@ -32,8 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AggregateFilter implements SupayFilter {
     @Override
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-        ctx = convertSubContext(ctx);
-
         SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
         if (thisCtx.hasError()) {
             return thisCtx;
@@ -49,41 +47,10 @@ public class AggregateFilter implements SupayFilter {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-        ctx = convertSupayContext((SubContext)ctx);
         SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
         if (thisCtx.hasError()) {
         }
+
         return chain.nextAfter(ctx);
     }
-
-    /**
-     * 将上下文转换子类上下文，用于保存原始的Request和Response
-     * @param ctx
-     */
-    private SubContext convertSubContext(SupayContext<? extends Request, ? extends Response> ctx) {
-        SubContext subContext = SubContext.builder().build();
-        BeanUtils.copyProperties(ctx, subContext);
-        subContext.setOriginRequest(ctx.getRequest());
-        subContext.setOriginResponse(ctx.getResponse());
-        return subContext;
-    }
-
-    /**
-     * 将上下文转换子类上下文，用于保存原始的Request和Response
-     * @param ctx
-     */
-    private SupayContext convertSupayContext(SubContext<? extends Request, ? extends Response> ctx) {
-        SupayContext context = SupayContext.builder().build();
-        BeanUtils.copyProperties(ctx, context);
-        context.setRequest(ctx.getOriginRequest());
-        return context;
-    }
-
 }
-
-@Data
-@SuperBuilder
-class SubContext<R extends Request, S extends Response> extends  SupayContext<R, S> {
-    private R originRequest;
-    private S originResponse;
-};
