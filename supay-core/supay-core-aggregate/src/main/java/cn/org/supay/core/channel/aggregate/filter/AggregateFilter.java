@@ -42,15 +42,13 @@ public class AggregateFilter implements SupayFilter {
             return ctx.fail(StrUtil.format("本次请求支付方式{} 与所使用渠道{}不匹配",
                     thisCtx.getRequest().getPayType().getName(), thisCtx.getChannelConfig().getChannelType().getName()));
         }
+
         return chain.nextBefore(ctx);
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
         SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
-        if (thisCtx.hasError()) {
-        }
-
         return chain.nextAfter(ctx);
     }
 }

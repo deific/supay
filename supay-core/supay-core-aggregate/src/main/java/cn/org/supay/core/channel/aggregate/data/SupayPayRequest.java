@@ -5,6 +5,7 @@
 package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.annotation.XmlField;
+import cn.org.supay.core.channel.aggregate.context.AggregateContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayCoreConfig;
@@ -44,7 +45,6 @@ public class SupayPayRequest implements Request {
     /** 支付参数 */
     private SupayPayParam payParam;
 
-
     /**
      * 转换为上下文
      * @param appId
@@ -53,7 +53,7 @@ public class SupayPayRequest implements Request {
      */
     @Override
     public SupayContext<? extends Request, ? extends Response> toContext(String appId, boolean isSandbox) {
-        SupayContext context = SupayContext.buildContext(SupayCoreConfig.getChannelConfig(appId), this, isSandbox);
+        SupayContext context = AggregateContext.buildContext(SupayCoreConfig.getChannelConfig(appId), this, isSandbox);
         context.setAggregate(true);
         return context;
     }

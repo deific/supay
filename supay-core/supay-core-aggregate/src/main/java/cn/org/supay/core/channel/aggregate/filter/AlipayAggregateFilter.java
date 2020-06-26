@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.filter;
 
+import cn.org.supay.core.channel.aggregate.context.AggregateContext;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
@@ -36,7 +37,6 @@ public class AlipayAggregateFilter implements SupayFilter {
 
         // 转换方法参数
         Request request = ctx.getRequest();
-
         // 支付方法
         if (request instanceof SupayPayRequest) {
             SupayPayRequest payRequest = (SupayPayRequest) request;
@@ -46,9 +46,10 @@ public class AlipayAggregateFilter implements SupayFilter {
                     .subject(payRequest.getTradeName())
                     .totalAmount(payRequest.getAmount().toString())
                     .returnUrl(payRequest.getReturnUrl()).build();
+            // 用转换后的具体渠道request覆盖将原请求参数，后续转给具体渠道服务执行
+            // 原请求暂存originRequest，返回时与request交换
             ctx.setRequest(pageRequest);
         }
-
         return chain.nextBefore(ctx);
     }
 
@@ -59,17 +60,25 @@ public class AlipayAggregateFilter implements SupayFilter {
             return chain.nextAfter(ctx);
         }
 
+        AggregateContext thisCtx = (AggregateContext) ctx;
         // 将响应转换为
-        Response response = ctx.getResponse();
+        Response response = thisCtx.getResponse();
+
         // 支付方法
         if (response instanceof AliPayPageResponse) {
             AliPayPageResponse pageResponse = (AliPayPageResponse) response;
             SupayPayResponse payResponse = SupayPayResponse.builder()
                     .redirectPageBody(pageResponse.getBody())
                     .build();
-            ctx.setResponse(payResponse);
+
+            // 将转换后的响应暂存
+            thisCtx.setOriginResponse(payResponse);
         }
 
-        return chain.nextAfter(ctx);
+        // 返回前交换请求和响应，保持接口调用时输入输出参数一致性
+        thisCtx.switchRequest();
+        thisCtx.switchResponse();
+
+        return chain.nextAfter(thisCtx);
     }
 }

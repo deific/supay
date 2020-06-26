@@ -48,4 +48,22 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
                 .build();
         return cxt;
     }
+
+    /**
+     * 交换请求
+     */
+    public void switchRequest() {
+        R tempR = originRequest;
+        this.originRequest = this.request;
+        this.request = tempR;
+    }
+
+    /**
+     * 交换响应
+     */
+    public void switchResponse() {
+        S tempS = this.response;
+        this.response = this.originResponse;
+        this.originResponse = tempS;
+    }
 }
