@@ -51,7 +51,6 @@ public class AlipayDemoController {
                 .mchId(props.getStr("ali.mchId")).mchName("支付宝商户").mchSecretKey(props.getStr("ali.mchSecretKey"))
                 .channelType(SupayChannelType.ALIPAY).apiBaseUrl("https://openapi.alipaydev.com/gateway.do")
                 .build()
-                .addFilter(new AliPayFilter())
                 .register()
         ;
     }
