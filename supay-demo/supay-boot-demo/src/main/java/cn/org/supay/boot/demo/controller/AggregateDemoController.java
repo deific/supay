@@ -7,9 +7,7 @@ package cn.org.supay.boot.demo.controller;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.SupayCore;
-import cn.org.supay.core.channel.aggregate.data.SupayPagePayRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayPayParam;
-import cn.org.supay.core.channel.aggregate.data.SupayPayParamWxH5;
+import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.wx.WxApiType;
@@ -62,25 +60,22 @@ public class AggregateDemoController {
 
 
     /**
-     * 跳到支付页面
+     * 跳到支付宝支付页面
      * 针对实时支付,即时付款
-     *
      * @param price       金额
      * @return 跳到支付页面
      */
-    @RequestMapping(value = "toPagePay.html", produces = "text/html;charset=UTF-8")
-    public HttpEntity<String> toPagePay(BigDecimal price) {
+    @RequestMapping(value = "toAliPagePay.html", produces = "text/html;charset=UTF-8")
+    public HttpEntity<String> toAliPagePay(BigDecimal price) {
         //及时收款
         String orderCode = IdUtil.fastSimpleUUID();
 
         // 构建支付上下文参数
         SupayContext cxt = SupayPagePayRequest.builder()
                 .tradeNo(orderCode)
-//                .payType(SupayPayType.ALI_PAGE_PAY)
-                .payType(SupayPayType.ALI_WAP_PAY)
+                .payType(SupayPayType.ALI_PAGE_PAY)
                 .tradeName("测试网页支付")
                 .amount(price)
-                .payParam(SupayPayParamWxH5.builder().build())
                 .returnUrl("http://taobao.com")
                 .build()
                 .toContext(channelConfig.getAppId(), false);
@@ -90,6 +85,34 @@ public class AggregateDemoController {
 
         String result = ((AliPayPageResponse)cxt.getResponse()).getBody();
 
+        return new HttpEntity<>(result);
+    }
+
+    /**
+     * 跳到支付宝支付页面
+     * 针对实时支付,即时付款
+     * @param price       金额
+     * @return 跳到支付页面
+     */
+    @RequestMapping(value = "toAliAppPay.html", produces = "text/html;charset=UTF-8")
+    public HttpEntity<String> toAliAppPay(BigDecimal price) {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayAppPayRequest.builder()
+                .tradeNo(orderCode)
+                .payType(SupayPayType.ALI_APP_PAY)
+                .tradeName("测试APP支付")
+                .amount(price)
+                .returnUrl("http://taobao.com")
+                .build()
+                .toContext(channelConfig.getAppId(), false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectPageBody();
         return new HttpEntity<>(result);
     }
 }
