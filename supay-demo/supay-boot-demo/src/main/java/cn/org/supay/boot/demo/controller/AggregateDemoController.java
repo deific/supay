@@ -115,4 +115,32 @@ public class AggregateDemoController {
         String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectPageBody();
         return new HttpEntity<>(result);
     }
+
+    /**
+     * 跳到支付宝支付页面
+     * 针对实时支付,即时付款
+     * @param price       金额
+     * @return 跳到支付页面
+     */
+    @RequestMapping(value = "toAliWapPay.html", produces = "text/html;charset=UTF-8")
+    public HttpEntity<String> toAliWapPay(BigDecimal price) {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayH5PayRequest.builder()
+                .tradeNo(orderCode)
+                .payType(SupayPayType.ALI_WAP_PAY)
+                .tradeName("测试APP支付")
+                .amount(price)
+                .returnUrl("http://taobao.com")
+                .build()
+                .toContext(channelConfig.getAppId(), false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectPageBody();
+        return new HttpEntity<>(result);
+    }
 }
