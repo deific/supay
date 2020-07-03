@@ -4,7 +4,6 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
 
-import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.context.AggregateContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;

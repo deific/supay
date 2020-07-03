@@ -4,12 +4,9 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate;
 
-import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.aggregate.filter.AggregateFilter;
-import cn.org.supay.core.channel.aggregate.filter.AlipayAggregateFilter;
-import cn.org.supay.core.channel.aggregate.filter.WxAggregateFilter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayCoreConfig;
@@ -37,7 +34,7 @@ public class SupayChannelPayService implements BaseChannelPayService {
 
     @Override
     public void register() {
-        SupayCoreConfig.registerPayService(getSupportType(), this, new AggregateFilter(), new WxAggregateFilter(), new AlipayAggregateFilter());
+        SupayCoreConfig.registerPayService(getSupportType(), this, new AggregateFilter());
     }
 
     @Override

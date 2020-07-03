@@ -4,10 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
 
-import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.channel.data.Response;
-import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
-import com.aliyun.tea.TeaModel;
 import lombok.Data;
 
 /**

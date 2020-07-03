@@ -8,7 +8,6 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.aggregate.data.*;
-import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.config.SupayChannelConfig;

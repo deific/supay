@@ -17,5 +17,12 @@
             <artifactId>supay-core-common</artifactId>
             <version>${supay.version}</version>
         </dependency>
+
+        <!-- 聚合转换支付依赖-->
+        <dependency>
+            <groupId>cn.org.supay</groupId>
+            <artifactId>supay-core-aggregate</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

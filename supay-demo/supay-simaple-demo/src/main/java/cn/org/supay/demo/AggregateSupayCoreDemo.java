@@ -8,11 +8,9 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.SupayCore;
+import cn.org.supay.core.channel.aggregate.data.SupayPagePayRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayParamWxApp;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
-import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
-import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
-import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
@@ -55,7 +53,7 @@ public class AggregateSupayCoreDemo {
         String orderCode = IdUtil.fastSimpleUUID();
 
         // 构建支付上下文
-        SupayContext cxt = SupayPayRequest.builder()
+        SupayContext cxt = SupayPagePayRequest.builder()
                 .tradeNo(orderCode)
                 .tradeName("测试网页支付")
                 .amount(new BigDecimal(1))

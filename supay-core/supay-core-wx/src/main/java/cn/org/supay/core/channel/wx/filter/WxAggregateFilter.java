@@ -2,7 +2,7 @@
  * @(#)AliPayFilter.java 2020年05月31日 22:18
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.channel.aggregate.filter;
+package cn.org.supay.core.channel.wx.filter;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.net.NetUtil;

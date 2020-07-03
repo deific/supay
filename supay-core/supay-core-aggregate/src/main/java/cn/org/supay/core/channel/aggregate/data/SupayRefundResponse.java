@@ -4,10 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
 
-import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.channel.data.Response;
-import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
-import com.aliyun.tea.TeaModel;
 import lombok.Data;
 
 /**
@@ -20,6 +17,6 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class SupayRefundResponse extends AlipayTradeRefundResponse implements Response {
+public class SupayRefundResponse implements Response {
 
 }

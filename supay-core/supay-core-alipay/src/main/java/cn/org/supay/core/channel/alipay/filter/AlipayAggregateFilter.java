@@ -2,9 +2,11 @@
  * @(#)AliPayFilter.java 2020年05月31日 22:18
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.channel.aggregate.filter;
+package cn.org.supay.core.channel.alipay.filter;
 
 import cn.org.supay.core.channel.aggregate.context.AggregateContext;
+import cn.org.supay.core.channel.aggregate.data.SupayPagePayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPagePayResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
@@ -31,14 +33,14 @@ public class AlipayAggregateFilter implements SupayFilter {
     @Override
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
         SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
-        if (!SupayChannelType.ALIPAY.equals(targetChannel)) {
+        if (!ctx.isAggregate()) {
             return chain.nextBefore(ctx);
         }
 
         // 转换方法参数
         Request request = ctx.getRequest();
         // 支付方法
-        if (request instanceof SupayPayRequest) {
+        if (request instanceof SupayPagePayRequest) {
             SupayPayRequest payRequest = (SupayPayRequest) request;
             AliPayPageRequest pageRequest = AliPayPageRequest.builder()
                     .payType(((SupayPayRequest) request).getPayType())
@@ -46,6 +48,7 @@ public class AlipayAggregateFilter implements SupayFilter {
                     .subject(payRequest.getTradeName())
                     .totalAmount(payRequest.getAmount().toString())
                     .returnUrl(payRequest.getReturnUrl()).build();
+
             // 用转换后的具体渠道request覆盖将原请求参数，后续转给具体渠道服务执行
             // 原请求暂存originRequest，返回时与request交换
             ctx.setRequest(pageRequest);
@@ -56,7 +59,7 @@ public class AlipayAggregateFilter implements SupayFilter {
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
         SupayChannelType targetChannel = ctx.getChannelConfig().getChannelType();
-        if (!SupayChannelType.ALIPAY.equals(targetChannel)) {
+        if (!ctx.isAggregate()) {
             return chain.nextAfter(ctx);
         }
 
@@ -67,7 +70,7 @@ public class AlipayAggregateFilter implements SupayFilter {
         // 支付方法
         if (response instanceof AliPayPageResponse) {
             AliPayPageResponse pageResponse = (AliPayPageResponse) response;
-            SupayPayResponse payResponse = SupayPayResponse.builder()
+            SupayPayResponse payResponse = SupayPagePayResponse.builder()
                     .redirectPageBody(pageResponse.getBody())
                     .build();
 

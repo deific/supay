@@ -5,7 +5,6 @@
 package cn.org.supay.core.channel.aggregate.data;
 
 import lombok.Data;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**

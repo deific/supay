@@ -5,10 +5,7 @@
 package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.channel.data.Response;
-import com.alipay.easysdk.payment.facetoface.models.AlipayTradePayResponse;
-import com.aliyun.tea.TeaModel;
 import lombok.Data;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**

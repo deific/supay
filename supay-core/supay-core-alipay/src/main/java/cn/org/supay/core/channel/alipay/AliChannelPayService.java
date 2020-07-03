@@ -7,6 +7,7 @@ package cn.org.supay.core.channel.alipay;
 import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.alipay.data.*;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
+import cn.org.supay.core.channel.alipay.filter.AlipayAggregateFilter;
 import cn.org.supay.core.channel.alipay.notify.AliPayNotifyData;
 import cn.org.supay.core.channel.alipay.sdk.Factory;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
@@ -49,7 +50,8 @@ public class AliChannelPayService implements BaseChannelPayService {
 
     @Override
     public void register() {
-        SupayCoreConfig.registerPayService(getSupportType(), this, new AliPayFilter());
+        SupayCoreConfig.registerPayService(getSupportType(), this,
+                new AliPayFilter(), new AlipayAggregateFilter());
     }
 
     @Override

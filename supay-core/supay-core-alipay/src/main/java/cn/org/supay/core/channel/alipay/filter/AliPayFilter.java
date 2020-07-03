@@ -70,7 +70,7 @@ public class AliPayFilter implements SupayFilter {
 
             Factory.setOptions(config);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error("初始化支付宝支付异常：", e);
         }
     }
 }
