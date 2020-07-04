@@ -24,7 +24,7 @@
         <hutool.version>5.3.4</hutool.version>
         <validation.version>2.0.1.Final</validation.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <log4j2.version>2.13.1</log4j2.version>
+        <log4j2.version>2.13.3</log4j2.version>
     </properties>
 
     <dependencies>
