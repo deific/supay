@@ -4,7 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.channel;
 
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.context.SupayContext;
 
 /**
  * <b>Application name：</b> BaseChannelPayService.java <br>
@@ -27,5 +30,4 @@ public interface BaseChannelPayService extends ChannelPayService {
     default String getReqUrl(SupayChannelConfig config, ChannelApiType wxApiType, Boolean isSandBox) {
         return config.getApiBaseUrl().concat(wxApiType.getUrl());
     }
-
 }

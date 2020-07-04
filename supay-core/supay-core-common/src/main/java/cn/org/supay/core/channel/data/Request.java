@@ -37,5 +37,12 @@ public interface Request {
         return ctx;
     }
 
+    /**
+     * 获取支付类型
+     * @return
+     */
+    default SupayPayType getPayType() {
+        return null;
+    }
 
 }

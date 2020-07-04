@@ -5,12 +5,17 @@
 package cn.org.supay.core.channel.aggregate.context;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReferenceUtil;
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <b>Application name：</b> AggregateContext.java <br>
@@ -21,6 +26,7 @@ import lombok.experimental.SuperBuilder;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Slf4j
 @Data
 @SuperBuilder
 public class AggregateContext<R extends Request, S extends Response> extends SupayContext<R, S> {
@@ -66,4 +72,48 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
         this.response = this.originResponse;
         this.originResponse = tempS;
     }
+
+    /**
+     * 校验请求上下文的请求响应参数类型与指定类型是否一致
+     * @param r
+     * @param s
+     * @return
+     */
+    @Override
+    public <T> T checkAndConvertType(Class<? extends Request> r, Class<? extends Response> s) {
+        return (T) this;
+    }
+
+    /**
+     *
+     * @param r
+     * @param <R>
+     * @return
+     */
+    @Override
+    public <Re> Re getRequest(Class<Re> r) {
+        if (this.getRequest().getClass().isAssignableFrom(r)) {
+            return (Re) this.getRequest();
+        }
+        // 尝试转换类型
+        // 判断是否目标类型是否实现了聚合参数转换接口，如果实现了调用转换
+        if (AggregateRequestConvert.class.isAssignableFrom(r)) {
+            try {
+                log.debug("转换聚合参数类型[{}]为渠道参数类型[{}]", this.getRequest().getClass().getName(), r.getName());
+                AggregateRequestConvert targetRequest = (AggregateRequestConvert) r.newInstance();
+                this.originRequest = targetRequest.convertRequest((SupayBaseRequest) this.getRequest());
+                this.switchRequest();
+                return (Re)this.request;
+            } catch (Exception e) {
+                log.error("转换聚合参数类型异常", e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+//    public void setResponse() {
+//
+//    }
 }

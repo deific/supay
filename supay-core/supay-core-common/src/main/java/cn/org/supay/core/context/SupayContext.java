@@ -155,6 +155,42 @@ public class SupayContext<R extends Request, S extends Response> {
     }
 
     /**
+     * 校验请求上下文的请求响应参数类型与指定类型是否一致
+     * @param r
+     * @param s
+     * @return
+     */
+    public <T> T checkAndConvertType(Class<? extends Request> r, Class<? extends Response> s) {
+        // 判断类型是否匹配
+        boolean isMatch = (this.getRequest() != null && r.isInstance(this.getRequest()));
+        if (!isMatch && this.getRequest() != null) {
+            this.fail("请求类型与当前渠道要求类型不匹配，要求类型：" + r.getName() + " 请求类型：" + this.getRequest().getClass());
+            return (T)this;
+        }
+
+        isMatch = this.getResponse() != null && s.isInstance(this.getResponse());
+        if (!isMatch && this.getResponse() != null) {
+            this.fail("响应类型与当前渠道要求类型不匹配，要求类型：" + s.getName() + " 响应类型：" + this.getResponse().getClass());
+            return (T)this;
+        }
+
+        // 参数检查
+        return (T)this;
+    }
+
+    /**
+     *
+     * @param r
+     * @param <R>
+     * @return
+     */
+    public <R> R getRequest(Class<R> r) {
+        if (this.getRequest().getClass().isAssignableFrom(r)) {
+            return (R) this.getRequest();
+        }
+        return null;
+    }
+    /**
      * 构建上下文
      * @param channelConfig
      * @param request

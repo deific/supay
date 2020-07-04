@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
-public class SupayPayResponse implements Response {
+public class SupayPayResponse extends SupayBaseResponse implements Response {
     /** 业务处理编码 */
     protected String resultCode;
     /** 业务处理信息 */

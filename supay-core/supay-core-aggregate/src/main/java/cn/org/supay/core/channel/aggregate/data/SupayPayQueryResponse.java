@@ -6,6 +6,7 @@ package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.channel.data.Response;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <b>Application name：</b> SupayPayQueryResponse.java <br>
@@ -17,5 +18,6 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class SupayPayQueryResponse implements Response {
+@SuperBuilder
+public class SupayPayQueryResponse extends SupayBaseResponse implements Response {
 }

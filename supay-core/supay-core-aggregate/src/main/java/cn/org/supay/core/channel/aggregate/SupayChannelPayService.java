@@ -6,6 +6,8 @@ package cn.org.supay.core.channel.aggregate;
 
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.BaseChannelPayService;
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import cn.org.supay.core.channel.aggregate.filter.AggregateFilter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;

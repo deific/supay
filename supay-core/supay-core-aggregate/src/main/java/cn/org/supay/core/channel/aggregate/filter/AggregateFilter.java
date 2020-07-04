@@ -5,6 +5,8 @@
 package cn.org.supay.core.channel.aggregate.filter;
 
 import cn.hutool.core.util.StrUtil;
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
 import cn.org.supay.core.channel.data.Request;

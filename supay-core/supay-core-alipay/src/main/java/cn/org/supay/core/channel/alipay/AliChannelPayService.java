@@ -7,18 +7,16 @@ package cn.org.supay.core.channel.alipay;
 import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.alipay.data.*;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
-import cn.org.supay.core.channel.alipay.filter.AlipayAggregateFilter;
 import cn.org.supay.core.channel.alipay.notify.AliPayNotifyData;
 import cn.org.supay.core.channel.alipay.sdk.Factory;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.channel.data.Request;
-import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.utils.BeanUtils;
-import cn.org.supay.core.utils.SupayUtils;
 import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
@@ -51,24 +49,18 @@ public class AliChannelPayService implements BaseChannelPayService {
     @Override
     public void register() {
         SupayCoreConfig.registerPayService(getSupportType(), this,
-                new AliPayFilter(), new AlipayAggregateFilter());
+                new AliPayFilter());
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
-        // 检查并转换类型
-        SupayContext<AliPayBaseRequest, Response> thisCtx = SupayUtils.checkAndConvertType(ctx,
-                AliPayBaseRequest.class, Response.class);
-        if (thisCtx.hasError()) {
-            return thisCtx;
-        }
+    public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> thisCtx) {
         try {
             // 简易支付
             SupayPayType payType = thisCtx.getRequest().getPayType();
             switch (payType) {
                 case ALI_PAGE_PAY:
-                    AliPayPageRequest request = (AliPayPageRequest) thisCtx.getRequest();
-                    AlipayTradePagePayResponse response = Factory.Payment.Page(ctx.getChannelConfig().getAppId())
+                    AliPayPageRequest request = thisCtx.getRequest(AliPayPageRequest.class);
+                    AlipayTradePagePayResponse response = Factory.Payment.Page(thisCtx.getChannelConfig().getAppId())
                             .pay(request.getSubject(), request.getOutTradeNo(), request.getTotalAmount(), request.getReturnUrl());
                     AliPayPageResponse pageResponse = new AliPayPageResponse();
                     pageResponse.setBody(response.body);
@@ -76,7 +68,7 @@ public class AliChannelPayService implements BaseChannelPayService {
                     return thisCtx;
                 case ALI_WAP_PAY:
                     AliPayPageRequest wapRequest = (AliPayPageRequest) thisCtx.getRequest();
-                    AlipayTradeWapPayResponse wapResponse = Factory.Payment.Wap(ctx.getChannelConfig().getAppId()).pay(wapRequest.getSubject(), wapRequest.getOutTradeNo(),
+                    AlipayTradeWapPayResponse wapResponse = Factory.Payment.Wap(thisCtx.getChannelConfig().getAppId()).pay(wapRequest.getSubject(), wapRequest.getOutTradeNo(),
                             wapRequest.getTotalAmount(), wapRequest.getReturnUrl(), wapRequest.getReturnUrl());
                     AliPayPageResponse wapPayResponse = new AliPayPageResponse();
                     wapPayResponse.setBody(wapResponse.body);
@@ -84,7 +76,7 @@ public class AliChannelPayService implements BaseChannelPayService {
                     return thisCtx;
                 case ALI_APP_PAY:
                     AliPayAppRequest appRequest = (AliPayAppRequest)thisCtx.getRequest();
-                    AlipayTradeAppPayResponse appResponse = Factory.Payment.App(ctx.getChannelConfig().getAppId())
+                    AlipayTradeAppPayResponse appResponse = Factory.Payment.App(thisCtx.getChannelConfig().getAppId())
                             .pay(appRequest.getSubject(), appRequest.getOutTradeNo(), appRequest.getTotalAmount());
                     AliPayAppResponse appPayResponse = new AliPayAppResponse();
                     appPayResponse.setBody(appResponse.body);
@@ -92,18 +84,18 @@ public class AliChannelPayService implements BaseChannelPayService {
                     return thisCtx;
                 case ALI_FACE_PAY:
                     AliPayFaceRequest faceRequest = (AliPayFaceRequest) thisCtx.getRequest();
-                    AlipayTradePayResponse faceResponse = Factory.Payment.FaceToFace(ctx.getChannelConfig().getAppId())
+                    AlipayTradePayResponse faceResponse = Factory.Payment.FaceToFace(thisCtx.getChannelConfig().getAppId())
                             .pay(faceRequest.getSubject(), faceRequest.getOutTradeNo(), faceRequest.getTotalAmount(), faceRequest.getAuthCode());
                     AliPayFaceResponse facePayResponse = AliPayFaceResponse.build(faceResponse.toMap());
                     thisCtx.setResponse(facePayResponse);
-                    return ctx;
+                    return thisCtx;
                 case ALI_COMMON_PAY:
                     AliPayCommonRequest commonRequest = (AliPayCommonRequest)thisCtx.getRequest();
-                    AlipayTradeCreateResponse commonResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId())
+                    AlipayTradeCreateResponse commonResponse = Factory.Payment.Common(thisCtx.getChannelConfig().getAppId())
                             .create(commonRequest.getSubject(), commonRequest.getOutTradeNo(), commonRequest.getTotalAmount(), commonRequest.getBuyerId());
                     AliPayCommonResponse commonPayResponse = AliPayCommonResponse.build(commonResponse.toMap());
                     thisCtx.setResponse(commonPayResponse);
-                    return ctx;
+                    return thisCtx;
             }
         } catch (Exception e) {
             thisCtx.fail("调用阿里支付接口异常:" + e.getMessage());
@@ -115,8 +107,7 @@ public class AliChannelPayService implements BaseChannelPayService {
     @Override
     public SupayContext<? extends Request, ? extends Response> refund(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
-        SupayContext<AliPayRefundRequest, AliPayRefundResponse> thisCtx = SupayUtils.checkAndConvertType(ctx,
-                AliPayRefundRequest.class, AliPayRefundResponse.class);
+        SupayContext<AliPayRefundRequest, AliPayRefundResponse> thisCtx = ctx.checkAndConvertType(AliPayRefundRequest.class, AliPayRefundResponse.class);
         if (thisCtx.hasError()) {
             return thisCtx;
         }
@@ -135,8 +126,7 @@ public class AliChannelPayService implements BaseChannelPayService {
     @Override
     public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
-        SupayContext<AliPayQueryRequest, AliPayQueryResponse> thisCtx = SupayUtils.checkAndConvertType(ctx,
-                AliPayQueryRequest.class, AliPayQueryResponse.class);
+        SupayContext<AliPayQueryRequest, AliPayQueryResponse> thisCtx = ctx.checkAndConvertType(AliPayQueryRequest.class, AliPayQueryResponse.class);
         if (thisCtx.hasError()) {
             return thisCtx;
         }

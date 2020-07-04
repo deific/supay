@@ -28,7 +28,7 @@ import java.math.BigDecimal;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class SupayPayRequest implements Request {
+public class SupayPayRequest extends SupayBaseRequest implements Request {
     /** 业务支付单号 */
     private String tradeNo;
     /** 业务支付单号 */

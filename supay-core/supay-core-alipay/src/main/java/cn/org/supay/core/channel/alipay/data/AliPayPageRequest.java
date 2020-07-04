@@ -4,7 +4,12 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -18,7 +23,20 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
-public class AliPayPageRequest extends AliPayBaseRequest {
+@NoArgsConstructor
+public class AliPayPageRequest extends AliPayBaseRequest implements AggregateRequestConvert {
 
+    /** 支付完成返回地址 */
     String returnUrl;
+
+    @Override
+    public <T> T convertRequest(SupayBaseRequest request) {
+        SupayPayRequest payRequest = (SupayPayRequest) request;
+        this.setPayType(((SupayPayRequest) request).getPayType());
+        this.setOutTradeNo(payRequest.getTradeNo());
+        this.setSubject(payRequest.getTradeName());
+        this.setTotalAmount(payRequest.getAmount().toString());
+        this.setReturnUrl(payRequest.getReturnUrl());
+        return (T) this;
+    }
 }
