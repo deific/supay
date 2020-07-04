@@ -5,6 +5,7 @@
 package cn.org.supay.core.channel.aggregate.filter;
 
 import cn.hutool.core.util.StrUtil;
+import cn.org.supay.core.channel.aggregate.context.AggregateContext;
 import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
@@ -46,6 +47,9 @@ public class AggregateFilter implements SupayFilter {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
+        AggregateContext aggregateContext = (AggregateContext) ctx;
+        aggregateContext.switchRequest();
+        aggregateContext.switchResponse();
         SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
         return chain.nextAfter(ctx);
     }

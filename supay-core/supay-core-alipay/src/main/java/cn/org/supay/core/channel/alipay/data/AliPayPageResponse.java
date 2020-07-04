@@ -4,6 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
+import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayPagePayResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import lombok.Data;
 import lombok.ToString;
 
@@ -18,6 +22,10 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class AliPayPageResponse extends AlipayBaseResponse {
+public class AliPayPageResponse extends AlipayBaseResponse implements AggregateResponseConvert {
 
+    @Override
+    public SupayBaseResponse convertResponse() {
+        return SupayPagePayResponse.builder().redirectPageBody(this.getBody()).build();
+    }
 }

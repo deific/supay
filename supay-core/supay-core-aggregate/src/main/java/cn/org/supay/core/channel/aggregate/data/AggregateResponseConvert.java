@@ -16,9 +16,8 @@ package cn.org.supay.core.channel.aggregate.data;
 public interface AggregateResponseConvert<T> {
     /**
      * 将渠道响应参数转换为聚合响应类型
-     * @param response
      * @param <T>
      * @return
      */
-    SupayBaseResponse convertResponse(T response);
+    SupayBaseResponse convertResponse();
 }

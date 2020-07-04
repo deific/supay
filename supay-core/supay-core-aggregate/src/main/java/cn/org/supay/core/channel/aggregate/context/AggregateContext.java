@@ -7,8 +7,7 @@ package cn.org.supay.core.channel.aggregate.context;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReferenceUtil;
-import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
+import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
@@ -87,7 +86,6 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
     /**
      *
      * @param r
-     * @param <R>
      * @return
      */
     @Override
@@ -95,25 +93,38 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
         if (this.getRequest().getClass().isAssignableFrom(r)) {
             return (Re) this.getRequest();
         }
+
         // 尝试转换类型
         // 判断是否目标类型是否实现了聚合参数转换接口，如果实现了调用转换
         if (AggregateRequestConvert.class.isAssignableFrom(r)) {
             try {
-                log.debug("转换聚合参数类型[{}]为渠道参数类型[{}]", this.getRequest().getClass().getName(), r.getName());
+                log.debug("[调用]转换聚合请求参数类型[{}]为渠道请求参数类型[{}]", this.getRequest().getClass().getName(), r.getName());
                 AggregateRequestConvert targetRequest = (AggregateRequestConvert) r.newInstance();
-                this.originRequest = targetRequest.convertRequest((SupayBaseRequest) this.getRequest());
-                this.switchRequest();
+                this.request = targetRequest.convertRequest((SupayBaseRequest) this.getRequest());
                 return (Re)this.request;
             } catch (Exception e) {
                 log.error("转换聚合参数类型异常", e);
                 return null;
             }
         }
-        return null;
+        return (Re)super.getRequest();
     }
 
-
-//    public void setResponse() {
-//
-//    }
+    /**
+     * 设置响应
+     * @param rsp
+     */
+    @Override
+    public void setResponse(Response rsp) {
+        super.setResponse(rsp);
+        if (AggregateResponseConvert.class.isAssignableFrom(rsp.getClass())) {
+            try {
+                AggregateResponseConvert targetResponse = (AggregateResponseConvert) rsp;
+                this.originResponse = (S) targetResponse.convertResponse();
+                log.debug("[调用]转换渠道响应参数类型[{}]为聚合响应参数类型[{}]", rsp.getClass().getName(), this.originResponse.getClass().getName());
+            } catch (Exception e) {
+                log.error("转换聚合参数类型异常", e);
+            }
+        }
+    }
 }
