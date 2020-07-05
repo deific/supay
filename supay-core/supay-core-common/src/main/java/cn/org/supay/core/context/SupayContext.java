@@ -14,6 +14,7 @@ import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ import java.util.Date;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Slf4j
 @Data
 @SuperBuilder
 @ToString(callSuper = true)
@@ -101,6 +103,7 @@ public class SupayContext<R extends Request, S extends Response> {
     public SupayContext fail(String msg) {
         this.setMsg(msg);
         this.setSuccess(false);
+        log.error(msg);
         return this;
     }
 

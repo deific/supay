@@ -4,6 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPagePayRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayQueryRequest;
 import cn.org.supay.core.channel.data.Request;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +23,13 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class AliPayQueryRequest implements Request {
+public class AliPayQueryRequest implements Request, AggregateRequestConvert {
     protected String outTradeNo;
+
+    @Override
+    public AliPayQueryRequest convertRequest(SupayBaseRequest request) {
+        SupayPayQueryRequest queryRequest = (SupayPayQueryRequest) request;
+        this.setOutTradeNo(queryRequest.getOutTradeNo());
+        return this;
+    }
 }

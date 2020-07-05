@@ -17,7 +17,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class SupayRefundQueryRequest implements Request {
+public class SupayRefundQueryRequest extends SupayBaseRequest implements Request {
     protected String outTradeNo;
     protected String outRefundNo;
 }

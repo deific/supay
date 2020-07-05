@@ -5,6 +5,9 @@
 package cn.org.supay.core.channel.wx.data;
 
 import cn.org.supay.core.annotation.XmlField;
+import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
 import lombok.Data;
 import lombok.ToString;
 
@@ -19,7 +22,7 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
-public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseResponse {
+public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseResponse implements AggregateResponseConvert {
 
     /** 微信生成的预支付回话标识，用于后续接口调用中使用，该值有效期为2小时 */
     @XmlField("prepay_id")
@@ -36,4 +39,14 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
     /** 支付跳转链接 */
     @XmlField("mweb_url")
     private String mwebUrl;
+
+    @Override
+    public SupayBaseResponse convertResponse() {
+        SupayPayResponse payResponse = SupayPayResponse.builder()
+                .resultCode(this.getResultCode())
+                .resultMsg(this.getReturnMsg())
+                .redirectUrl(this.getMwebUrl())
+                .build();
+        return payResponse;
+    }
 }

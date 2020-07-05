@@ -96,6 +96,9 @@ public class BeanUtils extends BeanUtil {
         }
 
         for (Field field : fields) {
+            if (map.get(field.getName()) == null) {
+                continue;
+            }
             if (field.isAnnotationPresent(XmlField.class)) {
                 ReflectUtil.setFieldValue(xmlBean, field, map.get(field.getAnnotation(XmlField.class).value()));
             } else {

@@ -4,9 +4,17 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.data;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.org.supay.core.annotation.XmlField;
+import cn.org.supay.core.channel.aggregate.data.*;
+import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <b>Application name：</b> WxPayUnifiedOrderRequest.java <br>
@@ -19,7 +27,8 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
-public class WxPayUnifiedOrderRequest extends WxPayBaseRequest {
+@NoArgsConstructor
+public class WxPayUnifiedOrderRequest extends WxPayBaseRequest implements AggregateRequestConvert {
     @XmlField("device_info")
     private String deviceInfo;
     @XmlField("nonce_str")
@@ -60,4 +69,22 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest {
     private String sceneInfo;
     @XmlField("profit_sharing")
     private String profitSharing;
+
+    @Override
+    public WxPayBaseRequest convertRequest(SupayBaseRequest request) {
+        SupayPayRequest payRequest = (SupayPayRequest) request;
+        WxPayBaseRequest wxRequest = WxPayUnifiedOrderRequest.builder()
+                .body(payRequest.getTradeName())
+                .outTradeNo(payRequest.getTradeNo())
+                .notifyUrl(payRequest.getNotifyUrl())
+                .totalFee(payRequest.getAmount().multiply(new BigDecimal(100)).toString())
+                .timeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"))
+                .timeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"))
+                .tradeType(SupayPayType.WX_MP_PAY.getCode())
+//                        .openid(props.getStr("wx.openId"))
+                .spbillCreateIp(NetUtil.getLocalhostStr())
+                .nonceStr(String.valueOf(System.currentTimeMillis()))
+                .build();
+        return wxRequest;
+    }
 }

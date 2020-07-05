@@ -7,6 +7,7 @@ package cn.org.supay.core.channel.aggregate.data;
 import cn.org.supay.core.channel.data.Request;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <b>Application name：</b> SupayPayQueryRequest.java <br>
@@ -18,7 +19,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-@Builder
-public class SupayPayQueryRequest implements Request {
+@SuperBuilder
+public class SupayPayQueryRequest extends SupayBaseRequest implements Request {
     protected String outTradeNo;
 }

@@ -4,6 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundRequest;
 import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
 
@@ -17,7 +21,15 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class AliPayRefundRequest implements Request {
+public class AliPayRefundRequest implements Request, AggregateRequestConvert {
     protected String outTradeNo;
     protected String totalAmount;
+
+    @Override
+    public AliPayRefundRequest convertRequest(SupayBaseRequest request) {
+        SupayRefundRequest refundRequest = (SupayRefundRequest) request;
+        this.setOutTradeNo(refundRequest.getOutTradeNo());
+        this.setTotalAmount(refundRequest.getTotalAmount());
+        return this;
+    }
 }

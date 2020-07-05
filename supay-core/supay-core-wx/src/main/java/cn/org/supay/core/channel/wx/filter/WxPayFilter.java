@@ -32,26 +32,6 @@ public class WxPayFilter implements SupayFilter {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-        // 如果是支付
-        if (ctx.getResponse() instanceof WxPayUnifiedOrderResponse) {
-            WxPayUnifiedOrderResponse response = (WxPayUnifiedOrderResponse) ctx.getResponse();
-            SupayPayType payType = SupayPayType.valueOfByCode(response.getTradeType());
-            // 解析和封装微信返回数据
-            switch (payType) {
-                case WX_MP_PAY:
-                    WxMpPayData mpPayData = WxMpPayData.builder()
-                            .appId(response.getAppid())
-                            .prepayId(response.getPrepayId())
-                            .packageStr("")
-                            .nonceStr(String.valueOf(System.currentTimeMillis()))
-                            .build()
-                            ;
-                    response.setPayData(mpPayData);
-
-            }
-        }
-
-
         return chain.nextAfter(ctx);
     }
 }

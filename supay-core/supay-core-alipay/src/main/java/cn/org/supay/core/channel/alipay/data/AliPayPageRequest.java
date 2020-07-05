@@ -4,10 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
-import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
-import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
+import cn.org.supay.core.channel.aggregate.data.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -30,13 +27,13 @@ public class AliPayPageRequest extends AliPayBaseRequest implements AggregateReq
     String returnUrl;
 
     @Override
-    public <T> T convertRequest(SupayBaseRequest request) {
-        SupayPayRequest payRequest = (SupayPayRequest) request;
-        this.setPayType(((SupayPayRequest) request).getPayType());
+    public AliPayPageRequest convertRequest(SupayBaseRequest request) {
+        SupayPagePayRequest payRequest = (SupayPagePayRequest) request;
+        this.setPayType((request).getPayType());
         this.setOutTradeNo(payRequest.getTradeNo());
         this.setSubject(payRequest.getTradeName());
         this.setTotalAmount(payRequest.getAmount().toString());
         this.setReturnUrl(payRequest.getReturnUrl());
-        return (T) this;
+        return this;
     }
 }

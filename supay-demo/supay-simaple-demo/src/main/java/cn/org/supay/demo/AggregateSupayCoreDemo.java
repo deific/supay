@@ -11,6 +11,7 @@ import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.aggregate.data.SupayPagePayRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayParamWxApp;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
+import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
@@ -32,19 +33,27 @@ import java.math.BigDecimal;
 public class AggregateSupayCoreDemo {
 
     private static Props props;
-    private static  SupayChannelConfig channelConfig;
-
+    private static  SupayChannelConfig aliChannelConfig;
+    private static  SupayChannelConfig wxChannelConfig;
     // 初始化
     static {
         props = new Props("config/my-ali-pay.conf");
         // 初始化配置
-        channelConfig = SupayChannelConfig.builder()
+        aliChannelConfig = SupayChannelConfig.builder()
                 .rootSecretKey(props.getStr("ali.publicKey"))
                 .appId(props.getStr("ali.appId")).appSecret(props.getStr("ali.appSecret")).appName("支付宝应用-支付")
                 .mchId(props.getStr("ali.mchId")).mchName("支付宝商户").mchSecretKey(props.getStr("ali.mchSecretKey"))
                 .channelType(SupayChannelType.ALIPAY).apiBaseUrl("https://openapi.alipaydev.com/gateway.do")
                 .build()
                 .register();
+
+        props = new Props("config/my-wx-pay.conf");
+        // 初始化配置
+        wxChannelConfig = SupayChannelConfig.builder()
+                .appId(props.getStr("wx.appId")).appSecret(props.getStr("wx.appSecret")).appName("微信公众号-支付")
+                .mchId(props.getStr("wx.mchId")).mchSecretKey(props.getStr("wx.mchSecretKey")).mchName("微信商户")
+                .channelType(SupayChannelType.WECHAT).apiBaseUrl(WxApiType.BASE_URL_CHINA1.getUrl())
+                .build().register();
 
     }
 
@@ -58,9 +67,13 @@ public class AggregateSupayCoreDemo {
                 .tradeName("测试网页支付")
                 .amount(new BigDecimal(1))
                 .returnUrl("http://taobao.com")
-                .payType(SupayPayType.ALI_PAGE_PAY)
+                .notifyUrl("http://taobao.com")
+                .payType(SupayPayType.WX_H5_PAY)
+//                .payType(SupayPayType.ALI_PAGE_PAY)
                 .payParam(SupayPayParamWxApp.builder().appId("aa").build())
-                .build().toContext(channelConfig.getAppId(), false);
+                .build()
+//                .toContext(aliChannelConfig.getAppId(), false);
+                .toContext(wxChannelConfig.getAppId(), false);
 
         // 本地模拟支付
 //        cxt.setLocalMock(true);

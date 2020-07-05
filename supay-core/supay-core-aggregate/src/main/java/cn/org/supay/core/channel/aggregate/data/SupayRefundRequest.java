@@ -17,7 +17,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class SupayRefundRequest implements Request {
+public class SupayRefundRequest extends SupayBaseRequest implements Request {
     /**  业务订单号 */
     protected String outTradeNo;
     /**  金额 */

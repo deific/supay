@@ -11,9 +11,7 @@ import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.ChannelApiType;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.channel.wx.convert.WxPayConverter;
-import cn.org.supay.core.channel.wx.data.WxPayBaseRequest;
-import cn.org.supay.core.channel.wx.data.WxPayBaseResponse;
-import cn.org.supay.core.channel.wx.data.WxPayOrderQueryRequest;
+import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.channel.wx.filter.WxPayFilter;
 import cn.org.supay.core.channel.wx.notify.WxPayNotifyData;
 import cn.org.supay.core.config.SupayChannelConfig;
@@ -69,12 +67,12 @@ public class WxChannelPayService implements BaseChannelPayService {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
-        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxApiType.UNIFIED_ORDER);
+        return callApi(ctx, WxPayUnifiedOrderRequest.class, WxPayUnifiedOrderResponse.class, WxApiType.UNIFIED_ORDER);
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
-        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayBaseResponse.class, WxApiType.PAY_QUERY);
+        return callApi(ctx, WxPayOrderQueryRequest.class, WxPayOrderQueryResponse.class, WxApiType.PAY_QUERY);
     }
 
     /**
@@ -89,15 +87,9 @@ public class WxChannelPayService implements BaseChannelPayService {
                                                                         Class<? extends WxPayBaseRequest> requestClass,
                                                                         Class<? extends WxPayBaseResponse> responseClass,
                                                                         WxApiType apiType) {
-        // 检查并转换类型
-        SupayContext<WxPayBaseRequest, WxPayBaseResponse> thisCtx = SupayUtils.checkAndConvertType(ctx,
-                requestClass, responseClass);
-        if (ctx.hasError()) {
-            return ctx;
-        }
         // 设置随机数和签名
         SupayChannelConfig channelConfig = ctx.getChannelConfig();
-        WxPayBaseRequest request = thisCtx.getRequest();
+        WxPayBaseRequest request = ctx.getRequest(requestClass);
         request.setAppid(StrUtil.isNotEmpty(request.getAppid())?request.getAppid():channelConfig.getAppId());
         request.setMchId(StrUtil.isNotEmpty(request.getMchId())?request.getMchId():channelConfig.getMchId());
         request.setNonceStr(RandomUtil.randomString(16));

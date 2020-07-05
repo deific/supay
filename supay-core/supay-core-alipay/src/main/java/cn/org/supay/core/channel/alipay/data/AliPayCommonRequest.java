@@ -4,6 +4,9 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -19,7 +22,18 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
-public class AliPayCommonRequest extends AliPayBaseRequest implements Request {
+public class AliPayCommonRequest extends AliPayBaseRequest implements AggregateRequestConvert {
     /** 买家的支付宝唯一用户号 */
     String buyerId;
+
+    @Override
+    public AliPayCommonRequest convertRequest(SupayBaseRequest request) {
+        SupayPayRequest payRequest = (SupayPayRequest) request;
+        this.setPayType((request).getPayType());
+        this.setOutTradeNo(payRequest.getTradeNo());
+        this.setSubject(payRequest.getTradeName());
+        this.setTotalAmount(payRequest.getAmount().toString());
+        this.setBuyerId(payRequest.getTradeNo());
+        return this;
+    }
 }

@@ -5,6 +5,10 @@
 package cn.org.supay.core.channel.alipay.data;
 
 import cn.hutool.json.JSONUtil;
+import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayPayQueryResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryResponse;
 import cn.org.supay.core.channel.data.Response;
 import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
 import com.aliyun.tea.TeaModel;
@@ -20,7 +24,7 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class AliPayRefundQueryResponse extends AlipayTradeFastpayRefundQueryResponse implements Response {
+public class AliPayRefundQueryResponse extends AlipayTradeFastpayRefundQueryResponse implements Response, AggregateResponseConvert {
 
     public static AliPayRefundQueryResponse build(java.util.Map<String, ?> map) throws Exception {
         AliPayRefundQueryResponse self = new AliPayRefundQueryResponse();
@@ -35,5 +39,14 @@ public class AliPayRefundQueryResponse extends AlipayTradeFastpayRefundQueryResp
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public SupayBaseResponse convertResponse() {
+        return SupayRefundQueryResponse.builder()
+                .outTradeNo(this.outTradeNo)
+                .tradeNo(this.tradeNo)
+                .refundStatus(this.refundStatus)
+                .build();
     }
 }

@@ -21,5 +21,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class SupayRefundQueryResponse extends SupayBaseResponse implements Response {
 
-   
+    public String tradeNo;
+
+    public String outTradeNo;
+
+    public String refundStatus;
 }

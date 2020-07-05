@@ -12,6 +12,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.SignUtils;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -25,6 +26,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class WxPayBaseRequest implements Request {
     /** 微信分配的应用ID（公众号、小程序、app） */
     @XmlField("appid")
@@ -58,4 +60,7 @@ public class WxPayBaseRequest implements Request {
         this.setSign(sign);
         return ctx;
     }
+
+
+
 }
