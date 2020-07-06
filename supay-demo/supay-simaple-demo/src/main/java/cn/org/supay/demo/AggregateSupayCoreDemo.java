@@ -76,7 +76,7 @@ public class AggregateSupayCoreDemo {
                 .toContext(wxChannelConfig.getAppId(), false);
 
         // 本地模拟支付
-//        cxt.setLocalMock(true);
+        cxt.setLocalMock(true);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
 

@@ -6,10 +6,12 @@ package cn.org.supay.core.channel.mock;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.org.supay.core.channel.BaseChannelPayService;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
+import com.github.jsonzou.jmockdata.JMockData;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -67,6 +69,9 @@ public class MockChannelPayService implements BaseChannelPayService {
      * @return
      */
     private SupayContext<? extends Request, ? extends Response> randomSuccess(SupayContext<? extends Request, ? extends Response> ctx) {
+        Response response = JMockData.mock(SupayBaseResponse.class);
+        ctx.setResponse(response);
+
         int successValue = RandomUtil.randomInt(1, 100);
         boolean isSuccess = successValue <= 95;
         if (isSuccess) {
