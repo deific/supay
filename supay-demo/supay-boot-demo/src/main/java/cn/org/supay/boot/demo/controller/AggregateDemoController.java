@@ -5,14 +5,10 @@
 package cn.org.supay.boot.demo.controller;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
-import cn.org.supay.core.channel.wx.WxApiType;
-import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -35,29 +31,6 @@ import java.math.BigDecimal;
 @RequestMapping("/aggregate")
 public class AggregateDemoController {
 
-    private static  SupayChannelConfig channelConfig;
-
-    // 初始化
-    static {
-        Props alipayProps = new Props("./config/my-ali-pay.conf");
-        Props wxpayProps = new Props("./config/my-wx-pay.conf");
-        // 初始化渠道参数配置
-        channelConfig = SupayChannelConfig.builder()
-                .rootSecretKey(alipayProps.getStr("ali.publicKey"))
-                .appId(alipayProps.getStr("ali.appId")).appSecret(alipayProps.getStr("ali.appSecret")).appName("支付宝应用-支付")
-                .mchId(alipayProps.getStr("ali.mchId")).mchName("支付宝商户").mchSecretKey(alipayProps.getStr("ali.mchSecretKey"))
-                .channelType(SupayChannelType.ALIPAY).apiBaseUrl("https://openapi.alipaydev.com/gateway.do")
-                .build().register();
-        // 初始化渠道参数配置
-        channelConfig = SupayChannelConfig.builder()
-                .appId(wxpayProps.getStr("wx.appId")).appSecret(wxpayProps.getStr("wx.appSecret")).appName("微信公众号-支付")
-                .mchId(wxpayProps.getStr("wx.mchId")).mchSecretKey(wxpayProps.getStr("wx.mchSecretKey")).mchName("微信商户")
-                .channelType(SupayChannelType.WECHAT).apiBaseUrl(WxApiType.BASE_URL_CHINA1.getUrl())
-                .build().register();
-        ;
-    }
-
-
     /**
      * 跳到支付宝支付页面
      * 针对实时支付,即时付款
@@ -65,7 +38,7 @@ public class AggregateDemoController {
      * @return 跳到支付页面
      */
     @RequestMapping(value = "toAliPagePay.html", produces = "text/html;charset=UTF-8")
-    public HttpEntity<String> toAliPagePay(BigDecimal price) {
+    public HttpEntity<String> toAliPagePay(BigDecimal price, String appId) {
         //及时收款
         String orderCode = IdUtil.fastSimpleUUID();
 
@@ -77,7 +50,7 @@ public class AggregateDemoController {
                 .amount(price)
                 .returnUrl("http://taobao.com")
                 .build()
-                .toContext(channelConfig.getAppId(), false);
+                .toContext(appId, false);
 
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
@@ -94,7 +67,7 @@ public class AggregateDemoController {
      * @return 跳到支付页面
      */
     @RequestMapping(value = "toAliAppPay.html", produces = "text/html;charset=UTF-8")
-    public HttpEntity<String> toAliAppPay(BigDecimal price) {
+    public HttpEntity<String> toAliAppPay(BigDecimal price, String appId) {
         //及时收款
         String orderCode = IdUtil.fastSimpleUUID();
 
@@ -106,7 +79,7 @@ public class AggregateDemoController {
                 .amount(price)
                 .returnUrl("http://taobao.com")
                 .build()
-                .toContext(channelConfig.getAppId(), false);
+                .toContext(appId, false);
 
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
@@ -122,7 +95,7 @@ public class AggregateDemoController {
      * @return 跳到支付页面
      */
     @RequestMapping(value = "toAliWapPay.html", produces = "text/html;charset=UTF-8")
-    public HttpEntity<String> toAliWapPay(BigDecimal price) {
+    public HttpEntity<String> toAliWapPay(BigDecimal price, String appId) {
         //及时收款
         String orderCode = IdUtil.fastSimpleUUID();
 
@@ -134,7 +107,7 @@ public class AggregateDemoController {
                 .amount(price)
                 .returnUrl("http://taobao.com")
                 .build()
-                .toContext(channelConfig.getAppId(), false);
+                .toContext(appId, false);
 
         // 调用支付接口
         cxt = SupayCore.pay(cxt);

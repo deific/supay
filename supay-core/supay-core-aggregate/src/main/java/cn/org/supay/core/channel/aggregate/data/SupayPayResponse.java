@@ -20,12 +20,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayPayResponse extends SupayBaseResponse implements Response {
-    /** 业务处理编码 */
-    protected String resultCode;
-    /** 业务处理信息 */
-    protected String resultMsg;
-    /** 业务处理是否成功 */
-    protected boolean success;
+
     /** 跳转地址 */
     protected String redirectUrl;
     /** 跳转页面内容 */

@@ -6,6 +6,7 @@ package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.channel.data.Response;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -19,6 +20,12 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class SupayBaseResponse implements Response {
-
+    /** 业务处理编码 */
+    protected String resultCode;
+    /** 业务处理信息 */
+    protected String resultMsg;
+    /** 业务处理是否成功 */
+    protected boolean success;
 }
