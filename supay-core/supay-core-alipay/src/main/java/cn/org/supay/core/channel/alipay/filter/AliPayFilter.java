@@ -11,7 +11,7 @@ import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
-import com.alipay.easysdk.kernel.BaseClient;
+import com.alipay.easysdk.kernel.Config;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.MalformedURLException;
@@ -47,7 +47,7 @@ public class AliPayFilter implements SupayFilter {
      * @return
      */
     private void init(SupayChannelConfig channelConfig) {
-        BaseClient.Config config = new BaseClient.Config();
+        Config config = new Config();
 
         try {
             URL url = new URL(channelConfig.getApiBaseUrl());

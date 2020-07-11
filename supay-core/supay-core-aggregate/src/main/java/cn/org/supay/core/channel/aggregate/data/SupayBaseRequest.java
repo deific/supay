@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * <b>Application name：</b> SuPayRequest.java <br>
@@ -29,4 +30,17 @@ import java.math.BigDecimal;
 @SuperBuilder
 @NoArgsConstructor
 public class SupayBaseRequest implements Request {
+    /** 其他接口配置参数 */
+    protected Map<String, Object> optionParams;
+
+    /**
+     * 设置其他参数
+     * @param paramName
+     * @param paramValue
+     * @return
+     */
+    public SupayBaseRequest setParam(String paramName, Object paramValue) {
+        optionParams.put(paramName, paramValue);
+        return this;
+    }
 }

@@ -6,9 +6,13 @@ package cn.org.supay.core.channel.alipay.data;
 
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.enums.SupayPayType;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <b>Application name：</b> AliPayBaseRequest.java <br>
@@ -28,4 +32,17 @@ public class AliPayBaseRequest implements Request {
     protected String subject;
     protected String outTradeNo;
     protected String totalAmount;
+    /** 其他非必要配置参数 */
+    protected Map<String, Object> optionParams = new HashMap<>();
+
+    /**
+     * 设置其他参数
+     * @param paramName
+     * @param paramValue
+     * @return
+     */
+    public AliPayBaseRequest setParam(String paramName, Object paramValue) {
+        optionParams.put(paramName, paramValue);
+        return this;
+    }
 }

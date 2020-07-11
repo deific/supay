@@ -4,7 +4,13 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.sdk;
 
-import com.alipay.easysdk.kernel.BaseClient;
+import com.alipay.easysdk.kernel.AlipayConstants;
+import com.alipay.easysdk.kernel.Client;
+import com.alipay.easysdk.kernel.Config;
+import com.alipay.easysdk.kernel.Context;
+import com.alipay.easysdk.kms.aliyun.AliyunKMSClient;
+import com.alipay.easysdk.kms.aliyun.AliyunKMSSigner;
+import com.aliyun.tea.TeaModel;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,61 +28,32 @@ import java.util.Map;
  */
 @Slf4j
 public class Factory  {
+
     private static final Map<String, ClientInfo> clients = new HashMap<>();
+
+    public static final String SDK_VERSION = "alipay-easysdk-java-2.0.0";
 
     /**
      * 设置客户端参数，只需设置一次，即可反复使用各种场景下的API Client
      *
      * @param options 客户端参数对象
      */
-    public static void setOptions(BaseClient.Config options) {
+    public static void setOptions(Config options) {
         try {
-            ClientInfo clientInfo = clients.get(options.appId);
-            if (clientInfo != null) {
-                return;
+            Context context = new Context(options, SDK_VERSION);
+
+            if (AlipayConstants.AliyunKMS.equals(context.getConfig(AlipayConstants.SIGN_PROVIDER_CONFIG_KEY))) {
+                context.setSigner(new AliyunKMSSigner(new AliyunKMSClient(TeaModel.buildMap(options))));
             }
-            registerClient(options.appId, new com.alipay.easysdk.base.image.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.base.video.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.base.oauth.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.base.qrcode.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.marketing.openlife.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.marketing.pass.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.marketing.templatemessage.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.member.identification.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.payment.common.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.payment.huabei.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.payment.facetoface.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.payment.page.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.payment.wap.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.payment.app.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.security.textrisk.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.util.generic.Client(options));
-            registerClient(options.appId, new com.alipay.easysdk.util.aes.Client(options));
+
+            ClientInfo clientInfo = new ClientInfo();
+            clientInfo.setAppId(options.appId);
+            clientInfo.setContext(context);
+            clients.put(options.appId, clientInfo);
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * 注册客户端
-     * @param appId
-     * @param client
-     */
-    private static void registerClient(String appId, BaseClient client) {
-        ClientInfo clientInfo = clients.get(appId);
-        if (clientInfo == null) {
-            clientInfo = new ClientInfo();
-            clientInfo.setAppId(appId);
-            clients.put(appId, clientInfo);
-        }
-        clientInfo.registerClient(client.getClass().getCanonicalName(), client);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T getClient(String appId, Class<T> clazz) {
-        BaseClient baseClient = clients.get(appId).getClient(clazz.getCanonicalName());
-        Preconditions.checkNotNull(baseClient, "尚未注册" + clazz.getCanonicalName() + "，请先调用Factory.setOptions方法。");
-        return (T) baseClient;
     }
 
     /**
@@ -88,8 +65,8 @@ public class Factory  {
          *
          * @return 支付通用API Client
          */
-        public static com.alipay.easysdk.payment.common.Client Common(String appId) {
-            return getClient(appId, com.alipay.easysdk.payment.common.Client.class);
+        public static com.alipay.easysdk.payment.common.Client Common(String appId) throws Exception {
+            return new com.alipay.easysdk.payment.common.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -97,8 +74,8 @@ public class Factory  {
          *
          * @return 花呗相关API Client
          */
-        public static com.alipay.easysdk.payment.huabei.Client Huabei(String appId) {
-            return getClient(appId, com.alipay.easysdk.payment.huabei.Client.class);
+        public static com.alipay.easysdk.payment.huabei.Client Huabei(String appId) throws Exception {
+            return new com.alipay.easysdk.payment.huabei.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -106,8 +83,8 @@ public class Factory  {
          *
          * @return 当面付相关API Client
          */
-        public static com.alipay.easysdk.payment.facetoface.Client FaceToFace(String appId) {
-            return getClient(appId, com.alipay.easysdk.payment.facetoface.Client.class);
+        public static com.alipay.easysdk.payment.facetoface.Client FaceToFace(String appId) throws Exception {
+            return new com.alipay.easysdk.payment.facetoface.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -115,8 +92,8 @@ public class Factory  {
          *
          * @return 电脑网站支付相关API Client
          */
-        public static com.alipay.easysdk.payment.page.Client Page(String appId) {
-            return getClient(appId, com.alipay.easysdk.payment.page.Client.class);
+        public static com.alipay.easysdk.payment.page.Client Page(String appId) throws Exception {
+            return new com.alipay.easysdk.payment.page.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -124,8 +101,8 @@ public class Factory  {
          *
          * @return 手机网站支付相关API Client
          */
-        public static com.alipay.easysdk.payment.wap.Client Wap(String appId) {
-            return getClient(appId, com.alipay.easysdk.payment.wap.Client.class);
+        public static com.alipay.easysdk.payment.wap.Client Wap(String appId) throws Exception {
+            return new com.alipay.easysdk.payment.wap.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -133,8 +110,8 @@ public class Factory  {
          *
          * @return 手机APP支付相关API Client
          */
-        public static com.alipay.easysdk.payment.app.Client App(String appId) {
-            return getClient(appId, com.alipay.easysdk.payment.app.Client.class);
+        public static com.alipay.easysdk.payment.app.Client App(String appId) throws Exception {
+            return new com.alipay.easysdk.payment.app.Client(new Client(clients.get(appId).getContext()));
         }
     }
 
@@ -147,8 +124,8 @@ public class Factory  {
          *
          * @return 图片相关API Client
          */
-        public static com.alipay.easysdk.base.image.Client Image(String appId) {
-            return getClient(appId, com.alipay.easysdk.base.image.Client.class);
+        public static com.alipay.easysdk.base.image.Client Image(String appId) throws Exception {
+            return new com.alipay.easysdk.base.image.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -156,8 +133,8 @@ public class Factory  {
          *
          * @return 视频相关API Client
          */
-        public static com.alipay.easysdk.base.video.Client Video(String appId) {
-            return getClient(appId, com.alipay.easysdk.base.video.Client.class);
+        public static com.alipay.easysdk.base.video.Client Video(String appId) throws Exception {
+            return new com.alipay.easysdk.base.video.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -165,8 +142,8 @@ public class Factory  {
          *
          * @return OAuth认证相关API Client
          */
-        public static com.alipay.easysdk.base.oauth.Client OAuth(String appId) {
-            return getClient(appId, com.alipay.easysdk.base.oauth.Client.class);
+        public static com.alipay.easysdk.base.oauth.Client OAuth(String appId) throws Exception {
+            return new com.alipay.easysdk.base.oauth.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -174,8 +151,8 @@ public class Factory  {
          *
          * @return 小程序二维码相关API Client
          */
-        public static com.alipay.easysdk.base.qrcode.Client Qrcode(String appId) {
-            return getClient(appId, com.alipay.easysdk.base.qrcode.Client.class);
+        public static com.alipay.easysdk.base.qrcode.Client Qrcode(String appId) throws Exception {
+            return new com.alipay.easysdk.base.qrcode.Client(new Client(clients.get(appId).getContext()));
         }
     }
 
@@ -188,8 +165,8 @@ public class Factory  {
          *
          * @return 生活号相关API Client
          */
-        public static com.alipay.easysdk.marketing.openlife.Client OpenLife(String appId) {
-            return getClient(appId, com.alipay.easysdk.marketing.openlife.Client.class);
+        public static com.alipay.easysdk.marketing.openlife.Client OpenLife(String appId) throws Exception {
+            return new com.alipay.easysdk.marketing.openlife.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -197,8 +174,8 @@ public class Factory  {
          *
          * @return 支付宝卡包相关API Client
          */
-        public static com.alipay.easysdk.marketing.pass.Client Pass(String appId) {
-            return getClient(appId, com.alipay.easysdk.marketing.pass.Client.class);
+        public static com.alipay.easysdk.marketing.pass.Client Pass(String appId) throws Exception {
+            return new com.alipay.easysdk.marketing.pass.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -206,8 +183,8 @@ public class Factory  {
          *
          * @return 小程序模板消息相关API Client
          */
-        public static com.alipay.easysdk.marketing.templatemessage.Client TemplateMessage(String appId) {
-            return getClient(appId, com.alipay.easysdk.marketing.templatemessage.Client.class);
+        public static com.alipay.easysdk.marketing.templatemessage.Client TemplateMessage(String appId) throws Exception {
+            return new com.alipay.easysdk.marketing.templatemessage.Client(new Client(clients.get(appId).getContext()));
         }
     }
 
@@ -220,8 +197,8 @@ public class Factory  {
          *
          * @return 支付宝身份认证相关API Client
          */
-        public static com.alipay.easysdk.member.identification.Client Identification(String appId) {
-            return getClient(appId, com.alipay.easysdk.member.identification.Client.class);
+        public static com.alipay.easysdk.member.identification.Client Identification(String appId) throws Exception {
+            return new com.alipay.easysdk.member.identification.Client(new Client(clients.get(appId).getContext()));
         }
     }
 
@@ -234,8 +211,8 @@ public class Factory  {
          *
          * @return 文本风险识别相关API Client
          */
-        public static com.alipay.easysdk.security.textrisk.Client TextRisk(String appId) {
-            return getClient(appId, com.alipay.easysdk.security.textrisk.Client.class);
+        public static com.alipay.easysdk.security.textrisk.Client TextRisk(String appId) throws Exception {
+            return new com.alipay.easysdk.security.textrisk.Client(new Client(clients.get(appId).getContext()));
         }
     }
 
@@ -248,8 +225,8 @@ public class Factory  {
          *
          * @return OpenAPI通用接口
          */
-        public static com.alipay.easysdk.util.generic.Client Generic(String appId) {
-            return getClient(appId, com.alipay.easysdk.util.generic.Client.class);
+        public static com.alipay.easysdk.util.generic.Client Generic(String appId) throws Exception {
+            return new com.alipay.easysdk.util.generic.Client(new Client(clients.get(appId).getContext()));
         }
 
         /**
@@ -257,42 +234,8 @@ public class Factory  {
          *
          * @return AES128加解密相关API Client
          */
-        public static com.alipay.easysdk.util.aes.Client AES(String appId) {
-            return getClient(appId, com.alipay.easysdk.util.aes.Client.class);
-        }
-    }
-
-    /**
-     * 客户端定义
-     */
-    public static class ClientInfo {
-        private String appId;
-        private Map<String, BaseClient> clientHashMap = new HashMap<>();
-
-        /**
-         * 设置appid
-         * @param appId
-         */
-        public void setAppId(String appId) {
-            this.appId = appId;
-        }
-
-        /**
-         * 注册客户端
-         * @param clientName
-         * @param client
-         */
-        public void registerClient(String clientName, BaseClient client) {
-            clientHashMap.put(clientName, client);
-        }
-
-        /**
-         * 获取客户端
-         * @param clientName
-         * @return
-         */
-        public BaseClient getClient(String clientName) {
-            return clientHashMap.get(clientName);
+        public static com.alipay.easysdk.util.aes.Client AES(String appId) throws Exception {
+            return new com.alipay.easysdk.util.aes.Client(new Client(clients.get(appId).getContext()));
         }
     }
 }

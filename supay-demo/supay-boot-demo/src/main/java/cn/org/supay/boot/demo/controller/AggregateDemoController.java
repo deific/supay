@@ -55,7 +55,7 @@ public class AggregateDemoController {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((AliPayPageResponse)cxt.getResponse()).getBody();
+        String result = ((SupayPagePayResponse)cxt.getResponse()).getRedirectPageBody();
 
         return new HttpEntity<>(result);
     }

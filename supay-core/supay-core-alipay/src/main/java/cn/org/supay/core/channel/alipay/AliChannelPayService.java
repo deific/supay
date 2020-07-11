@@ -60,38 +60,39 @@ public class AliChannelPayService implements BaseChannelPayService {
             switch (payType) {
                 case ALI_PAGE_PAY:
                     AliPayPageRequest request = thisCtx.getRequest(AliPayPageRequest.class);
-                    AlipayTradePagePayResponse response = Factory.Payment.Page(thisCtx.getChannelConfig().getAppId())
+                    AlipayTradePagePayResponse response = Factory.Payment.Page(thisCtx.getChannelConfig().getAppId()).batchOptional(request.getOptionParams())
                             .pay(request.getSubject(), request.getOutTradeNo(), request.getTotalAmount(), request.getReturnUrl());
                     AliPayPageResponse pageResponse = new AliPayPageResponse();
                     pageResponse.setBody(response.body);
                     thisCtx.setResponse(pageResponse);
                     return thisCtx;
                 case ALI_WAP_PAY:
-                    AliPayPageRequest wapRequest = (AliPayPageRequest) thisCtx.getRequest();
-                    AlipayTradeWapPayResponse wapResponse = Factory.Payment.Wap(thisCtx.getChannelConfig().getAppId()).pay(wapRequest.getSubject(), wapRequest.getOutTradeNo(),
+                    AliPayPageRequest wapRequest = thisCtx.getRequest(AliPayPageRequest.class);
+                    AlipayTradeWapPayResponse wapResponse = Factory.Payment.Wap(thisCtx.getChannelConfig().getAppId()).batchOptional(wapRequest.getOptionParams())
+                            .pay(wapRequest.getSubject(), wapRequest.getOutTradeNo(),
                             wapRequest.getTotalAmount(), wapRequest.getReturnUrl(), wapRequest.getReturnUrl());
                     AliPayPageResponse wapPayResponse = new AliPayPageResponse();
                     wapPayResponse.setBody(wapResponse.body);
                     thisCtx.setResponse(wapPayResponse);
                     return thisCtx;
                 case ALI_APP_PAY:
-                    AliPayAppRequest appRequest = (AliPayAppRequest)thisCtx.getRequest();
-                    AlipayTradeAppPayResponse appResponse = Factory.Payment.App(thisCtx.getChannelConfig().getAppId())
+                    AliPayAppRequest appRequest = thisCtx.getRequest(AliPayAppRequest.class);
+                    AlipayTradeAppPayResponse appResponse = Factory.Payment.App(thisCtx.getChannelConfig().getAppId()).batchOptional(appRequest.getOptionParams())
                             .pay(appRequest.getSubject(), appRequest.getOutTradeNo(), appRequest.getTotalAmount());
                     AliPayAppResponse appPayResponse = new AliPayAppResponse();
                     appPayResponse.setBody(appResponse.body);
                     thisCtx.setResponse(appPayResponse);
                     return thisCtx;
                 case ALI_FACE_PAY:
-                    AliPayFaceRequest faceRequest = (AliPayFaceRequest) thisCtx.getRequest();
-                    AlipayTradePayResponse faceResponse = Factory.Payment.FaceToFace(thisCtx.getChannelConfig().getAppId())
+                    AliPayFaceRequest faceRequest = thisCtx.getRequest(AliPayFaceRequest.class);
+                    AlipayTradePayResponse faceResponse = Factory.Payment.FaceToFace(thisCtx.getChannelConfig().getAppId()).batchOptional(faceRequest.getOptionParams())
                             .pay(faceRequest.getSubject(), faceRequest.getOutTradeNo(), faceRequest.getTotalAmount(), faceRequest.getAuthCode());
                     AliPayFaceResponse facePayResponse = AliPayFaceResponse.build(faceResponse.toMap());
                     thisCtx.setResponse(facePayResponse);
                     return thisCtx;
                 case ALI_COMMON_PAY:
-                    AliPayCommonRequest commonRequest = (AliPayCommonRequest)thisCtx.getRequest();
-                    AlipayTradeCreateResponse commonResponse = Factory.Payment.Common(thisCtx.getChannelConfig().getAppId())
+                    AliPayCommonRequest commonRequest = thisCtx.getRequest(AliPayCommonRequest.class);
+                    AlipayTradeCreateResponse commonResponse = Factory.Payment.Common(thisCtx.getChannelConfig().getAppId()).batchOptional(commonRequest.getOptionParams())
                             .create(commonRequest.getSubject(), commonRequest.getOutTradeNo(), commonRequest.getTotalAmount(), commonRequest.getBuyerId());
                     AliPayCommonResponse commonPayResponse = AliPayCommonResponse.build(commonResponse.toMap());
                     thisCtx.setResponse(commonPayResponse);
