@@ -115,4 +115,34 @@ public class AggregateDemoController {
         String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectPageBody();
         return new HttpEntity<>(result);
     }
+
+
+    /**
+     * 跳到微信支付页面
+     * 针对实时支付,即时付款
+     * @param price       金额
+     * @return 跳到支付页面
+     */
+    @RequestMapping(value = "toWxH5Pay.html", produces = "text/html;charset=UTF-8")
+    public HttpEntity<String> toWxH5Pay(BigDecimal price, String appId) {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayH5PayRequest.builder()
+                .tradeNo(orderCode)
+                .payType(SupayPayType.WX_H5_PAY)
+                .tradeName("测试APP支付")
+                .amount(price)
+                .payParam(SupayPayParamWxH5.builder().build())
+                .returnUrl("http://taobao.com")
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectPageBody();
+        return new HttpEntity<>(result);
+    }
 }
