@@ -8,9 +8,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.SupayCore;
-import cn.org.supay.core.channel.aggregate.data.SupayPagePayRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayPayParamWxApp;
-import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
+import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
@@ -57,15 +55,15 @@ public class AggregateSupayCoreDemo {
 
     }
 
-    public static void main(String[] args) {
 
+
+    private static void testPagePay() {
         String orderCode = IdUtil.fastSimpleUUID();
-
         // 构建支付上下文
         SupayContext cxt = SupayPagePayRequest.builder()
                 .tradeNo(orderCode)
                 .tradeName("测试网页支付")
-                .amount(new BigDecimal(1))
+                .amount(new BigDecimal(0.01))
                 .returnUrl("http://taobao.com")
                 .notifyUrl("http://taobao.com")
                 .payType(SupayPayType.WX_H5_PAY)
@@ -82,6 +80,36 @@ public class AggregateSupayCoreDemo {
 
         log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.isSuccess(),
                 cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
+    }
 
+    private static void testScanPay() {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayScanPayRequest.builder()
+                .tradeNo(orderCode)
+                .payType(SupayPayType.WX_SCAN_PAY)
+                .tradeName("测试APP支付")
+                .amount(new BigDecimal(0.01))
+                .payParam(SupayPayParamWxScan.builder().build())
+                .returnUrl("http://supay.com/payresult")
+                .notifyUrl("http://supay.com/notify")
+                .build()
+                .toContext(wxChannelConfig.getAppId(), false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        String result = ((SupayPayResponse)cxt.getResponse()).getRedirectPageBody();
+
+        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.isSuccess(),
+                cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
+    }
+
+    public static void main(String[] args) {
+
+//        testPagePay();
+        testScanPay();
     }
 }

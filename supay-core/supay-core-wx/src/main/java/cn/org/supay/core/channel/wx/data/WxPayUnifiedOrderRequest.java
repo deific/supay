@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 /**
@@ -77,10 +78,10 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest implements Aggreg
                 .body(payRequest.getTradeName())
                 .outTradeNo(payRequest.getTradeNo())
                 .notifyUrl(payRequest.getNotifyUrl())
-                .totalFee(payRequest.getAmount().multiply(new BigDecimal(100)).toString())
+                .totalFee(payRequest.getAmount().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_DOWN).toString())
                 .timeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"))
                 .timeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"))
-                .tradeType(SupayPayType.WX_MP_PAY.getCode())
+                .tradeType(payRequest.getPayType().getCode())
 //                        .openid(props.getStr("wx.openId"))
                 .spbillCreateIp(NetUtil.getLocalhostStr())
                 .nonceStr(String.valueOf(System.currentTimeMillis()))
