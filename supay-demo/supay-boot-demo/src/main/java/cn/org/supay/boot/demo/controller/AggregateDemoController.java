@@ -7,7 +7,6 @@ package cn.org.supay.boot.demo.controller;
 import cn.hutool.core.util.IdUtil;
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.aggregate.data.*;
-import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayPayType;
 import lombok.extern.slf4j.Slf4j;
@@ -118,7 +117,7 @@ public class AggregateDemoController {
 
 
     /**
-     * 跳到微信支付页面
+     * 跳到微信H5支付页面
      * 针对实时支付,即时付款
      * @param price       金额
      * @return 跳到支付页面
@@ -143,6 +142,35 @@ public class AggregateDemoController {
         cxt = SupayCore.pay(cxt);
 
         String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectPageBody();
+        return new HttpEntity<>(result);
+    }
+
+    /**
+     * 跳到微信支付扫码页面
+     * 针对实时支付,即时付款
+     * @param price       金额
+     * @return 跳到支付页面
+     */
+    @RequestMapping(value = "toWxScanPay.html", produces = "text/html;charset=UTF-8")
+    public HttpEntity<String> toWxScanPay(BigDecimal price, String appId) {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayScanPayRequest.builder()
+                .tradeNo(orderCode)
+                .payType(SupayPayType.WX_SCAN_PAY)
+                .tradeName("测试APP支付")
+                .amount(price)
+                .payParam(SupayPayParamWxScan.builder().build())
+                .returnUrl("http://taobao.com")
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        String result = ((SupayScanPayResponse)cxt.getResponse()).getQrCode();
         return new HttpEntity<>(result);
     }
 }
