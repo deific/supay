@@ -74,18 +74,48 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest implements Aggreg
     @Override
     public WxPayBaseRequest convertRequest(SupayBaseRequest request) {
         SupayPayRequest payRequest = (SupayPayRequest) request;
-        WxPayBaseRequest wxRequest = WxPayUnifiedOrderRequest.builder()
-                .body(payRequest.getTradeName())
-                .outTradeNo(payRequest.getTradeNo())
-                .notifyUrl(payRequest.getNotifyUrl())
-                .totalFee(payRequest.getAmount().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_DOWN).toString())
-                .timeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"))
-                .timeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"))
-                .tradeType(payRequest.getPayType().getCode())
-//                        .openid(props.getStr("wx.openId"))
-                .spbillCreateIp(NetUtil.getLocalhostStr())
-                .nonceStr(String.valueOf(System.currentTimeMillis()))
-                .build();
-        return wxRequest;
+        this.setBody(payRequest.getTradeName());
+        this.setOutTradeNo(payRequest.getTradeNo());
+        this.setNotifyUrl(payRequest.getNotifyUrl());
+        this.setTotalFee(payRequest.getAmount().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_DOWN).toString());
+        this.setTimeStart(DateUtil.format(new Date(), "yyyyMMddHHmmss"));
+        this.setTimeExpire(DateUtil.format(DateUtil.offsetMinute(new Date(), 15), "yyyyMMddHHmmss"));
+        this.setTradeType(payRequest.getPayType().getCode());
+        this.setSpbillCreateIp(NetUtil.getLocalhostStr());
+        this.setNonceStr(String.valueOf(System.currentTimeMillis()));
+
+        // 支付参数
+        this.fillPayParam(payRequest.getPayType(), payRequest.getPayParam());
+
+        return this;
+    }
+
+    /**
+     * 填充支付参数
+     * @param payType
+     * @param payParam
+     */
+    private void fillPayParam(SupayPayType payType, SupayPayParam payParam) {
+        switch (payType) {
+            // h5支付场景信息
+            case WX_H5_PAY:
+                this.setSceneInfo(((SupayPayParamWxH5)payParam).getSceneInfo());
+                break;
+            case WX_MP_PAY:
+                this.setAppid(((SupayPayParamWxMp)payParam).getAppId());
+                this.setOpenid(((SupayPayParamWxMp)payParam).getOpenId());
+                break;
+            case WX_APP_PAY:
+                this.setAppid(((SupayPayParamWxApp)payParam).getAppId());
+                break;
+            case WX_SCAN_PAY:
+                break;
+            case WX_FACE_PAY:
+                break;
+            case WX_MICRO_PAY:
+                this.setAppid(((SupayPayParamWxMini)payParam).getAppId());
+                this.setOpenid(((SupayPayParamWxMini)payParam).getOpenId());
+                break;
+        }
     }
 }

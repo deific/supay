@@ -35,6 +35,11 @@
             <artifactId>hutool-json</artifactId>
             <version>${hutool.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-extra</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
         <!-- huTool 工具包 End -->
     </dependencies>
 </project>

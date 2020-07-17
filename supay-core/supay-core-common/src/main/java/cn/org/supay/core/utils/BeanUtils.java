@@ -45,7 +45,7 @@ public class BeanUtils extends BeanUtil {
             try {
                 boolean isAccessible = field.isAccessible();
                 field.setAccessible(true);
-                if (field.get(bean) == null || field.getModifiers() == Modifier.STATIC) {
+                if (field.get(bean) == null || Modifier.isStatic(field.getModifiers())) {
                     field.setAccessible(isAccessible);
                     continue;
                 }
@@ -96,13 +96,16 @@ public class BeanUtils extends BeanUtil {
         }
 
         for (Field field : fields) {
-            if (map.get(field.getName()) == null) {
-                continue;
-            }
             if (field.isAnnotationPresent(XmlField.class)) {
-                ReflectUtil.setFieldValue(xmlBean, field, map.get(field.getAnnotation(XmlField.class).value()));
+                Object value = map.get(field.getAnnotation(XmlField.class).value());
+                if (value != null) {
+                    ReflectUtil.setFieldValue(xmlBean, field, value);
+                }
             } else {
-                ReflectUtil.setFieldValue(xmlBean, field, map.get(field.getName()));
+                Object value = map.get(field.getName());
+                if (value != null) {
+                    ReflectUtil.setFieldValue(xmlBean, field, value);
+                }
             }
         }
         return xmlBean;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @(#)SupayScanPayResponse.java 2020年05月29日 12:26
+ * @(#)SupayMpPayRequest.java 2020年05月29日 12:26
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 /**
- * <b>Application name：</b> SupayScanPayResponse.java <br>
+ * <b>Application name：</b> SupayMpPayRequest.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
@@ -18,9 +18,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
-public class SupayScanPayResponse extends SupayPayResponse {
-    /** 二维码 */
-    private String qrCode;
-    /** 二维码url */
-    private String qrCodeUrl;
+public class SupayMpPayRequest extends SupayPayRequest {
+
+    String returnUrl;
 }

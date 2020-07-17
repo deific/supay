@@ -21,5 +21,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class SupayPayParamWxH5 extends SupayPayParam {
-
+    /** 场景数据 */
+    private String sceneInfo;
 }

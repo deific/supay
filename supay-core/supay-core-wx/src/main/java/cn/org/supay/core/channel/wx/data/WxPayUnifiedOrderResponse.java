@@ -4,10 +4,11 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.data;
 
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.annotation.XmlField;
-import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
-import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
+import cn.org.supay.core.channel.aggregate.data.*;
+import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 import lombok.ToString;
 
@@ -42,11 +43,30 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
 
     @Override
     public SupayBaseResponse convertResponse() {
-        SupayPayResponse payResponse = SupayPayResponse.builder()
-                .resultCode(this.getResultCode())
-                .resultMsg(this.getReturnMsg())
-                .redirectUrl(this.getMwebUrl())
-                .build();
+        SupayPayResponse payResponse = null;
+        SupayPayType payType = SupayPayType.valueOfByCode(this.tradeType);
+        switch (payType) {
+            // h5支付场景信息
+            case WX_H5_PAY:
+                payResponse = SupayH5PayResponse.builder().build();
+                break;
+            case WX_MP_PAY:
+                payResponse = SupayAppPayResponse.builder().build();
+                break;
+            case WX_APP_PAY:
+                break;
+            case WX_SCAN_PAY:
+                payResponse = SupayScanPayResponse.builder()
+                        .qrCodeUrl(this.codeURL)
+                        .build();
+                break;
+            case WX_FACE_PAY:
+                break;
+            case WX_MICRO_PAY:
+                break;
+        }
+        payResponse.setResultCode(this.getResultCode());
+        payResponse.setResultMsg(this.getReturnMsg());
         return payResponse;
     }
 }
