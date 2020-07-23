@@ -5,6 +5,7 @@
 package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -20,7 +21,8 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayPayResponse extends SupayBaseResponse implements Response {
-
+    /** 支付方式 */
+    protected SupayPayType payType;
     /** 跳转地址 */
     protected String redirectUrl;
     /** 跳转页面内容 */

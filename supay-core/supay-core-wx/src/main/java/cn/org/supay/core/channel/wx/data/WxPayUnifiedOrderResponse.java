@@ -65,6 +65,7 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
             case WX_MICRO_PAY:
                 break;
         }
+        payResponse.setPayType(payType);
         payResponse.setResultCode(this.getResultCode());
         payResponse.setResultMsg(this.getReturnMsg());
         return payResponse;
