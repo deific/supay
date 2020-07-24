@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 
@@ -171,6 +172,36 @@ public class AggregateDemoController {
         cxt = SupayCore.pay(cxt);
 
         String result = ((SupayScanPayResponse)cxt.getResponse()).getQrCode();
+        return new HttpEntity<>(result);
+    }
+
+    /**
+     * 跳到微信支付扫码页面
+     * 针对实时支付,即时付款
+     * @param price       金额
+     * @return 跳到支付页面
+     */
+    @RequestMapping(value = "toWxAppPay.html")
+    @ResponseBody
+    public HttpEntity<String> toWxAppPay(BigDecimal price, String appId) {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayAppPayRequest.builder()
+                .tradeNo(orderCode)
+                .payType(SupayPayType.WX_APP_PAY)
+                .tradeName("测试APP支付")
+                .amount(price)
+                .payParam(SupayPayParamWxScan.builder().build())
+                .returnUrl("http://taobao.com")
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectPageBody();
         return new HttpEntity<>(result);
     }
 }
