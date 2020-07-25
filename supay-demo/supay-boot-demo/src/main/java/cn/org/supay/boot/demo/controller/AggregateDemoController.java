@@ -204,4 +204,35 @@ public class AggregateDemoController {
         String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectPageBody();
         return new HttpEntity<>(result);
     }
+
+
+    /**
+     * 微信公众号支付
+     * 针对实时支付,即时付款
+     * @param price       金额
+     * @return 跳到支付页面
+     */
+    @RequestMapping(value = "toWxMpPay.html")
+    @ResponseBody
+    public HttpEntity<String> toWxMpPay(BigDecimal price, String appId) {
+        //及时收款
+        String orderCode = IdUtil.fastSimpleUUID();
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayMpPayRequest.builder()
+                .tradeNo(orderCode)
+                .payType(SupayPayType.WX_MP_PAY)
+                .tradeName("测试APP支付")
+                .amount(price)
+                .payParam(SupayPayParamWxScan.builder().build())
+                .returnUrl("http://taobao.com")
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        String result = ((SupayMpPayResponse)cxt.getResponse()).getRedirectPageBody();
+        return new HttpEntity<>(result);
+    }
 }
