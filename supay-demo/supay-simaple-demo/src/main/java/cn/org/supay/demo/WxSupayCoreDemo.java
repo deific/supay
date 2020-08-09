@@ -8,6 +8,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.channel.ChannelPayService;
+import cn.org.supay.core.channel.aggregate.Supay;
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.channel.wx.WxChannelPayService;
 import cn.org.supay.core.channel.wx.convert.WxPayConverter;
@@ -20,6 +21,7 @@ import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.SupayCore;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -50,8 +52,12 @@ public class WxSupayCoreDemo {
     }
 
     public static void main(String[] args) {
+//        WxSupayCoreDemo.testScanPay();
+        WxSupayCoreDemo.testAppPay();
+    }
 
 
+    private static void testMpPay() {
         String orderCode = IdUtil.fastSimpleUUID();
         // 微信支付
 
@@ -88,5 +94,17 @@ public class WxSupayCoreDemo {
         wxPayChannelService.queryTradeInfo(qCtx);
 
         log.debug("查询结果：{}", qCtx.getResponse());
+    }
+
+    private static void testScanPay() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String qrCodeUrl = Supay.scanPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+        log.debug("二维码支付内容：{}", qrCodeUrl);
+    }
+
+    private static void testAppPay() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String appParamJson = Supay.appPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+        log.debug("app支付内容：{}", appParamJson);
     }
 }

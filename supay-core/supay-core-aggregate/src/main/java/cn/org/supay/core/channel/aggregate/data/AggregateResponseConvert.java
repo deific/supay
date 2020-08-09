@@ -4,6 +4,8 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.aggregate.data;
 
+import cn.org.supay.core.context.SupayContext;
+
 /**
  * <b>Application name：</b> AggregateConvert.java <br>
  * <b>Application describing： </b> <br>
@@ -13,11 +15,11 @@ package cn.org.supay.core.channel.aggregate.data;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public interface AggregateResponseConvert<T> {
+public interface AggregateResponseConvert {
     /**
      * 将渠道响应参数转换为聚合响应类型
-     * @param <T>
+     * @param
      * @return
      */
-    SupayBaseResponse convertResponse();
+    SupayBaseResponse convertResponse(SupayContext context);
 }

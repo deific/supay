@@ -7,6 +7,7 @@ package cn.org.supay.demo;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
+import cn.org.supay.core.channel.aggregate.Supay;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
@@ -17,6 +18,8 @@ import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.SupayCore;
 import lombok.extern.slf4j.Slf4j;
+
+import java.math.BigDecimal;
 
 /**
  * <b>Application name：</b> AliSupayCoreDemo.java <br>
@@ -49,6 +52,12 @@ public class AliSupayCoreDemo {
 
     public static void main(String[] args) {
 
+        AliSupayCoreDemo.testScanPay();
+        AliSupayCoreDemo.testAppPay();
+
+    }
+
+    private void test() {
         String orderCode = IdUtil.fastSimpleUUID();
 
         // 构建支付上下文
@@ -75,6 +84,17 @@ public class AliSupayCoreDemo {
         // 调用支付接口
         cxt = (SupayContext) SupayCore.queryPayOrder(cxt);
         log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), ((AliPayQueryResponse)cxt.getResponse()));
+    }
 
+    private static void testScanPay() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String qrCodeUrl = Supay.scanPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+        log.debug("app支付内容：{}", qrCodeUrl);
+    }
+
+    private static void testAppPay() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String appParamJson = Supay.appPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+        log.debug("二维码支付内容：{}", appParamJson);
     }
 }

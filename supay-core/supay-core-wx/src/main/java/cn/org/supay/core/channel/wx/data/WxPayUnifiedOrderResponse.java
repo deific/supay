@@ -6,11 +6,19 @@ package cn.org.supay.core.channel.wx.data;
 
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.*;
+import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayPayType;
+import cn.org.supay.core.utils.BeanUtils;
+import cn.org.supay.core.utils.SignUtils;
 import lombok.Data;
 import lombok.ToString;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <b>Application name：</b> WxPayUnifiedOrderResponse.java <br>
@@ -42,7 +50,7 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
     private String mwebUrl;
 
     @Override
-    public SupayBaseResponse convertResponse() {
+    public SupayBaseResponse convertResponse(SupayContext ctx) {
         SupayPayResponse payResponse = null;
         SupayPayType payType = SupayPayType.valueOfByCode(this.tradeType);
         switch (payType) {
@@ -54,6 +62,19 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
                 payResponse = SupayAppPayResponse.builder().build();
                 break;
             case WX_APP_PAY:
+                Map<String, String> appParam = new HashMap<>();
+                // APP支付参数
+                appParam.put("appid", this.appid);
+                appParam.put("partnerid", ctx.getChannelConfig().getMchId());
+                appParam.put("prepayid", this.prepayId);
+                appParam.put("noncestr", this.nonceStr);
+                appParam.put("package", "Sign=WXPay");
+                appParam.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+                appParam.put("sign", SignUtils.signForMap(BeanUtils.xmlBean2Map(appParam), ctx.getChannelConfig().getMchSecretKey()));
+
+                payResponse = SupayAppPayResponse.builder()
+                        .appPayBody(JSONUtil.toJsonStr(appParam))
+                        .build();
                 break;
             case WX_SCAN_PAY:
                 payResponse = SupayScanPayResponse.builder()
@@ -68,6 +89,7 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
         payResponse.setPayType(payType);
         payResponse.setResultCode(this.getResultCode());
         payResponse.setResultMsg(this.getReturnMsg());
+        payResponse.setSuccess(this.checkResult());
         return payResponse;
     }
 }

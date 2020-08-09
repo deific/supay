@@ -79,6 +79,7 @@ public class AliChannelPayService implements BaseChannelPayService {
                     AliPayAppRequest appRequest = thisCtx.getRequest(AliPayAppRequest.class);
                     AlipayTradeAppPayResponse appResponse = Factory.Payment.App(thisCtx.getChannelConfig().getAppId()).batchOptional(appRequest.getOptionParams())
                             .pay(appRequest.getSubject(), appRequest.getOutTradeNo(), appRequest.getTotalAmount());
+
                     AliPayAppResponse appPayResponse = new AliPayAppResponse();
                     appPayResponse.setBody(appResponse.body);
                     thisCtx.setResponse(appPayResponse);

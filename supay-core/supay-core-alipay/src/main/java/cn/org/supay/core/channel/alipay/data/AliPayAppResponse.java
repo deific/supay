@@ -9,6 +9,7 @@ import cn.org.supay.core.channel.aggregate.data.SupayAppPayResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayPagePayResponse;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.context.SupayContext;
 import lombok.Data;
 import lombok.ToString;
 
@@ -24,9 +25,13 @@ import lombok.ToString;
 @Data
 @ToString
 public class AliPayAppResponse extends AlipayBaseResponse implements Response, AggregateResponseConvert {
-
     @Override
-    public SupayBaseResponse convertResponse() {
-        return SupayAppPayResponse.builder().redirectPageBody(this.getBody()).build();
+    public SupayBaseResponse convertResponse(SupayContext context) {
+        SupayAppPayResponse payResponse = SupayAppPayResponse.builder()
+                .appPayBody(this.getBody())
+                .success(true)
+                .build();
+        return payResponse;
+
     }
 }

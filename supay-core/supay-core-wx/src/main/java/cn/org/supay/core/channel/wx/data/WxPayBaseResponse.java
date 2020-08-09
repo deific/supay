@@ -85,6 +85,14 @@ public class WxPayBaseResponse<T extends WxPayData> implements Response {
     }
 
     /**
+     * 检查结果是否成功
+     * @return
+     */
+    public boolean checkResult() {
+        return "SUCCESS".equalsIgnoreCase(getReturnCode()) && "SUCCESS".equalsIgnoreCase(getResultCode());
+    }
+
+    /**
      * 校验返回结果签名
      */
     @Override
@@ -95,8 +103,7 @@ public class WxPayBaseResponse<T extends WxPayData> implements Response {
         }
 
         //校验结果是否成功
-        if (!"SUCCESS".equalsIgnoreCase(getReturnCode())
-                || !"SUCCESS".equalsIgnoreCase(getResultCode())) {
+        if (!checkResult()) {
             StringBuilder errorMsg = new StringBuilder("[微信接口返回]");
             if (getReturnCode() != null) {
                 errorMsg.append("返回代码：").append(getReturnCode());

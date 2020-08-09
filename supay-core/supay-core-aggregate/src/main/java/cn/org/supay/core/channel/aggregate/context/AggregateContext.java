@@ -120,7 +120,7 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
         if (AggregateResponseConvert.class.isAssignableFrom(rsp.getClass())) {
             try {
                 AggregateResponseConvert targetResponse = (AggregateResponseConvert) rsp;
-                this.originResponse = (S) targetResponse.convertResponse();
+                this.originResponse = (S) targetResponse.convertResponse(this);
                 log.debug("[调用]转换渠道响应参数类型[{}]为聚合响应参数类型[{}]", rsp.getClass().getName(), this.originResponse.getClass().getName());
             } catch (Exception e) {
                 log.error("转换聚合参数类型异常", e);

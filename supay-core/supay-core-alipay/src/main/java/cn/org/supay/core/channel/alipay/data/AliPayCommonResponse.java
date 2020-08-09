@@ -8,6 +8,7 @@ import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayAppPayResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.context.SupayContext;
 import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
 import com.aliyun.tea.TeaModel;
 import lombok.Data;
@@ -32,7 +33,7 @@ public class AliPayCommonResponse extends AlipayTradeCreateResponse implements R
     }
 
     @Override
-    public SupayBaseResponse convertResponse() {
+    public SupayBaseResponse convertResponse(SupayContext context) {
         return SupayAppPayResponse.builder().redirectPageBody(this.httpBody).build();
     }
 }

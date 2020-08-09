@@ -10,6 +10,7 @@ import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayRefundResponse;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.context.SupayContext;
 import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
 import com.aliyun.tea.TeaModel;
 import lombok.Data;
@@ -42,7 +43,7 @@ public class AliPayRefundResponse extends AlipayTradeRefundResponse implements R
     }
 
     @Override
-    public SupayBaseResponse convertResponse() {
+    public SupayBaseResponse convertResponse(SupayContext context) {
         return SupayRefundResponse.builder()
                 .outTradeNo(this.outTradeNo)
                 .tradeNo(this.tradeNo)
