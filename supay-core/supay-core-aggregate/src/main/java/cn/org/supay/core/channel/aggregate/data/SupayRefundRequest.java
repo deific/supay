@@ -6,6 +6,10 @@ package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
 
 /**
  * <b>Application name：</b> SupayRefundRequest.java <br>
@@ -17,9 +21,11 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
 public class SupayRefundRequest extends SupayBaseRequest implements Request {
     /**  业务订单号 */
     protected String outTradeNo;
-    /**  金额 */
-    protected String totalAmount;
+    /**  退款金额 */
+    protected BigDecimal refundAmount;
 }

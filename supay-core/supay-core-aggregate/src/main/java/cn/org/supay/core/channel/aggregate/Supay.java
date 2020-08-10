@@ -102,15 +102,44 @@ public class Supay {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        SupayAppPayResponse scanPayResponse = ((SupayAppPayResponse)cxt.getResponse());
+        SupayAppPayResponse appPayResponse = ((SupayAppPayResponse)cxt.getResponse());
 
         String result = null;
-        if (scanPayResponse.isSuccess()) {
-            result = scanPayResponse.getAppPayBody();
+        if (appPayResponse.isSuccess()) {
+            result = appPayResponse.getAppPayBody();
         }
         return result;
     }
 
+    /**
+     * 退款接口
+     * @param appId
+     * @param outTradeNo
+     * @param refundAmount
+     * @param notifyUrl
+     * @return
+     */
+    public static SupayRefundResponse refund(String appId, String originTradeNo, String refundTradeNo, BigDecimal refundAmount, String notifyUrl) {
+        SupayPayType payType = getMatchedPayType(appId, SupayPayType.ALI_APP_PAY, SupayPayType.WX_APP_PAY);
+        if (payType == null) {
+            log.error("当前商户appId对应的渠道不支持扫码扫码支付");
+            return null;
+        }
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayRefundRequest.builder()
+                .outTradeNo(refundTradeNo)
+                .refundAmount(refundAmount)
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        SupayRefundResponse refundResponse = ((SupayRefundResponse)cxt.getResponse());
+
+        return refundResponse;
+    }
 
     /**
      * 查找该使用的支付方式
