@@ -40,6 +40,7 @@
 ![支付](/docs/SupayCore.png)
 
 ## 示例
+### 普通用法
 ```java
     String orderCode = IdUtil.fastSimpleUUID();
     
@@ -97,6 +98,19 @@
     wxPayChannelService.queryTradeInfo(qCtx);
 
     log.debug("查询结果：{}", qCtx.getResponse());
+```
+
+### 简洁用法
+```java
+    // 扫码支付，根据appId的配置自动识别微信，支付宝
+    String orderCode = IdUtil.fastSimpleUUID();
+    String qrCodeUrl = Supay.scanPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+    log.debug("二维码支付内容：{}", qrCodeUrl);
+
+    // 退款
+    String orderCode = IdUtil.fastSimpleUUID();
+    String refundCode = IdUtil.fastSimpleUUID();
+    Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), new BigDecimal(0.01), "https://www.spay.org.cn/notify");
 ```
 
 ## 统一支付入口SupayCore
