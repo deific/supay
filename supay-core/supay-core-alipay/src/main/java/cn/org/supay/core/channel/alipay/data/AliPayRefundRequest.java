@@ -28,8 +28,8 @@ public class AliPayRefundRequest implements Request, AggregateRequestConvert {
     @Override
     public AliPayRefundRequest convertRequest(SupayBaseRequest request) {
         SupayRefundRequest refundRequest = (SupayRefundRequest) request;
-        this.setOutTradeNo(refundRequest.getOutTradeNo());
-        this.setTotalAmount(refundRequest.getTotalAmount());
+        this.setOutTradeNo(refundRequest.getOriginTradeNo());
+        this.setTotalAmount(refundRequest.getRefundAmount().toString());
         return this;
     }
 }

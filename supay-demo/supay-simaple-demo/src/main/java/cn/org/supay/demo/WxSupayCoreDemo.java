@@ -53,7 +53,8 @@ public class WxSupayCoreDemo {
 
     public static void main(String[] args) {
 //        WxSupayCoreDemo.testScanPay();
-        WxSupayCoreDemo.testAppPay();
+//        WxSupayCoreDemo.testAppPay();
+        WxSupayCoreDemo.testRefund();
     }
 
 
@@ -106,5 +107,11 @@ public class WxSupayCoreDemo {
         String orderCode = IdUtil.fastSimpleUUID();
         String appParamJson = Supay.appPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
         log.debug("app支付内容：{}", appParamJson);
+    }
+
+    private static void testRefund() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String refundCode = IdUtil.fastSimpleUUID();
+        Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
     }
 }

@@ -38,7 +38,7 @@ public class WxApiType extends ChannelApiType {
     /** 关闭订单 */
     public static WxApiType CLOSE = new WxApiType("", "/pay/closeorder");
     /** 申请退款 */
-    public static WxApiType REFUND = new WxApiType("", "/secapi/pay/refund");
+    public static WxApiType REFUND = new WxApiType("", "/secapi/pay/refund", true);
     /** 查询退款 */
     public static WxApiType REFUND_QUERY = new WxApiType("", "/pay/refundquery");
     /** 下载对账单 */
@@ -48,5 +48,8 @@ public class WxApiType extends ChannelApiType {
 
     public WxApiType(String name, String url) {
         super(name, url);
+    }
+    public WxApiType(String name, String url, boolean sslCertRequired) {
+        super(name, url, sslCertRequired);
     }
 }

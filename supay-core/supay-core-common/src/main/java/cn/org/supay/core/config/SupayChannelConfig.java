@@ -4,9 +4,17 @@
  *******************************************************************************/
 package cn.org.supay.core.config;
 
+import cn.hutool.core.util.StrUtil;
+import cn.org.supay.core.enums.KeyStoreType;
 import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.utils.HttpConfig;
 import lombok.Builder;
 import lombok.Data;
+
+import javax.net.ssl.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyStore;
 
 /**
  * <b>Application name：</b> SupayChannelConfig.java <br>
@@ -34,6 +42,7 @@ public class SupayChannelConfig {
     private String mchName;
     /** 第三方渠道商户秘钥 */
     private String mchSecretKey;
+
     /** 第三方渠道证书路径 */
     private String appCertFile;
     /** 合作方证书密码 */
@@ -46,7 +55,7 @@ public class SupayChannelConfig {
     /** 合作方证书密码 */
     private String mchCertPassword;
     /** 合作方证书格式 */
-    private String mchCertFormat;
+    private KeyStoreType mchCertFormat;
 
     /** 根密钥 */
     private String rootSecretKey;
@@ -58,11 +67,58 @@ public class SupayChannelConfig {
     /** 是否启用沙箱环境 */
     private boolean sandBox;
 
+    /** 配置证书构建sslFactory*/
+    private SSLSocketFactory sslSocketFactory = null;
     /**
      * 注册渠道参数配置
      */
     public SupayChannelConfig register() {
         SupayCoreConfig.registerPayConfig(appId, this);
         return this;
+    }
+
+
+    /**
+     * 初始化
+     * @param httpConfig
+     * @return
+     */
+    private SSLSocketFactory initAndGetSSL() {
+        if (sslSocketFactory != null) {
+            return sslSocketFactory;
+        }
+
+        try {
+            X509TrustManager trustManager=null;
+
+            // 客户端证书
+            KeyStore keyStore = KeyStore.getInstance(getMchCertFormat().name());
+            //加载证书
+            InputStream ksIn = new FileInputStream(getMchCertFile());
+            keyStore.load(ksIn, getMchCertPassword().toCharArray());
+            ksIn.close();
+
+            //读取证书
+            KeyStore trustStore = KeyStore.getInstance(getMchCertFormat().name());
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+            keyManagerFactory.init(keyStore, getMchCertPassword().toCharArray());
+            trustManagerFactory.init(trustStore);
+
+            TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+            trustManager = (X509TrustManager) trustManagers[0];
+
+            // 初始化SSLContext
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, getMchCertPassword().toCharArray());
+            KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
+            sslContext.init(keyManagers, null, null);
+            sslSocketFactory = sslContext.getSocketFactory();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sslSocketFactory;
     }
 }

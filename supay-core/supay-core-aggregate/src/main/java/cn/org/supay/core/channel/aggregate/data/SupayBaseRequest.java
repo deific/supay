@@ -43,4 +43,17 @@ public class SupayBaseRequest implements Request {
         optionParams.put(paramName, paramValue);
         return this;
     }
+
+    /**
+     * 转换为上下文
+     * @param appId
+     * @param isSandbox
+     * @return
+     */
+    @Override
+    public SupayContext<? extends Request, ? extends Response> toContext(String appId, boolean isSandbox) {
+        SupayContext context = AggregateContext.buildContext(SupayCoreConfig.getChannelConfig(appId), this, isSandbox);
+        context.setAggregate(true);
+        return context;
+    }
 }

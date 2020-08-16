@@ -4,7 +4,11 @@
  *******************************************************************************/
 package cn.org.supay.core.utils;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * <b>Application name：</b> HttpUtils.java <br>
@@ -16,5 +20,21 @@ import cn.hutool.http.HttpUtil;
  * <b>@version：</b>V1.0.0 <br>
  */
 public class HttpUtils extends HttpUtil {
+
+    /**
+     * 基于ssl
+     * @param sslSocketFactory
+     * @param url
+     * @param data
+     * @return
+     */
+    public static String postSsl(SSLSocketFactory sslSocketFactory, String url, String data) {
+        HttpRequest http = HttpRequest.post(url);
+        HttpResponse response = http.setSSLSocketFactory(sslSocketFactory).body(data).execute();
+        if (response.isOk()) {
+            return response.body();
+        }
+        return null;
+    }
 
 }

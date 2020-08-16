@@ -22,7 +22,6 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.HttpUtils;
-import cn.org.supay.core.utils.SupayUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -75,6 +74,12 @@ public class WxChannelPayService implements BaseChannelPayService {
         return callApi(ctx, WxPayOrderQueryRequest.class, WxPayOrderQueryResponse.class, WxApiType.PAY_QUERY);
     }
 
+
+    @Override
+    public SupayContext<? extends Request, ? extends Response> refund(SupayContext<? extends Request, ? extends Response> ctx) {
+        return callApi(ctx, WxPayRefundRequest.class, WxPayRefundResponse.class, WxApiType.REFUND);
+    }
+
     /**
      * 调用微信接口
      * @param ctx
@@ -100,10 +105,14 @@ public class WxChannelPayService implements BaseChannelPayService {
         }
         String reqXml = ctx.toRequestStr();
         String targetUrl = getReqUrl(ctx.getChannelConfig(), apiType, ctx.isSandBox());
-
         log.debug("[微信渠道] 接口：{} 请求参数：{}", targetUrl, reqXml);
         long startCallTime = System.currentTimeMillis();
-        String resXml = HttpUtils.post(targetUrl, reqXml);
+        String resXml = null;
+        if (apiType.isSslCertRequired()) {
+            resXml = HttpUtils.postSsl(initAndGetSSL(), targetUrl, reqXml);
+        } else {
+            resXml = HttpUtils.post(targetUrl, reqXml);
+        }
         log.debug("[微信渠道] 接口：{} 耗时：{} 请求响应：{}", targetUrl, System.currentTimeMillis() - startCallTime, resXml);
         ctx.parseResponseStr(resXml, responseClass);
         return ctx;

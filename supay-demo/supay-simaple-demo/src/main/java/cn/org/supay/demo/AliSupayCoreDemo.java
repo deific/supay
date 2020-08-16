@@ -97,4 +97,11 @@ public class AliSupayCoreDemo {
         String appParamJson = Supay.appPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
         log.debug("二维码支付内容：{}", appParamJson);
     }
+
+
+    private static void testRefund() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String refundCode = IdUtil.fastSimpleUUID();
+        Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+    }
 }

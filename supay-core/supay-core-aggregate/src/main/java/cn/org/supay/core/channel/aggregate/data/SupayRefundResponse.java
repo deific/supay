@@ -6,7 +6,6 @@ package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.channel.data.Response;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -21,9 +20,14 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayRefundResponse extends SupayBaseResponse implements Response {
-    public String tradeNo;
-
-    public String outTradeNo;
-
-    public String refundStatus;
+    /** 退款单号（业务侧单号） */
+    public String refundTradeNo;
+    /** 原交易单号（业务侧单号） */
+    public String originTradeNo;
+    /** 退款服务单号（微信侧单号） */
+    public String refundServiceId;
+    /** 退款渠道 */
+    public String refundChannel;
+    /** 退款金额 */
+    private String refundFee;
 }

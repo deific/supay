@@ -6,10 +6,7 @@ package cn.org.supay.core.channel.aggregate.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.channel.aggregate.context.AggregateContext;
-import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayPayResponse;
+import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.filter.FilterChain;
@@ -31,13 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 public class AggregateFilter implements SupayFilter {
     @Override
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
-        SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
+        SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayBaseRequest.class, SupayBaseResponse.class);
         if (thisCtx.hasError()) {
             return thisCtx;
         }
 
         // 检查支付类型和所使用渠道是否匹配
-        if (!thisCtx.getRequest().getPayType().getChannel().equals(thisCtx.getChannelConfig().getChannelType())) {
+        if (thisCtx.getRequest() instanceof SupayPayRequest && !thisCtx.getRequest().getPayType().getChannel().equals(thisCtx.getChannelConfig().getChannelType())) {
             return ctx.fail(StrUtil.format("本次请求支付方式{} 与所使用渠道{}不匹配",
                     thisCtx.getRequest().getPayType().getName(), thisCtx.getChannelConfig().getChannelType().getName()));
         }
@@ -50,7 +47,7 @@ public class AggregateFilter implements SupayFilter {
         AggregateContext aggregateContext = (AggregateContext) ctx;
         aggregateContext.switchRequest();
         aggregateContext.switchResponse();
-        SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayPayRequest.class, SupayPayResponse.class);
+        SupayContext<SupayPayRequest, SupayPayResponse> thisCtx = SupayUtils.checkAndConvertType(ctx, SupayBaseRequest.class, SupayBaseResponse.class);
         return chain.nextAfter(ctx);
     }
 }

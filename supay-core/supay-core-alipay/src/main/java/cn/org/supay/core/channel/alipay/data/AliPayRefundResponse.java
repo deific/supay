@@ -45,8 +45,10 @@ public class AliPayRefundResponse extends AlipayTradeRefundResponse implements R
     @Override
     public SupayBaseResponse convertResponse(SupayContext context) {
         return SupayRefundResponse.builder()
-                .outTradeNo(this.outTradeNo)
-                .tradeNo(this.tradeNo)
+                .originTradeNo(this.outTradeNo)
+                .refundTradeNo(this.tradeNo)
+                .refundFee(this.refundFee)
+                .refundServiceId(this.refundSettlementId)
                 .build();
     }
 }

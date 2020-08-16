@@ -21,13 +21,25 @@ public class ChannelApiType {
     protected String name;
     /** url地址 */
     protected String url;
+    /** 是否要求ssl证书 */
+    protected boolean sslCertRequired;
 
     public ChannelApiType(String name, String url) {
         this.name = name;
         this.url = url;
     }
 
+    public ChannelApiType(String name, String url, boolean sslCertRequired) {
+        this.name = name;
+        this.url = url;
+        this.sslCertRequired = sslCertRequired;
+    }
+
     public String getUrl() {
         return this.url;
+    }
+
+    public boolean isSslCertRequired() {
+        return sslCertRequired;
     }
 }

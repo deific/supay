@@ -6,6 +6,7 @@ package cn.org.supay.core.utils;
 
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
 
 /**
@@ -41,4 +42,5 @@ public class SupayUtils {
         // 参数检查
         return (T)ctx;
     }
+
 }

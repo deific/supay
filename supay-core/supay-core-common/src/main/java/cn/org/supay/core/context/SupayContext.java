@@ -103,7 +103,6 @@ public class SupayContext<R extends Request, S extends Response> {
     public SupayContext fail(String msg) {
         this.setMsg(msg);
         this.setSuccess(false);
-        log.error(msg);
         return this;
     }
 
@@ -168,12 +167,14 @@ public class SupayContext<R extends Request, S extends Response> {
         boolean isMatch = (this.getRequest() != null && r.isInstance(this.getRequest()));
         if (!isMatch && this.getRequest() != null) {
             this.fail("请求类型与当前渠道要求类型不匹配，要求类型：" + r.getName() + " 请求类型：" + this.getRequest().getClass());
+            log.error(this.msg);
             return (T)this;
         }
 
         isMatch = this.getResponse() != null && s.isInstance(this.getResponse());
         if (!isMatch && this.getResponse() != null) {
             this.fail("响应类型与当前渠道要求类型不匹配，要求类型：" + s.getName() + " 响应类型：" + this.getResponse().getClass());
+            log.error(this.msg);
             return (T)this;
         }
 
