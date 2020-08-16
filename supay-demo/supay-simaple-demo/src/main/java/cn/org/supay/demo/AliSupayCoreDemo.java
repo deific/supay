@@ -52,8 +52,9 @@ public class AliSupayCoreDemo {
 
     public static void main(String[] args) {
 
-        AliSupayCoreDemo.testScanPay();
-        AliSupayCoreDemo.testAppPay();
+//        AliSupayCoreDemo.testScanPay();
+//        AliSupayCoreDemo.testAppPay();
+        AliSupayCoreDemo.testRefund();
 
     }
 
@@ -102,6 +103,6 @@ public class AliSupayCoreDemo {
     private static void testRefund() {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
-        Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+        Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal("0.01"), new BigDecimal("0.01"), "https://www.spay.org.cn/notify");
     }
 }

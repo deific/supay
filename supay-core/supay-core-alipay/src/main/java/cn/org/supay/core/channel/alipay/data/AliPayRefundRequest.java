@@ -23,13 +23,13 @@ import lombok.Data;
 @Data
 public class AliPayRefundRequest implements Request, AggregateRequestConvert {
     protected String outTradeNo;
-    protected String totalAmount;
+    protected String refundAmount;
 
     @Override
     public AliPayRefundRequest convertRequest(SupayBaseRequest request) {
         SupayRefundRequest refundRequest = (SupayRefundRequest) request;
         this.setOutTradeNo(refundRequest.getOriginTradeNo());
-        this.setTotalAmount(refundRequest.getRefundAmount().toString());
+        this.setRefundAmount(refundRequest.getRefundAmount().toString());
         return this;
     }
 }

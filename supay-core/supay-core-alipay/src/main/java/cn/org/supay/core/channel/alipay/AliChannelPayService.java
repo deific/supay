@@ -113,9 +113,10 @@ public class AliChannelPayService implements BaseChannelPayService {
         if (thisCtx.hasError()) {
             return thisCtx;
         }
-        AliPayRefundRequest refundRequest = thisCtx.getRequest();
+        AliPayRefundRequest refundRequest = thisCtx.getRequest(AliPayRefundRequest.class);
         try {
-            AlipayTradeRefundResponse refundResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).refund(refundRequest.getOutTradeNo(), refundRequest.getOutTradeNo());
+            AlipayTradeRefundResponse refundResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId())
+                    .refund(refundRequest.getOutTradeNo(), refundRequest.getRefundAmount());
             AliPayRefundResponse response = AliPayRefundResponse.build(refundResponse.toMap());
             thisCtx.setResponse(response);
         } catch (Exception e) {
