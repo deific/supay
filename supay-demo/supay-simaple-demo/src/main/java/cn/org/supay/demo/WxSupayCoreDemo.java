@@ -16,6 +16,7 @@ import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.KeyStoreType;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.SupayCore;
@@ -46,6 +47,7 @@ public class WxSupayCoreDemo {
         channelConfig = SupayChannelConfig.builder()
                 .appId(props.getStr("wx.appId")).appSecret(props.getStr("wx.appSecret")).appName("微信公众号-支付")
                 .mchId(props.getStr("wx.mchId")).mchSecretKey(props.getStr("wx.mchSecretKey")).mchName("微信商户")
+                .mchCertFile(props.getStr("wx.mchCertFile")).mchCertPassword(props.getStr("wx.mchCertPassword")).mchCertFormat(KeyStoreType.PKCS12)
                 .channelType(SupayChannelType.WECHAT).apiBaseUrl(WxApiType.BASE_URL_CHINA1.getUrl())
                 .build().register();
 
@@ -112,6 +114,6 @@ public class WxSupayCoreDemo {
     private static void testRefund() {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
-        Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+        Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), new BigDecimal(0.01), "https://www.spay.org.cn/notify");
     }
 }

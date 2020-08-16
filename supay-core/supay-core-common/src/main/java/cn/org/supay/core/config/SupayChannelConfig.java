@@ -4,10 +4,8 @@
  *******************************************************************************/
 package cn.org.supay.core.config;
 
-import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.enums.KeyStoreType;
 import cn.org.supay.core.enums.SupayChannelType;
-import cn.org.supay.core.utils.HttpConfig;
 import lombok.Builder;
 import lombok.Data;
 
@@ -80,17 +78,14 @@ public class SupayChannelConfig {
 
     /**
      * 初始化
-     * @param httpConfig
      * @return
      */
-    private SSLSocketFactory initAndGetSSL() {
+    public SSLSocketFactory getSSLSocketFactory() {
         if (sslSocketFactory != null) {
             return sslSocketFactory;
         }
 
         try {
-            X509TrustManager trustManager=null;
-
             // 客户端证书
             KeyStore keyStore = KeyStore.getInstance(getMchCertFormat().name());
             //加载证书
@@ -101,17 +96,15 @@ public class SupayChannelConfig {
             //读取证书
             KeyStore trustStore = KeyStore.getInstance(getMchCertFormat().name());
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 
             keyManagerFactory.init(keyStore, getMchCertPassword().toCharArray());
             trustManagerFactory.init(trustStore);
 
             TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-            trustManager = (X509TrustManager) trustManagers[0];
 
             // 初始化SSLContext
             SSLContext sslContext = SSLContext.getInstance("TLS");
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(keyStore, getMchCertPassword().toCharArray());
             KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
             sslContext.init(keyManagers, null, null);

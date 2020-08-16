@@ -119,11 +119,13 @@ public class Supay {
      * @param notifyUrl
      * @return
      */
-    public static SupayRefundResponse refund(String appId, String originTradeNo, String refundTradeNo, BigDecimal refundAmount, String notifyUrl) {
+    public static SupayRefundResponse refund(String appId, String originTradeNo, String refundTradeNo,
+                                             BigDecimal totalAmount, BigDecimal refundAmount, String notifyUrl) {
         // 构建支付上下文参数
         SupayContext cxt = SupayRefundRequest.builder()
                 .originTradeNo(originTradeNo)
                 .refundTradeNo(refundTradeNo)
+                .totalAmount(totalAmount)
                 .refundAmount(refundAmount)
                 .notifyUrl(notifyUrl)
                 .build()

@@ -24,10 +24,12 @@ import java.math.BigDecimal;
 @SuperBuilder
 @NoArgsConstructor
 public class SupayRefundRequest extends SupayBaseRequest implements Request {
-    /** 原始支付单号 */
+    /** 原始支付单号(业务侧) */
     protected String originTradeNo;
-    /**  业务退款单号 */
+    /**  业务退款单号(业务侧) */
     protected String refundTradeNo;
+    /** 原始支付金额 */
+    protected BigDecimal totalAmount;
     /**  退款金额 */
     protected BigDecimal refundAmount;
     /** 退款成功通知地址 */

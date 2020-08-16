@@ -94,6 +94,7 @@ public class WxPayRefundRequest extends WxPayBaseRequest implements AggregateReq
     this.setOutTradeNo(refundRequest.getOriginTradeNo());
     this.setOutRefundNo(refundRequest.getRefundTradeNo());
     this.setRefundFee(refundRequest.getRefundAmount().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_DOWN).intValue());
+    this.setTotalFee(refundRequest.getTotalAmount().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_DOWN).intValue());
     this.setNonceStr(String.valueOf(System.currentTimeMillis()));
     this.setNotifyUrl(refundRequest.getNotifyUrl());
     return this;
