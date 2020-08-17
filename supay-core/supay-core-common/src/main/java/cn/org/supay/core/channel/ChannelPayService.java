@@ -101,11 +101,20 @@ public interface ChannelPayService {
     }
 
     /**
-     * 批量查询交易信息
+     * 查询支付交易信息
      * @param ctx
      * @return
      */
-    default SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
+    default SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+        return ctx.fail("不支持该方法");
+    }
+
+    /**
+     * 查询退款交易信息
+     * @param ctx
+     * @return
+     */
+    default SupayContext<? extends Request, ? extends Response> queryRefundTrade(SupayContext<? extends Request, ? extends Response> ctx) {
         return ctx.fail("不支持该方法");
     }
 

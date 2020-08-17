@@ -70,7 +70,7 @@ public class WxChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
+    public SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
         return callApi(ctx, WxPayOrderQueryRequest.class, WxPayOrderQueryResponse.class, WxApiType.PAY_QUERY);
     }
 

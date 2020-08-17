@@ -6,8 +6,6 @@ package cn.org.supay.core.channel.aggregate;
 
 import cn.org.supay.core.SupayCore;
 import cn.org.supay.core.channel.BaseChannelPayService;
-import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import cn.org.supay.core.channel.aggregate.filter.AggregateFilter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
@@ -55,8 +53,8 @@ public class SupayChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
-        return SupayCore.getPayChannelService(ctx.getChannelConfig().getChannelType()).queryTradeInfo(ctx);
+    public SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+        return SupayCore.getPayChannelService(ctx.getChannelConfig().getChannelType()).queryPayTrade(ctx);
     }
 
     @Override

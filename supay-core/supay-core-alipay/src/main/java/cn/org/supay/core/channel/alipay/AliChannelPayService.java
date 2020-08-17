@@ -127,7 +127,7 @@ public class AliChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
+    public SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
         SupayContext<AliPayQueryRequest, AliPayQueryResponse> thisCtx = ctx.checkAndConvertType(AliPayQueryRequest.class, AliPayQueryResponse.class);
         if (thisCtx.hasError()) {

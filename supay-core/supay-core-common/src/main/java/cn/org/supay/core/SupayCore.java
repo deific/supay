@@ -81,7 +81,7 @@ public class SupayCore {
      */
     public static SupayContext<? extends Request, ? extends Response> queryPayOrder(SupayContext<? extends Request, ? extends Response> ctx) {
         ChannelPayService proxyService = getPayChannelService(ctx);
-        return proxyService.queryTradeInfo(ctx);
+        return proxyService.queryPayTrade(ctx);
     }
 
     /**
@@ -111,7 +111,7 @@ public class SupayCore {
      */
     public static SupayContext<? extends Request, ? extends Response> queryTradeInfo(SupayContext<? extends Request, ? extends Response> ctx) {
         ChannelPayService proxyService = getPayChannelService(ctx);
-        return proxyService.queryTradeInfo(ctx);
+        return proxyService.queryPayTrade(ctx);
     }
 
     /**

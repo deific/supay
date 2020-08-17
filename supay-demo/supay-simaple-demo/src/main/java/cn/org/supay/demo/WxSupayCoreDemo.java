@@ -10,11 +10,8 @@ import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.aggregate.Supay;
 import cn.org.supay.core.channel.wx.WxApiType;
-import cn.org.supay.core.channel.wx.WxChannelPayService;
-import cn.org.supay.core.channel.wx.convert.WxPayConverter;
 import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.KeyStoreType;
 import cn.org.supay.core.enums.SupayChannelType;
@@ -94,7 +91,7 @@ public class WxSupayCoreDemo {
 //        SupayCore.queryPayOrder(qCtx);
         // 获取具体渠道支付服务
         ChannelPayService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
-        wxPayChannelService.queryTradeInfo(qCtx);
+        wxPayChannelService.queryPayTrade(qCtx);
 
         log.debug("查询结果：{}", qCtx.getResponse());
     }
