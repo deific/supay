@@ -145,6 +145,24 @@ public class AliChannelPayService implements BaseChannelPayService {
         return thisCtx;
     }
 
+    @Override
+    public SupayContext<? extends Request, ? extends Response> queryRefundTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+        // 检查并转换类型
+        SupayContext<AliPayRefundQueryRequest, AliPayRefundQueryResponse> thisCtx = ctx.checkAndConvertType(AliPayRefundQueryRequest.class, AliPayRefundQueryResponse.class);
+        if (thisCtx.hasError()) {
+            return thisCtx;
+        }
+        AliPayQueryRequest queryRequest = thisCtx.getRequest();
+        try {
+            AlipayTradeQueryResponse queryResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).query(queryRequest.getOutTradeNo());
+            AliPayQueryResponse response = AliPayQueryResponse.build(queryResponse.toMap());
+            thisCtx.setResponse(response);
+        } catch (Exception e) {
+            log.error("调用阿里支付查询接口异常：", e);
+            thisCtx.fail("调用阿里支付查询接口异常:" + e.getMessage());
+        }
+        return thisCtx;
+    }
 
     @Override
     public String asyncNotifyCallback(Map formParam, InputStream body) {
