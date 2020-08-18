@@ -6,6 +6,7 @@ package cn.org.supay.core.channel.alipay.data;
 
 import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -19,6 +20,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class AliPayFaceRequest extends AliPayBaseRequest implements Request {
     String authCode;
 }

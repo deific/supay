@@ -9,6 +9,7 @@ import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import cn.org.supay.core.channel.aggregate.data.SupayPayRequest;
 import cn.org.supay.core.channel.data.Request;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -22,6 +23,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class AliPayCommonRequest extends AliPayBaseRequest implements AggregateRequestConvert {
     /** 买家的支付宝唯一用户号 */
     String buyerId;

@@ -11,6 +11,8 @@ import cn.org.supay.core.channel.aggregate.data.SupayPayQueryRequest;
 import cn.org.supay.core.channel.data.Request;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <b>Application name：</b> AliPayRefundRequest.java <br>
@@ -22,7 +24,8 @@ import lombok.Data;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-@Builder
+@SuperBuilder
+@NoArgsConstructor
 public class AliPayQueryRequest implements Request, AggregateRequestConvert {
     protected String outTradeNo;
 

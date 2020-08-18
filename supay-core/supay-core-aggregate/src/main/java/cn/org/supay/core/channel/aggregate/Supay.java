@@ -153,7 +153,7 @@ public class Supay {
                 .toContext(appId, false);
 
         // 调用支付接口
-        cxt = SupayCore.queryPayOrder(cxt);
+        cxt = SupayCore.payQuery(cxt);
 
         SupayPayQueryResponse payQueryResponse = ((SupayPayQueryResponse)cxt.getResponse());
 
@@ -176,7 +176,7 @@ public class Supay {
                 .toContext(appId, false);
 
         // 调用支付接口
-        cxt = SupayCore.queryPayOrder(cxt);
+        cxt = SupayCore.refundQuery(cxt);
 
         SupayRefundQueryResponse refundQueryResponse = ((SupayRefundQueryResponse)cxt.getResponse());
 

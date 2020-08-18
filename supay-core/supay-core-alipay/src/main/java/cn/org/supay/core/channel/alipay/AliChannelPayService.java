@@ -19,6 +19,7 @@ import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.utils.BeanUtils;
 import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
+import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeRefundResponse;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePayResponse;
@@ -133,7 +134,7 @@ public class AliChannelPayService implements BaseChannelPayService {
         if (thisCtx.hasError()) {
             return thisCtx;
         }
-        AliPayQueryRequest queryRequest = thisCtx.getRequest();
+        AliPayQueryRequest queryRequest = thisCtx.getRequest(AliPayQueryRequest.class);
         try {
             AlipayTradeQueryResponse queryResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).query(queryRequest.getOutTradeNo());
             AliPayQueryResponse response = AliPayQueryResponse.build(queryResponse.toMap());
@@ -154,7 +155,8 @@ public class AliChannelPayService implements BaseChannelPayService {
         }
         AliPayRefundQueryRequest refundQueryRequest = thisCtx.getRequest(AliPayRefundQueryRequest.class);
         try {
-            AlipayTradeQueryResponse queryResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).query(refundQueryRequest.getOutTradeNo());
+            AlipayTradeFastpayRefundQueryResponse queryResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId())
+                    .queryRefund(refundQueryRequest.getOutTradeNo(), refundQueryRequest.getOutRefundNo());
             AliPayQueryResponse response = AliPayQueryResponse.build(queryResponse.toMap());
             thisCtx.setResponse(response);
         } catch (Exception e) {

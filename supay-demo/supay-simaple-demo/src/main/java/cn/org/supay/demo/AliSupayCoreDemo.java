@@ -55,6 +55,8 @@ public class AliSupayCoreDemo {
 //        AliSupayCoreDemo.testScanPay();
 //        AliSupayCoreDemo.testAppPay();
         AliSupayCoreDemo.testRefund();
+        AliSupayCoreDemo.testPayQuery();
+        AliSupayCoreDemo.testRefundQuery();
 
     }
 
@@ -83,7 +85,7 @@ public class AliSupayCoreDemo {
         cxt = SupayContext.buildContext(channelConfig, queryRequest, false);
         cxt.setLocalMock(true);
         // 调用支付接口
-        cxt = (SupayContext) SupayCore.queryPayOrder(cxt);
+        cxt = (SupayContext) SupayCore.payQuery(cxt);
         log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), ((AliPayQueryResponse)cxt.getResponse()));
     }
 
@@ -104,5 +106,17 @@ public class AliSupayCoreDemo {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
         Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal("0.01"), new BigDecimal("0.01"), "https://www.spay.org.cn/notify");
+    }
+
+    private static void testPayQuery() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String refundCode = IdUtil.fastSimpleUUID();
+        Supay.payQuery(channelConfig.getAppId(), orderCode);
+    }
+
+    private static void testRefundQuery() {
+        String orderCode = IdUtil.fastSimpleUUID();
+        String refundCode = IdUtil.fastSimpleUUID();
+        Supay.refundQuery(channelConfig.getAppId(), orderCode, refundCode);
     }
 }
