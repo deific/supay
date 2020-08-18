@@ -1,6 +1,9 @@
 package cn.org.supay.core.channel.wx.data;
 
 import cn.org.supay.core.annotation.XmlField;
+import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.context.SupayContext;
 import lombok.Data;
 import lombok.ToString;
 
@@ -18,7 +21,7 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
-public class WxPayRefundQueryResponse extends WxPayBaseResponse {
+public class WxPayRefundQueryResponse extends WxPayBaseResponse implements AggregateResponseConvert {
   /**
    * 终端设备号
    */
@@ -162,5 +165,10 @@ public class WxPayRefundQueryResponse extends WxPayBaseResponse {
    */
   @XmlField("refund_success_time_0")
   private String refundSuccessTime0;
+
+  @Override
+  public SupayBaseResponse convertResponse(SupayContext context) {
+    return null;
+  }
 }
 

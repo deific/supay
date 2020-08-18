@@ -1,6 +1,8 @@
 package cn.org.supay.core.channel.wx.data;
 
 import cn.org.supay.core.annotation.XmlField;
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class WxPayRefundQueryRequest extends WxPayBaseRequest {
+public class WxPayRefundQueryRequest extends WxPayBaseRequest implements AggregateRequestConvert {
   /**
    * 设备号
    */
@@ -57,4 +59,9 @@ public class WxPayRefundQueryRequest extends WxPayBaseRequest {
    */
   @XmlField("refund_id")
   private String refundId;
+
+  @Override
+  public <T> T convertRequest(SupayBaseRequest request) {
+    return null;
+  }
 }

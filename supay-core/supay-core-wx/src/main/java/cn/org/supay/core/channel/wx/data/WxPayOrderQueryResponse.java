@@ -5,6 +5,9 @@
 package cn.org.supay.core.channel.wx.data;
 
 import cn.org.supay.core.annotation.XmlField;
+import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.context.SupayContext;
 
 /**
  * <b>Application name：</b> WxPayOrderQueryResponse.java <br>
@@ -15,7 +18,7 @@ import cn.org.supay.core.annotation.XmlField;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
-public class WxPayOrderQueryResponse extends WxPayBaseResponse {
+public class WxPayOrderQueryResponse extends WxPayBaseResponse implements AggregateResponseConvert {
     /** 微信支付分配的终端设备号 */
     @XmlField("device_info")
     private String deviceInfo;
@@ -70,4 +73,9 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse {
     /** 对当前查询订单状态的描述和下一步操作的指引*/
     @XmlField("trade_state_desc")
     private String tradeStateDesc;
+
+    @Override
+    public SupayBaseResponse convertResponse(SupayContext context) {
+        return null;
+    }
 }
