@@ -140,6 +140,50 @@ public class Supay {
     }
 
     /**
+     * 支付查询
+     * @param appId
+     * @param outTradeNo
+     * @return
+     */
+    public static SupayPayQueryResponse payQuery(String appId, String outTradeNo) {
+        // 构建支付上下文参数
+        SupayContext cxt = SupayPayQueryRequest.builder()
+                .outTradeNo(outTradeNo)
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.queryPayOrder(cxt);
+
+        SupayPayQueryResponse payQueryResponse = ((SupayPayQueryResponse)cxt.getResponse());
+
+        return payQueryResponse;
+    }
+
+    /**
+     * 退款查询
+     * @param appId
+     * @param outTradeNo
+     * @param refundNo
+     * @return
+     */
+    public static SupayRefundQueryResponse refundQuery(String appId, String outTradeNo, String refundNo) {
+        // 构建支付上下文参数
+        SupayContext cxt = SupayRefundQueryRequest.builder()
+                .outTradeNo(outTradeNo)
+                .outRefundNo(refundNo)
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.queryPayOrder(cxt);
+
+        SupayRefundQueryResponse refundQueryResponse = ((SupayRefundQueryResponse)cxt.getResponse());
+
+        return refundQueryResponse;
+    }
+
+    /**
      * 查找该使用的支付方式
      * @param appId
      * @param payTypes
