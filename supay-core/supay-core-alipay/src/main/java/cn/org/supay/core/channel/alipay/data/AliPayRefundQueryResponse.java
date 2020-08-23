@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
@@ -11,9 +12,13 @@ import cn.org.supay.core.channel.aggregate.data.SupayPayQueryResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryResponse;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayPayStatus;
+import cn.org.supay.core.enums.SupayRefundStatus;
 import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
 import com.aliyun.tea.TeaModel;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
  * <b>Application name：</b> AliPayRefundResponse.java <br>
@@ -45,9 +50,26 @@ public class AliPayRefundQueryResponse extends AlipayTradeFastpayRefundQueryResp
     @Override
     public SupayBaseResponse convertResponse(SupayContext context) {
         return SupayRefundQueryResponse.builder()
-                .outTradeNo(this.outTradeNo)
-                .tradeNo(this.tradeNo)
-                .refundStatus(this.refundStatus)
+                .originTradeNo(this.outTradeNo)
+                .refundTradeNo(this.outRequestNo)
+                .refundAmount(new BigDecimal(this.refundAmount))
+                .refundStatus(convertRefundStatus())
                 .build();
+    }
+
+    /**
+     * 转换退款状态
+     * 如果该接口返回了查询数据，且refund_status为空或为REFUND_SUCCESS，则代表退款成功，如果没有查询到则代表未退款成功，可以调用退款接口进行重试。重试时请务必保证退款请求号一致。
+     * @return
+     */
+    private SupayRefundStatus convertRefundStatus() {
+        this.refundStatus = StrUtil.nullToEmpty(this.refundStatus);
+        switch (this.refundStatus) {
+            case "":
+            case "REFUND_SUCCESS":
+                return SupayRefundStatus.REFUND_SUCCESS;
+            default:
+                return SupayRefundStatus.REFUND_FAIL;
+        }
     }
 }

@@ -9,6 +9,7 @@ import cn.org.supay.core.enums.SupayRefundStatus;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -29,6 +30,9 @@ public class SupayRefundQueryResponse extends SupayBaseResponse implements Respo
 
     /** 原支付单号 */
     public String originTradeNo;
+
+    /** 退款金额 */
+    private BigDecimal refundAmount;
 
     /** 退款状态 */
     public SupayRefundStatus refundStatus;

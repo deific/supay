@@ -109,5 +109,6 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
             case "USERPAYING":
                 return SupayPayStatus.PAY_PROCESSING;
         }
+        return null;
     }
 }
