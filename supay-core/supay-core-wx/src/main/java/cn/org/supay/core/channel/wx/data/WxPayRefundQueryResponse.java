@@ -1,9 +1,13 @@
 package cn.org.supay.core.channel.wx.data;
 
+import cn.hutool.core.date.DateUtil;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayPayQueryResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryResponse;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayRefundStatus;
 import lombok.Data;
 import lombok.ToString;
 
@@ -168,7 +172,27 @@ public class WxPayRefundQueryResponse extends WxPayBaseResponse implements Aggre
 
   @Override
   public SupayBaseResponse convertResponse(SupayContext context) {
-    return null;
+    SupayRefundQueryResponse refundQueryResponse = SupayRefundQueryResponse.builder()
+            .originTradeNo(this.outTradeNo)
+            .refundTime(DateUtil.parse(this.refundSuccessTime0, "yyyyMMddHHmmss"))
+            .refundTradeNo(this.refundId0)
+            .refundStatus(convertRefundStatus())
+            .build();
+    refundQueryResponse.setResultCode(this.getResultCode());
+    refundQueryResponse.setResultMsg(this.getReturnMsg());
+    refundQueryResponse.setSuccess(this.checkResult());
+    return refundQueryResponse;
+  }
+
+  /**
+   * 转换退款状态
+   * @return
+   */
+  private SupayRefundStatus convertRefundStatus() {
+    switch (this.refundStatus0) {
+      default:
+        return SupayRefundStatus.NO_REFUND;
+    }
   }
 }
 

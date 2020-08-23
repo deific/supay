@@ -4,10 +4,13 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.data;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.org.supay.core.annotation.XmlField;
-import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayPayStatus;
+import cn.org.supay.core.enums.SupayRefundStatus;
 
 /**
  * <b>Application name：</b> WxPayOrderQueryResponse.java <br>
@@ -76,6 +79,35 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
 
     @Override
     public SupayBaseResponse convertResponse(SupayContext context) {
-        return null;
+        SupayPayQueryResponse payQueryResponse = SupayPayQueryResponse.builder()
+                .originTradeNo(this.outTradeNo)
+                .payTime(DateUtil.parse(this.timeEnd, "yyyyMMddHHmmss"))
+                .serviceTradeNo(this.transactionId)
+                .build();
+        payQueryResponse.setResultCode(this.getResultCode());
+        payQueryResponse.setResultMsg(this.getReturnMsg());
+        payQueryResponse.setSuccess(this.checkResult());
+        return payQueryResponse;
+    }
+
+    /**
+     * 转换退款状态
+     * SUCCESS—支付成功,ORDER_REFUND—转入退款,NOTPAY—未支付,CLOSED—已关闭,REVOKED—已撤销（刷卡支付）,USERPAYING--用户支付中,PAYERROR--支付失败(其他原因，如银行返回失败)
+     * @return
+     */
+    private SupayPayStatus convertPayStatus() {
+        switch (this.tradeState) {
+            case "SUCCESS":
+                return SupayPayStatus.PAY_SUCCESS;
+            case "NOTPAY":
+                return SupayPayStatus.NO_PAY;
+            case "ORDER_REFUND":
+            case "CLOSED":
+            case "REVOKED":
+            case "PAYERROR":
+                return SupayPayStatus.PAY_FAIL;
+            case "USERPAYING":
+                return SupayPayStatus.PAY_PROCESSING;
+        }
     }
 }

@@ -7,8 +7,13 @@ package cn.org.supay.core.channel.wx.data;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundRequest;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * <b>Application name：</b> WxPayOrderQueryRequest.java <br>
@@ -30,7 +35,9 @@ public class WxPayOrderQueryRequest extends WxPayBaseRequest implements Aggregat
     private String outTradeNo;
 
     @Override
-    public <T> T convertRequest(SupayBaseRequest request) {
-        return null;
+    public WxPayOrderQueryRequest convertRequest(SupayBaseRequest request) {
+        SupayRefundQueryRequest refundQueryRequest = (SupayRefundQueryRequest) request;
+        this.setOutTradeNo(refundQueryRequest.getOutTradeNo());
+        return this;
     }
 }
