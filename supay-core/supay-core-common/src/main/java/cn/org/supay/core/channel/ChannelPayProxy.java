@@ -4,17 +4,15 @@
  *******************************************************************************/
 package cn.org.supay.core.channel;
 
-import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
-import cn.org.supay.core.filter.SupayFilterChain;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.filter.SupayFilterChain;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Date;
 
 /**
  * <b>Application name：</b> ChannelPayService.java <br>
@@ -52,11 +50,11 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
             ctx = this.nextAfter(ctx);
             return ctx;
         } catch (Exception e) {
-            log.error("支付异常：", e);
+            log.error("[支付]支付异常：", e);
             return ctx.fail("支付异常：" + e.getMessage());
         } finally {
             long duration = ctx.duration();
-            log.debug("[支付] 累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", duration, ctx.getEndTime().getTime() - startTime, ctx.getResponse());
+            log.debug("[支付]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", duration, ctx.getEndTime().getTime() - startTime, ctx.getResponse());
         }
     }
 
