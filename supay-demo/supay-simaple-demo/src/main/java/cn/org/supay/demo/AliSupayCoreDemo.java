@@ -54,7 +54,7 @@ public class AliSupayCoreDemo {
 
 //        AliSupayCoreDemo.testScanPay();
 //        AliSupayCoreDemo.testAppPay();
-        AliSupayCoreDemo.testRefund();
+//        AliSupayCoreDemo.testRefund();
         AliSupayCoreDemo.testPayQuery();
         AliSupayCoreDemo.testRefundQuery();
 
@@ -77,7 +77,7 @@ public class AliSupayCoreDemo {
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
 
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(),
+        log.debug("交易状态：{} 信息：{} 耗时：{}ms 接口响应数据：{}", cxt.hasError(),
                 cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
 
         // 查询支付订单
@@ -86,7 +86,7 @@ public class AliSupayCoreDemo {
         cxt.setLocalMock(true);
         // 调用支付接口
         cxt = (SupayContext) SupayCore.payQuery(cxt);
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), ((AliPayQueryResponse)cxt.getResponse()));
+        log.debug("交易状态：{} 信息：{} 耗时：{}ms 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), ((AliPayQueryResponse)cxt.getResponse()));
     }
 
     private static void testScanPay() {

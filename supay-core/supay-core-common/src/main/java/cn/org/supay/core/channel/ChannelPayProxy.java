@@ -37,7 +37,7 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
-        log.debug("[支付]调用渠道服务：{}#{}", this.proxyService.getClass().getName(), method.getName());
+        log.debug("[支付][{}#{}]正在调用服务...", this.proxyService.getClass().getSimpleName(), method.getName());
         SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
         boolean isOk = checkContext(ctx);
         if (!isOk) {
@@ -56,7 +56,7 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
             return ctx.fail("支付异常：" + e.getMessage());
         } finally {
             long duration = ctx.duration();
-            log.debug("[支付] 累计耗时：{} 当前调用耗时：{} 结果：{}", duration, ctx.getEndTime().getTime() - startTime, ctx.getResponse());
+            log.debug("[支付] 累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", duration, ctx.getEndTime().getTime() - startTime, ctx.getResponse());
         }
     }
 

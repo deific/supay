@@ -17,6 +17,7 @@ import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.utils.BeanUtils;
+import com.alibaba.fastjson.JSON;
 import com.alipay.easysdk.payment.app.models.AlipayTradeAppPayResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeCreateResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeFastpayRefundQueryResponse;
@@ -134,9 +135,12 @@ public class AliChannelPayService implements BaseChannelPayService {
         if (thisCtx.hasError()) {
             return thisCtx;
         }
+        long startTime = System.currentTimeMillis();
         AliPayQueryRequest queryRequest = thisCtx.getRequest(AliPayQueryRequest.class);
         try {
+            log.debug("[支付宝]查询交易请求：{}", JSON.toJSONString(queryRequest));
             AlipayTradeQueryResponse queryResponse = Factory.Payment.Common(ctx.getChannelConfig().getAppId()).query(queryRequest.getOutTradeNo());
+            log.debug("[支付宝]查询交易响应：耗时：{}ms, 结果：{}", System.currentTimeMillis() - startTime, JSON.toJSONString(queryResponse));
             AliPayQueryResponse response = AliPayQueryResponse.build(queryResponse.toMap());
             thisCtx.setResponse(response);
         } catch (Exception e) {

@@ -98,7 +98,7 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
         // 判断是否目标类型是否实现了聚合参数转换接口，如果实现了调用转换
         if (AggregateRequestConvert.class.isAssignableFrom(r)) {
             try {
-                log.debug("[调用]转换聚合请求参数类型[{}]为渠道请求参数类型[{}]", this.getRequest().getClass().getName(), r.getName());
+                log.debug("[调用]转换聚合请求类型 -> 渠道请求参数类型：[{}] -> [{}]", this.getRequest().getClass().getName(), r.getName());
                 AggregateRequestConvert targetRequest = (AggregateRequestConvert) r.newInstance();
                 this.request = targetRequest.convertRequest((SupayBaseRequest) this.getRequest());
                 return (Re)this.request;
@@ -121,7 +121,7 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
             try {
                 AggregateResponseConvert targetResponse = (AggregateResponseConvert) rsp;
                 this.originResponse = (S) targetResponse.convertResponse(this);
-                log.debug("[调用]转换渠道响应参数类型[{}]为聚合响应参数类型[{}]", rsp.getClass().getName(), this.originResponse.getClass().getName());
+                log.debug("[调用]转换渠道响应参数类型 -> 聚合响应参数类型: [{}] -> [{}]", rsp.getClass().getName(), this.originResponse.getClass().getName());
             } catch (Exception e) {
                 log.error("转换聚合参数类型异常", e);
             }

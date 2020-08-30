@@ -78,7 +78,7 @@ public class AggregateSupayCoreDemo {
         // 调用支付接口
         cxt = (SupayContext) SupayCore.pay(cxt);
 
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.isSuccess(),
+        log.debug("交易状态：{} 信息：{} 耗时：{}ms 接口响应数据：{}", cxt.isSuccess(),
                 cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
     }
 
@@ -103,7 +103,7 @@ public class AggregateSupayCoreDemo {
 
         String result = ((SupayPayResponse)cxt.getResponse()).getRedirectPageBody();
 
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.isSuccess(),
+        log.debug("交易状态：{} 信息：{} 耗时：{}ms 接口响应数据：{}", cxt.isSuccess(),
                 cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));
     }
 

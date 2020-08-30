@@ -117,7 +117,7 @@ public class WxChannelPayService implements BaseChannelPayService {
         } else {
             resXml = HttpUtils.post(targetUrl, reqXml);
         }
-        log.debug("[微信渠道] 接口：{} 耗时：{} 请求响应：{}", targetUrl, System.currentTimeMillis() - startCallTime, resXml);
+        log.debug("[微信渠道] 接口：{} 耗时：{}ms 请求响应：{}", targetUrl, System.currentTimeMillis() - startCallTime, resXml);
         ctx.parseResponseStr(resXml, responseClass);
         return ctx;
     }

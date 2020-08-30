@@ -83,7 +83,7 @@ public class WxSupayCoreDemo {
         if (!cxt.hasError()) {
             cxt.getResponse();
         }
-        log.debug("交易状态：{} 信息：{} 耗时：{} 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), cxt.getResponse());
+        log.debug("交易状态：{} 信息：{} 耗时：{}ms 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), cxt.getResponse());
 
         // 查询支付订单
         WxPayOrderQueryRequest qReq = WxPayOrderQueryRequest.builder().outTradeNo(orderCode).build();

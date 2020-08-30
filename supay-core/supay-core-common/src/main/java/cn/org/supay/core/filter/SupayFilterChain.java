@@ -42,7 +42,7 @@ public class SupayFilterChain implements FilterChain {
     public SupayContext<? extends Request, ? extends Response> nextBefore(SupayContext<? extends Request, ? extends Response> ctx) {
         if (filters != null && chainPos < filters.size() && !ctx.hasError()) {
             SupayFilter filter = filters.get(chainPos);
-            log.debug("[before-{}]执行过滤器before方法:{}", this.getCurrent(), filter.getClass().getName());
+            log.debug("[支付][before-{}]执行过滤器before方法:{}", this.getCurrent(), filter.getClass().getName());
             chainPos ++;
             return filter.before(ctx, this);
         } else {
@@ -55,7 +55,7 @@ public class SupayFilterChain implements FilterChain {
         if (filters != null && chainPos > 0) {
             chainPos --;
             SupayFilter filter = filters.get(chainPos);
-            log.debug("[after-{}]执行过滤器after方法:{}", this.getCurrent(), filter.getClass().getName());
+            log.debug("[支付][after-{}]执行过滤器after方法:{}", this.getCurrent(), filter.getClass().getName());
             filter.after(ctx, this);
             return ctx;
         }

@@ -5,6 +5,7 @@
 package cn.org.supay.core.channel.alipay.data;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
@@ -53,7 +54,7 @@ public class AliPayQueryResponse extends AlipayTradeQueryResponse implements Res
                 .originTradeNo(this.outTradeNo)
                 .serviceTradeNo(this.tradeNo)
                 .payStatus(convertPayStatus())
-                .payTime(DateUtil.parseTime(this.sendPayDate))
+                .payTime(StrUtil.isNotBlank(this.sendPayDate)?DateUtil.parseTime(this.sendPayDate):null)
                 .build();
     }
 
@@ -64,14 +65,16 @@ public class AliPayQueryResponse extends AlipayTradeQueryResponse implements Res
      * @return
      */
     private SupayPayStatus convertPayStatus() {
-        switch (this.tradeStatus) {
-            case "WAIT_BUYER_PAY":
-                return SupayPayStatus.NO_PAY;
-            case "TRADE_FINISHED":
-            case "TRADE_SUCCESS":
-                return SupayPayStatus.PAY_SUCCESS;
-            case "TRADE_CLOSED":
-                return SupayPayStatus.PAY_FAIL;
+        if (StrUtil.isNotBlank(this.tradeStatus)) {
+            switch (this.tradeStatus) {
+                case "WAIT_BUYER_PAY":
+                    return SupayPayStatus.NO_PAY;
+                case "TRADE_FINISHED":
+                case "TRADE_SUCCESS":
+                    return SupayPayStatus.PAY_SUCCESS;
+                case "TRADE_CLOSED":
+                    return SupayPayStatus.PAY_FAIL;
+            }
         }
         return null;
     }
