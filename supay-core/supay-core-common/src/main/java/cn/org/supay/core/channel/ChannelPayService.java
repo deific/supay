@@ -105,7 +105,7 @@ public interface ChannelPayService {
      * @param ctx
      * @return
      */
-    default SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+    default SupayContext<? extends Request, ? extends Response> queryPay(SupayContext<? extends Request, ? extends Response> ctx) {
         return ctx.fail("不支持该方法");
     }
 
@@ -114,7 +114,7 @@ public interface ChannelPayService {
      * @param ctx
      * @return
      */
-    default SupayContext<? extends Request, ? extends Response> queryRefundTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+    default SupayContext<? extends Request, ? extends Response> queryRefund(SupayContext<? extends Request, ? extends Response> ctx) {
         return ctx.fail("不支持该方法");
     }
 

@@ -75,12 +75,12 @@ public class WxChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+    public SupayContext<? extends Request, ? extends Response> queryPay(SupayContext<? extends Request, ? extends Response> ctx) {
         return callApi(ctx, WxPayOrderQueryRequest.class, WxPayOrderQueryResponse.class, WxApiType.PAY_QUERY);
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryRefundTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+    public SupayContext<? extends Request, ? extends Response> queryRefund(SupayContext<? extends Request, ? extends Response> ctx) {
         return callApi(ctx, WxPayRefundQueryRequest.class, WxPayRefundQueryResponse.class, WxApiType.REFUND_QUERY);
     }
 

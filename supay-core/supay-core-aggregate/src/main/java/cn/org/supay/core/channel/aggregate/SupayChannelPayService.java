@@ -53,8 +53,8 @@ public class SupayChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
-        return SupayCore.getPayChannelService(ctx.getChannelConfig().getChannelType()).queryPayTrade(ctx);
+    public SupayContext<? extends Request, ? extends Response> queryPay(SupayContext<? extends Request, ? extends Response> ctx) {
+        return SupayCore.getPayChannelService(ctx.getChannelConfig().getChannelType()).queryPay(ctx);
     }
 
     @Override

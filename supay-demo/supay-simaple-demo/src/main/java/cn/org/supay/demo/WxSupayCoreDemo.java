@@ -93,7 +93,7 @@ public class WxSupayCoreDemo {
 //        SupayCore.queryPayOrder(qCtx);
         // 获取具体渠道支付服务
         ChannelPayService wxPayChannelService = SupayCore.getPayChannelService(SupayChannelType.WECHAT);
-        wxPayChannelService.queryPayTrade(qCtx);
+        wxPayChannelService.queryPay(qCtx);
 
         log.debug("查询结果：{}", qCtx.getResponse());
     }

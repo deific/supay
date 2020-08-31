@@ -129,7 +129,7 @@ public class AliChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryPayTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+    public SupayContext<? extends Request, ? extends Response> queryPay(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
         SupayContext<AliPayQueryRequest, AliPayQueryResponse> thisCtx = ctx.checkAndConvertType(AliPayQueryRequest.class, AliPayQueryResponse.class);
         if (thisCtx.hasError()) {
@@ -151,7 +151,7 @@ public class AliChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public SupayContext<? extends Request, ? extends Response> queryRefundTrade(SupayContext<? extends Request, ? extends Response> ctx) {
+    public SupayContext<? extends Request, ? extends Response> queryRefund(SupayContext<? extends Request, ? extends Response> ctx) {
         // 检查并转换类型
         SupayContext<AliPayRefundQueryRequest, AliPayRefundQueryResponse> thisCtx = ctx.checkAndConvertType(AliPayRefundQueryRequest.class, AliPayRefundQueryResponse.class);
         if (thisCtx.hasError()) {
