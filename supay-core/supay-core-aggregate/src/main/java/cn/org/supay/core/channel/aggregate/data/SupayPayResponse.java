@@ -24,8 +24,7 @@ public class SupayPayResponse extends SupayBaseResponse implements Response {
     /** 支付方式 */
     protected SupayPayType payType;
     /** 跳转地址 */
-    protected String redirectUrl;
-    /** 跳转页面内容 */
-    protected String redirectPageBody;
-
+    protected String redirectBody;
+    /** 页面跳转类型 */
+    protected RedirectType redirectType;
 }

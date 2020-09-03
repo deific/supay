@@ -20,10 +20,4 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayAppPayResponse extends SupayPayResponse implements Response {
-    /**
-     * app支付参数体
-     * 微信渠道：json格式
-     * 阿里渠道：url
-     */
-    private String appPayBody;
 }

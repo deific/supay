@@ -55,6 +55,7 @@ public class AliPayQueryResponse extends AlipayTradeQueryResponse implements Res
                 .serviceTradeNo(this.tradeNo)
                 .payStatus(convertPayStatus())
                 .payTime(StrUtil.isNotBlank(this.sendPayDate)?DateUtil.parseTime(this.sendPayDate):null)
+                .success(this.code == "0000")
                 .build();
     }
 

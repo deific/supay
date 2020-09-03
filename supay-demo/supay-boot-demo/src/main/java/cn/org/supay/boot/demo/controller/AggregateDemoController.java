@@ -55,7 +55,7 @@ public class AggregateDemoController {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((SupayPagePayResponse)cxt.getResponse()).getRedirectPageBody();
+        String result = ((SupayPagePayResponse)cxt.getResponse()).getRedirectType();
 
         return new HttpEntity<>(result);
     }
@@ -84,7 +84,7 @@ public class AggregateDemoController {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectPageBody();
+        String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectType();
         return new HttpEntity<>(result);
     }
 
@@ -112,7 +112,7 @@ public class AggregateDemoController {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectPageBody();
+        String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectType();
         return new HttpEntity<>(result);
     }
 
@@ -142,7 +142,7 @@ public class AggregateDemoController {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectPageBody();
+        String result = ((SupayH5PayResponse)cxt.getResponse()).getRedirectType();
         return new HttpEntity<>(result);
     }
 
@@ -201,7 +201,7 @@ public class AggregateDemoController {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectPageBody();
+        String result = ((SupayAppPayResponse)cxt.getResponse()).getRedirectType();
         return new HttpEntity<>(result);
     }
 
@@ -232,7 +232,7 @@ public class AggregateDemoController {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((SupayMpPayResponse)cxt.getResponse()).getRedirectPageBody();
+        String result = ((SupayMpPayResponse)cxt.getResponse()).getRedirectType();
         return new HttpEntity<>(result);
     }
 }

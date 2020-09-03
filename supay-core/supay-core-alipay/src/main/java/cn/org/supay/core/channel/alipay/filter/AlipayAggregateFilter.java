@@ -64,19 +64,6 @@ public class AlipayAggregateFilter implements SupayFilter {
         }
 
         AggregateContext thisCtx = (AggregateContext) ctx;
-        // 将响应转换为
-        Response response = thisCtx.getResponse();
-
-        // 支付方法
-        if (response instanceof AliPayPageResponse) {
-            AliPayPageResponse pageResponse = (AliPayPageResponse) response;
-            SupayPayResponse payResponse = SupayPagePayResponse.builder()
-                    .redirectPageBody(pageResponse.getBody())
-                    .build();
-
-            // 将转换后的响应暂存
-            thisCtx.setOriginResponse(payResponse);
-        }
 
         // 返回前交换请求和响应，保持接口调用时输入输出参数一致性
         thisCtx.switchRequest();

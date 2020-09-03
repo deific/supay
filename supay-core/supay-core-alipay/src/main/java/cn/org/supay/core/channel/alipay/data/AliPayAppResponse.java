@@ -4,10 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.alipay.data;
 
-import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayAppPayResponse;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
-import cn.org.supay.core.channel.aggregate.data.SupayPagePayResponse;
+import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.context.SupayContext;
 import lombok.Data;
@@ -28,8 +25,9 @@ public class AliPayAppResponse extends AlipayBaseResponse implements Response, A
     @Override
     public SupayBaseResponse convertResponse(SupayContext context) {
         SupayAppPayResponse payResponse = SupayAppPayResponse.builder()
-                .appPayBody(this.getBody())
-                .success(true)
+                .redirectBody(this.getBody())
+                .redirectType(RedirectType.URL)
+                .success(this.success)
                 .build();
         return payResponse;
 

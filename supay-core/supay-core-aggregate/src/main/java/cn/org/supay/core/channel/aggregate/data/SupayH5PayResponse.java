@@ -19,5 +19,4 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayH5PayResponse extends SupayPayResponse {
-
 }

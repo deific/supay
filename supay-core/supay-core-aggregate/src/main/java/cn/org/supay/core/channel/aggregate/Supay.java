@@ -106,7 +106,7 @@ public class Supay {
 
         String result = null;
         if (appPayResponse.isSuccess()) {
-            result = appPayResponse.getAppPayBody();
+            result = appPayResponse.getRedirectBody();
         }
         return result;
     }
@@ -142,7 +142,7 @@ public class Supay {
 
         String result = null;
         if (mpPayResponse.isSuccess()) {
-            result = mpPayResponse.getRedirectUrl();
+            result = mpPayResponse.getRedirectBody();
         }
         return result;
     }
@@ -159,7 +159,7 @@ public class Supay {
     public static String h5Pay(String appId, String tradeName, String outTradeNo, BigDecimal amount, String notifyUrl) {
         SupayPayType payType = getMatchedPayType(appId, SupayPayType.WX_H5_PAY, SupayPayType.ALI_WAP_PAY);
         if (payType == null) {
-            log.error("当前商户appId对应的渠道不支持扫码扫码支付");
+            log.error("当前商户appId对应的渠道不支持手机端H5网页支付");
             return null;
         }
         // 构建支付上下文参数
@@ -178,7 +178,7 @@ public class Supay {
 
         String result = null;
         if (h5PayResponse.isSuccess()) {
-            result = h5PayResponse.getRedirectUrl();
+            result = h5PayResponse.getRedirectBody();
         }
         return result;
     }
@@ -214,7 +214,7 @@ public class Supay {
 
         String result = null;
         if (h5PayResponse.isSuccess()) {
-            result = h5PayResponse.getRedirectUrl();
+            result = h5PayResponse.getRedirectBody();
         }
         return result;
     }

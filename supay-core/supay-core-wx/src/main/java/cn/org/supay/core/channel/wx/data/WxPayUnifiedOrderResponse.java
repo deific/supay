@@ -56,10 +56,25 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
         switch (payType) {
             // h5支付场景信息
             case WX_H5_PAY:
-                payResponse = SupayH5PayResponse.builder().build();
+                payResponse = SupayH5PayResponse.builder()
+                        .redirectBody(getMwebUrl())
+                        .build();
                 break;
             case WX_MP_PAY:
-                payResponse = SupayAppPayResponse.builder().build();
+                Map<String, String> mpParam = new HashMap<>();
+                // APP支付参数
+                mpParam.put("appid", this.appid);
+                mpParam.put("partnerid", ctx.getChannelConfig().getMchId());
+                mpParam.put("prepayid", this.prepayId);
+                mpParam.put("noncestr", this.nonceStr);
+                mpParam.put("package", "Sign=WXPay");
+                mpParam.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+                mpParam.put("sign", SignUtils.signForMap(BeanUtils.xmlBean2Map(mpParam), ctx.getChannelConfig().getMchSecretKey()));
+
+                payResponse = SupayMpPayResponse.builder()
+                        .redirectBody(JSONUtil.toJsonStr(mpParam))
+                        .redirectType(RedirectType.JSON_BODY)
+                        .build();
                 break;
             case WX_APP_PAY:
                 Map<String, String> appParam = new HashMap<>();
@@ -73,7 +88,8 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
                 appParam.put("sign", SignUtils.signForMap(BeanUtils.xmlBean2Map(appParam), ctx.getChannelConfig().getMchSecretKey()));
 
                 payResponse = SupayAppPayResponse.builder()
-                        .appPayBody(JSONUtil.toJsonStr(appParam))
+                        .redirectBody(JSONUtil.toJsonStr(appParam))
+                        .redirectType(RedirectType.JSON_BODY)
                         .build();
                 break;
             case WX_SCAN_PAY:

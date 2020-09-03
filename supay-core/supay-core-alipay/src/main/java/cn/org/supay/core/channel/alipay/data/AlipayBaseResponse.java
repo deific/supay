@@ -21,5 +21,11 @@ import lombok.ToString;
 @ToString
 public class AlipayBaseResponse implements Response {
 
+    public boolean success;
+
+    public int code;
+
+    public String msg;
+
     protected String body;
 }

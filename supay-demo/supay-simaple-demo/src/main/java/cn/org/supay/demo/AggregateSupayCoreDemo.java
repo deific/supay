@@ -101,7 +101,7 @@ public class AggregateSupayCoreDemo {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        String result = ((SupayPayResponse)cxt.getResponse()).getRedirectPageBody();
+        String result = ((SupayPayResponse)cxt.getResponse()).getRedirectBody();
 
         log.debug("交易状态：{} 信息：{} 耗时：{}ms 接口响应数据：{}", cxt.isSuccess(),
                 cxt.getMsg(), cxt.duration(), JSONUtil.toJsonStr(cxt.getResponse()));

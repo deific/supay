@@ -28,12 +28,22 @@ public class AliPayPageRequest extends AliPayBaseRequest implements AggregateReq
 
     @Override
     public AliPayPageRequest convertRequest(SupayBaseRequest request) {
-        SupayPagePayRequest payRequest = (SupayPagePayRequest) request;
-        this.setPayType((request).getPayType());
-        this.setOutTradeNo(payRequest.getTradeNo());
-        this.setSubject(payRequest.getTradeName());
-        this.setTotalAmount(payRequest.getAmount().toString());
-        this.setReturnUrl(payRequest.getReturnUrl());
+        if (request instanceof SupayPagePayRequest) {
+            SupayPagePayRequest pagePayRequest = (SupayPagePayRequest) request;
+            this.setPayType(pagePayRequest.getPayType());
+            this.setOutTradeNo(pagePayRequest.getTradeNo());
+            this.setSubject(pagePayRequest.getTradeName());
+            this.setTotalAmount(pagePayRequest.getAmount().toString());
+            this.setReturnUrl(pagePayRequest.getReturnUrl());
+        }
+        if (request instanceof SupayH5PayRequest) {
+            SupayH5PayRequest h5PayRequest = (SupayH5PayRequest) request;
+            this.setPayType(h5PayRequest.getPayType());
+            this.setOutTradeNo(h5PayRequest.getTradeNo());
+            this.setSubject(h5PayRequest.getTradeName());
+            this.setTotalAmount(h5PayRequest.getAmount().toString());
+            this.setReturnUrl(h5PayRequest.getReturnUrl());
+        }
         return this;
     }
 }

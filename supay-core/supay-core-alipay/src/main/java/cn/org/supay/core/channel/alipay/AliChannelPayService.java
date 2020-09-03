@@ -66,6 +66,9 @@ public class AliChannelPayService implements BaseChannelPayService {
                             .pay(request.getSubject(), request.getOutTradeNo(), request.getTotalAmount(), request.getReturnUrl());
                     AliPayPageResponse pageResponse = new AliPayPageResponse();
                     pageResponse.setBody(response.body);
+                    pageResponse.setSuccess(true);
+                    pageResponse.setCode(0);
+                    pageResponse.setMsg("成功");
                     thisCtx.setResponse(pageResponse);
                     return thisCtx;
                 case ALI_WAP_PAY:
@@ -75,15 +78,20 @@ public class AliChannelPayService implements BaseChannelPayService {
                             wapRequest.getTotalAmount(), wapRequest.getReturnUrl(), wapRequest.getReturnUrl());
                     AliPayPageResponse wapPayResponse = new AliPayPageResponse();
                     wapPayResponse.setBody(wapResponse.body);
+                    wapPayResponse.setSuccess(true);
+                    wapPayResponse.setCode(0);
+                    wapPayResponse.setMsg("成功");
                     thisCtx.setResponse(wapPayResponse);
                     return thisCtx;
                 case ALI_APP_PAY:
                     AliPayAppRequest appRequest = thisCtx.getRequest(AliPayAppRequest.class);
                     AlipayTradeAppPayResponse appResponse = Factory.Payment.App(thisCtx.getChannelConfig().getAppId()).batchOptional(appRequest.getOptionParams())
                             .pay(appRequest.getSubject(), appRequest.getOutTradeNo(), appRequest.getTotalAmount());
-
                     AliPayAppResponse appPayResponse = new AliPayAppResponse();
                     appPayResponse.setBody(appResponse.body);
+                    appPayResponse.setSuccess(true);
+                    appPayResponse.setCode(0);
+                    appPayResponse.setMsg("成功");
                     thisCtx.setResponse(appPayResponse);
                     return thisCtx;
                 case ALI_FACE_PAY:
@@ -98,6 +106,7 @@ public class AliChannelPayService implements BaseChannelPayService {
                     AlipayTradeCreateResponse commonResponse = Factory.Payment.Common(thisCtx.getChannelConfig().getAppId()).batchOptional(commonRequest.getOptionParams())
                             .create(commonRequest.getSubject(), commonRequest.getOutTradeNo(), commonRequest.getTotalAmount(), commonRequest.getBuyerId());
                     AliPayCommonResponse commonPayResponse = AliPayCommonResponse.build(commonResponse.toMap());
+
                     thisCtx.setResponse(commonPayResponse);
                     return thisCtx;
             }
