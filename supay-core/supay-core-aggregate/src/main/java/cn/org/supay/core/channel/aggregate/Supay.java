@@ -92,7 +92,7 @@ public class Supay {
         SupayContext cxt = SupayAppPayRequest.builder()
                 .tradeNo(outTradeNo)
                 .payType(payType)
-                .tradeName("测试APP支付")
+                .tradeName(tradeName)
                 .amount(amount)
                 .payParam(SupayPayParamWxApp.builder().appId(appId).build())
                 .notifyUrl(notifyUrl)
@@ -107,6 +107,114 @@ public class Supay {
         String result = null;
         if (appPayResponse.isSuccess()) {
             result = appPayResponse.getAppPayBody();
+        }
+        return result;
+    }
+
+    /**
+     * 公众号支付支付
+     * @param appId
+     * @param tradeName
+     * @param outTradeNo
+     * @param amount
+     * @param notifyUrl
+     * @return
+     */
+    public static String mpPay(String appId, String tradeName, String outTradeNo, BigDecimal amount, String notifyUrl) {
+        SupayPayType payType = getMatchedPayType(appId, SupayPayType.WX_MP_PAY);
+        if (payType == null) {
+            log.error("当前商户appId对应的渠道不支持扫码扫码支付");
+            return null;
+        }
+        // 构建支付上下文参数
+        SupayContext cxt = SupayMpPayRequest.builder()
+                .tradeNo(outTradeNo)
+                .payType(payType)
+                .tradeName(tradeName)
+                .amount(amount)
+                .payParam(SupayPayParamWxApp.builder().appId(appId).build())
+                .notifyUrl(notifyUrl)
+                .build()
+                .toContext(appId, false);
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+        SupayMpPayResponse mpPayResponse = ((SupayMpPayResponse)cxt.getResponse());
+
+        String result = null;
+        if (mpPayResponse.isSuccess()) {
+            result = mpPayResponse.getRedirectUrl();
+        }
+        return result;
+    }
+
+    /**
+     * h5支付支付
+     * @param appId
+     * @param tradeName
+     * @param outTradeNo
+     * @param amount
+     * @param notifyUrl
+     * @return
+     */
+    public static String h5Pay(String appId, String tradeName, String outTradeNo, BigDecimal amount, String notifyUrl) {
+        SupayPayType payType = getMatchedPayType(appId, SupayPayType.WX_H5_PAY, SupayPayType.ALI_WAP_PAY);
+        if (payType == null) {
+            log.error("当前商户appId对应的渠道不支持扫码扫码支付");
+            return null;
+        }
+        // 构建支付上下文参数
+        SupayContext cxt = SupayH5PayRequest.builder()
+                .tradeNo(outTradeNo)
+                .payType(payType)
+                .tradeName(tradeName)
+                .amount(amount)
+                .payParam(SupayPayParamWxApp.builder().appId(appId).build())
+                .notifyUrl(notifyUrl)
+                .build()
+                .toContext(appId, false);
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+        SupayH5PayResponse h5PayResponse = ((SupayH5PayResponse)cxt.getResponse());
+
+        String result = null;
+        if (h5PayResponse.isSuccess()) {
+            result = h5PayResponse.getRedirectUrl();
+        }
+        return result;
+    }
+
+    /**
+     * 面对面支付支付
+     * @param appId
+     * @param tradeName
+     * @param outTradeNo
+     * @param amount
+     * @param notifyUrl
+     * @return
+     */
+    public static String facePay(String appId, String tradeName, String outTradeNo, BigDecimal amount, String notifyUrl) {
+        SupayPayType payType = getMatchedPayType(appId, SupayPayType.WX_FACE_PAY, SupayPayType.ALI_FACE_PAY);
+        if (payType == null) {
+            log.error("当前商户appId对应的渠道不支持扫码扫码支付");
+            return null;
+        }
+        // 构建支付上下文参数
+        SupayContext cxt = SupayFacePayRequest.builder()
+                .tradeNo(outTradeNo)
+                .payType(payType)
+                .tradeName(tradeName)
+                .amount(amount)
+                .payParam(SupayPayParamWxApp.builder().appId(appId).build())
+                .notifyUrl(notifyUrl)
+                .build()
+                .toContext(appId, false);
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+        SupayFacePayResponse h5PayResponse = ((SupayFacePayResponse)cxt.getResponse());
+
+        String result = null;
+        if (h5PayResponse.isSuccess()) {
+            result = h5PayResponse.getRedirectUrl();
         }
         return result;
     }
@@ -167,7 +275,7 @@ public class Supay {
      * @param refundNo
      * @return
      */
-    public static SupayRefundQueryResponse refundQuery(String appId, String outTradeNo, String refundNo) {
+    public static  SupayRefundQueryResponse refundQuery(String appId, String outTradeNo, String refundNo) {
         // 构建支付上下文参数
         SupayContext cxt = SupayRefundQueryRequest.builder()
                 .outTradeNo(outTradeNo)

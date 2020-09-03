@@ -8,6 +8,8 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.channel.aggregate.Supay;
+import cn.org.supay.core.channel.aggregate.data.SupayPayQueryResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
@@ -111,12 +113,12 @@ public class AliSupayCoreDemo {
     private static void testPayQuery() {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
-        Supay.payQuery(channelConfig.getAppId(), orderCode);
+        SupayPayQueryResponse payQueryResponse = Supay.payQuery(channelConfig.getAppId(), orderCode);
     }
 
     private static void testRefundQuery() {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
-        Supay.refundQuery(channelConfig.getAppId(), orderCode, refundCode);
+        SupayRefundQueryResponse refundQueryResponse = Supay.refundQuery(channelConfig.getAppId(), orderCode, refundCode);
     }
 }
