@@ -14,7 +14,7 @@ GitHub：[https://github.com/deific/supay](https://github.com/deific/supay)
 
 ## 特性
 ```java
-1. 极少依赖,轻量级可扩展的工具包SDK，可嵌入任何系统
+1. 极少依赖,轻量级可扩展的工具包SDK,可嵌入任何系统
 2. 统一支付入口,简化调用,只使用SupayCore类即可
 3. 高性能异步线程处理请求和异步通知
 4. 支持多商户多应用
@@ -148,6 +148,8 @@ GitHub： [supay-boot-demo](https://github.com/deific/supay/tree/master/supay-de
 ## 统一支付入口Supay
 抽象各个第三方渠道支付接口和调用过程，统一支付SupayCore提供入口，对于不同的第三方渠道支付，Supay的方法入参和返回值不同。并且调用过程中增加了过滤器设计，可以灵活扩展各渠道调用过程。
 
+## 进度&计划
+开发中
 
 ### 贡献代码
 最后如果该库对你有帮助，不妨右上角点点 Star或者任意赞助支持，我更喜欢你 Fork PR 成为项目贡献者 .
