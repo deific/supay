@@ -5,6 +5,13 @@
 工具包可单独使用，通过整合、抽象、聚合第三方支付系统接口，对外提供简洁的使用和调用接口完成第三方支付接口（微信,支付宝,银联等等）调用，实现了扫码支付、H5支付、小程序支付等，支付与业务完全剥离，简单几行代码即可实现支付，简单快速完成支付模块的开发，可轻松嵌入到任何系统里。并且采用灵活的扩展性架构，以便实现更多的第三方支付接口。
 支付系统完善的支付系统。包括商户管理，用户账户体系，支付管理，支付路由，订单管理，上下游对账，清结算等支付核心功能，目标是打造一个开源的完善的可扩展的用于生产的支付系统。
 
+[![star](https://gitee.com/geekgarden/supay/badge/star.svg?theme=white)](https://gitee.com/geekgarden/supay/stargazers)
+[![fork](https://gitee.com/geekgarden/supay/badge/fork.svg?theme=white)](https://gitee.com/geekgarden/supay/members)
+
+Gitee：[https://gitee.com/geekgarden/supay](https://gitee.com/geekgarden/supay)
+
+GitHub：[https://github.com/deific/supay](https://github.com/deific/supay)
+
 ## 特性
 ```java
 1. 极少依赖,轻量级可扩展的工具包SDK，可嵌入任何系统
@@ -44,6 +51,20 @@
 ![支付](/docs/SupayCore.png)
 
 ## 示例&效果
+**简单Demo**
+简单的支付demo，使用配置文件配置相关支付参数，直接执行main函数运行
+
+Gitee：[supay-simaple-demo](https://gitee.com/geekgarden/supay/tree/master/supay-demo/supay-simaple-demo) 
+
+GitHub： [supay-simaple-demo](https://github.com/deific/supay/tree/master/supay-demo/supay-simaple-demo)
+
+**springboot版本 Demo**
+基于springboot体系搭建的demo,通过api接口调用处方
+
+Gitee：[supay-boot-demo](https://gitee.com/geekgarden/supay/tree/master/supay-demo/supay-boot-demo) 
+
+GitHub： [supay-boot-demo](https://github.com/deific/supay/tree/master/supay-demo/supay-boot-demo)
+
 ### 普通用法
 ```java
     String orderCode = IdUtil.fastSimpleUUID();
@@ -124,5 +145,18 @@
     Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), new BigDecimal(0.01), "https://www.spay.org.cn/notify");
 ```
 
-## 统一支付入口SupayCore
-抽象各个第三方渠道支付接口和调用过程，统一支付SupayCore提供入口，对于不同的第三方渠道支付，SupayCore的方法入参和返回值不同。并且调用过程中增加了过滤器设计，可以灵活扩展各渠道调用过程。
+## 统一支付入口Supay
+抽象各个第三方渠道支付接口和调用过程，统一支付SupayCore提供入口，对于不同的第三方渠道支付，Supay的方法入参和返回值不同。并且调用过程中增加了过滤器设计，可以灵活扩展各渠道调用过程。
+
+
+### 贡献代码
+最后如果该库对你有帮助，不妨右上角点点 Star或者任意赞助支持，我更喜欢你 Fork PR 成为项目贡献者 .
+
+## 支付官方文档 
+主要的第三方支付接口文档。
+
+- [微信委托扣款 API-服务商模式](https://pay.weixin.qq.com/wiki/doc/api/pap_sl.php?chapter=17_1)
+- [微信委托扣款 API-普通商户模式](https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=17_1)
+- [微信刷脸支付 API](https://pay.weixin.qq.com/wiki/doc/wxfacepay/develop/backend.html)
+- [微信支付 V3开发文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/api.shtml)
+- [支付宝开发平台](https://docs.open.alipay.com)
