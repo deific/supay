@@ -54,8 +54,8 @@ public class AliSupayCoreDemo {
 
     public static void main(String[] args) {
 
-//        AliSupayCoreDemo.testScanPay();
-//        AliSupayCoreDemo.testAppPay();
+        AliSupayCoreDemo.testScanPay();
+        AliSupayCoreDemo.testAppPay();
         AliSupayCoreDemo.testMpPay();
         AliSupayCoreDemo.testH5Pay();
 //        AliSupayCoreDemo.testFacePay();

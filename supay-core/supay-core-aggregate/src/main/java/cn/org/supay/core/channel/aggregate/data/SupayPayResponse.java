@@ -25,6 +25,13 @@ public class SupayPayResponse extends SupayBaseResponse implements Response {
     protected SupayPayType payType;
     /** 跳转地址 */
     protected String redirectBody;
-    /** 页面跳转类型 */
+    /**
+     * 返回参数跳转类型
+     * 不同支付方式下返回接口参数跳转不同，总的来说分为三种情况
+     * URL:直接返回可跳转的url地址，跳转到第三方页面完成支付
+     * PAGE_BODY:返回的html代码片段，一般是form表单，通过form表单提交
+     * JSON_BODY:返回支付参数并签名，前端支付接口需要用到这些参数，如h5，app等
+     *
+     */
     protected RedirectType redirectType;
 }
