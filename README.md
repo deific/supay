@@ -38,9 +38,12 @@
 - 抽象和统一支付交易流程，屏蔽支付系统差异
 - 内部架构设计支付扩展第三方支付系统
 
+设计思路请参考 [wiki](https://gitee.com/geekgarden/supay.wiki.git) 设计文档
+
+**supay思维导图**
 ![支付](/docs/SupayCore.png)
 
-## 示例
+## 示例&效果
 ### 普通用法
 ```java
     String orderCode = IdUtil.fastSimpleUUID();
