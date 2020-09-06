@@ -60,12 +60,10 @@ public class AliSupayCoreDemo {
         AliSupayCoreDemo.testAppPay();
 //        AliSupayCoreDemo.testMpPay();
         AliSupayCoreDemo.testH5Pay();
-        AliSupayCoreDemo.testH5Pay();
-        AliSupayCoreDemo.testH5Pay();
 //        AliSupayCoreDemo.testFacePay();
 //        AliSupayCoreDemo.testRefund();
-//        AliSupayCoreDemo.testPayQuery();
-//        AliSupayCoreDemo.testRefundQuery();
+        AliSupayCoreDemo.testPayQuery();
+        AliSupayCoreDemo.testRefundQuery();
 
         log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getSupayStats()));
     }
