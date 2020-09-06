@@ -5,11 +5,9 @@
 package cn.org.supay.core.channel.wx.data;
 
 import cn.org.supay.core.annotation.XmlField;
-import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
-import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryRequest;
-import cn.org.supay.core.channel.aggregate.data.SupayRefundRequest;
+import cn.org.supay.core.channel.aggregate.data.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -26,6 +24,7 @@ import java.math.RoundingMode;
  */
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class WxPayOrderQueryRequest extends WxPayBaseRequest implements AggregateRequestConvert {
     /** 微信的订单号，优先使用,与outTradeNo二选一 */
     @XmlField("transaction_id")
@@ -36,8 +35,8 @@ public class WxPayOrderQueryRequest extends WxPayBaseRequest implements Aggregat
 
     @Override
     public WxPayOrderQueryRequest convertRequest(SupayBaseRequest request) {
-        SupayRefundQueryRequest refundQueryRequest = (SupayRefundQueryRequest) request;
-        this.setOutTradeNo(refundQueryRequest.getOutTradeNo());
+        SupayPayQueryRequest payQueryRequest = (SupayPayQueryRequest) request;
+        this.setOutTradeNo(payQueryRequest.getOutTradeNo());
         return this;
     }
 }

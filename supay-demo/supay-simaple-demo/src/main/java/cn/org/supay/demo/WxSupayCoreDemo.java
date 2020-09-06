@@ -12,11 +12,13 @@ import cn.org.supay.core.channel.aggregate.Supay;
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.KeyStoreType;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.SupayCore;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
@@ -56,6 +58,8 @@ public class WxSupayCoreDemo {
 //        WxSupayCoreDemo.testRefund();
         WxSupayCoreDemo.testPayQuery();
         WxSupayCoreDemo.testRefundQuery();
+
+        log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getSupayStats()));
     }
 
 

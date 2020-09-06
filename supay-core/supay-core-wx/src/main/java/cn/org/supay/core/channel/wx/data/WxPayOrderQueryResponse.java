@@ -11,6 +11,8 @@ import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayPayStatus;
 import cn.org.supay.core.enums.SupayRefundStatus;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * <b>Application name：</b> WxPayOrderQueryResponse.java <br>
@@ -21,6 +23,8 @@ import cn.org.supay.core.enums.SupayRefundStatus;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Data
+@NoArgsConstructor
 public class WxPayOrderQueryResponse extends WxPayBaseResponse implements AggregateResponseConvert {
     /** 微信支付分配的终端设备号 */
     @XmlField("device_info")
@@ -81,7 +85,7 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
     public SupayBaseResponse convertResponse(SupayContext context) {
         SupayPayQueryResponse payQueryResponse = SupayPayQueryResponse.builder()
                 .originTradeNo(this.outTradeNo)
-                .payTime(DateUtil.parse(this.timeEnd, "yyyyMMddHHmmss"))
+                .payTime(this.timeEnd == null?null:DateUtil.parse(this.timeEnd, "yyyyMMddHHmmss"))
                 .serviceTradeNo(this.transactionId)
                 .build();
         payQueryResponse.setResultCode(this.getResultCode());

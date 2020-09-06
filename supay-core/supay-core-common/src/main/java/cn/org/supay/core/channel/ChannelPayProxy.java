@@ -49,7 +49,12 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
             }
             // 拦截器
             ctx = this.nextBefore(ctx);
-            ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(this.proxyService, ctx);
+            try {
+                ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(this.proxyService, ctx);
+            } catch (Exception e) {
+                log.error("[支付]支付异常：", e);
+                ctx.fail("支付异常：" + e.getMessage());
+            }
             ctx = this.nextAfter(ctx);
             return ctx;
         } catch (Exception e) {

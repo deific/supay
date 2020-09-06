@@ -3,6 +3,8 @@ package cn.org.supay.core.channel.wx.data;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayPayQueryRequest;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryRequest;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -61,7 +63,9 @@ public class WxPayRefundQueryRequest extends WxPayBaseRequest implements Aggrega
   private String refundId;
 
   @Override
-  public <T> T convertRequest(SupayBaseRequest request) {
-    return null;
+  public WxPayRefundQueryRequest convertRequest(SupayBaseRequest request) {
+    SupayRefundQueryRequest refundQueryRequest = (SupayRefundQueryRequest) request;
+    this.setOutTradeNo(refundQueryRequest.getOutTradeNo());
+    return this;
   }
 }

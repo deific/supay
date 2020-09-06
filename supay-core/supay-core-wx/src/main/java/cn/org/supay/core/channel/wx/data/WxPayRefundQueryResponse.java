@@ -9,6 +9,7 @@ import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryResponse;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayRefundStatus;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -25,6 +26,7 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
+@NoArgsConstructor
 public class WxPayRefundQueryResponse extends WxPayBaseResponse implements AggregateResponseConvert {
   /**
    * 终端设备号
