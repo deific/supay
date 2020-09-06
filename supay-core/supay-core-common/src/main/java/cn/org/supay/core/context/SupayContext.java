@@ -5,6 +5,7 @@
 package cn.org.supay.core.context;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
@@ -17,6 +18,8 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <b>Application name：</b> SupayContext.java <br>
@@ -40,10 +43,14 @@ public class SupayContext<R extends Request, S extends Response> {
     protected Date startTime;
     /** 结束时间 */
     protected Date endTime;
+    /** 调用层级 */
+    protected int invokeLevel = 0;
     /** 支付请求参数 */
     protected R request;
     /** 支付结果 */
     protected S response;
+    /** 附加参数 */
+    protected Map<String, Object> extra;
     /** 是否启动本地模拟支付 */
     protected boolean isLocalMock;
     /** 是否聚合支付 */
@@ -140,11 +147,27 @@ public class SupayContext<R extends Request, S extends Response> {
     /**
      * 开始计时
      */
-    public void startTimer() {
-        if (this.startTime == null) {
+    public void startInvoke() {
+        if (invokeLevel == 0) {
             this.startTime = new Date();
         }
+        this.invokeLevel += 1;
     }
+
+    /**
+     * 结束调用
+     */
+    public void endInvoke() {
+        if (this.invokeLevel == 0) {
+            this.endTime = new Date();
+        }
+        this.invokeLevel -= 1;
+    }
+
+    public int getInvokeLevel() {
+        return invokeLevel;
+    }
+
     /**
      * 耗时
      * @return
@@ -212,5 +235,27 @@ public class SupayContext<R extends Request, S extends Response> {
                 .build();
 
         return cxt;
+    }
+
+    /**
+     * 添加数据
+     * @param key
+     * @param data
+     */
+    public void addData(String key, Object data) {
+        if (extra == null) {
+            extra = new HashMap<>();
+        }
+        extra.put(key, data);
+    }
+
+    /**
+     * 获取数据
+     * @param key
+     * @param <T>
+     * @return
+     */
+    public <T> T getData(String key) {
+        return extra == null?null:(T) extra.get(key);
     }
 }

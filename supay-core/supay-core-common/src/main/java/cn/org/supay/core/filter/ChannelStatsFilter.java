@@ -4,10 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.filter;
 
-import cn.org.supay.core.config.SupayCoreConfig;
-import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.config.SupayCoreConfig;
+import cn.org.supay.core.context.SupayContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,14 +20,21 @@ import lombok.extern.slf4j.Slf4j;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class DefaultFilter implements SupayFilter {
+public class ChannelStatsFilter implements SupayFilter {
     @Override
     public SupayContext<? extends Request, ? extends Response> before(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
+        // 记录开始调用时间
+        ctx.addData("channelStartTime" + ctx.getInvokeLevel(), System.currentTimeMillis());
         return chain.nextBefore(ctx);
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> after(SupayContext<? extends Request, ? extends Response> ctx, FilterChain chain) {
+
+        Object startTime = ctx.getData("channelStartTime" + ctx.getInvokeLevel());
+        if (startTime != null) {
+            SupayCoreConfig.getSupayStats().channelInvokeCosts.addAndGet(System.currentTimeMillis() - (long)startTime);
+        }
 
         return chain.nextAfter(ctx);
     }

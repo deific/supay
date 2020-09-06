@@ -15,10 +15,12 @@ import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
 import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.SupayCore;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
@@ -54,15 +56,18 @@ public class AliSupayCoreDemo {
 
     public static void main(String[] args) {
 
-        AliSupayCoreDemo.testScanPay();
+//        AliSupayCoreDemo.testScanPay();
         AliSupayCoreDemo.testAppPay();
-        AliSupayCoreDemo.testMpPay();
+//        AliSupayCoreDemo.testMpPay();
+        AliSupayCoreDemo.testH5Pay();
+        AliSupayCoreDemo.testH5Pay();
         AliSupayCoreDemo.testH5Pay();
 //        AliSupayCoreDemo.testFacePay();
 //        AliSupayCoreDemo.testRefund();
 //        AliSupayCoreDemo.testPayQuery();
 //        AliSupayCoreDemo.testRefundQuery();
 
+        log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getSupayStats()));
     }
 
     private void test() {

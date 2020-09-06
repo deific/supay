@@ -7,7 +7,10 @@ package cn.org.supay.core.channel;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.filter.SupayFilterChain;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,13 +40,13 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
     public Object invoke(Object proxy, Method method, Object[] args) {
         log.debug("[支付][{}#{}]正在调用服务...", this.proxyService.getClass().getSimpleName(), method.getName());
         SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
-        boolean isOk = checkContext(ctx);
-        if (!isOk) {
-            return ctx;
-        }
-
+        ctx.startInvoke();
         long startTime = System.currentTimeMillis();
         try {
+            boolean isOk = checkContext(ctx);
+            if (!isOk) {
+                return ctx;
+            }
             // 拦截器
             ctx = this.nextBefore(ctx);
             ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(this.proxyService, ctx);
@@ -53,8 +56,19 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
             log.error("[支付]支付异常：", e);
             return ctx.fail("支付异常：" + e.getMessage());
         } finally {
-            long duration = ctx.duration();
-            log.debug("[支付]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", duration, ctx.getEndTime().getTime() - startTime, ctx.getResponse());
+            long currentDuration = System.currentTimeMillis() - startTime;
+            ctx.endInvoke();
+            // 首层调用
+            if (SupayCoreConfig.isEnableStats() && ctx.getInvokeLevel() == 0) {
+                SupayCoreConfig.getSupayStats().totalCount.incrementAndGet();
+                if (ctx.isSuccess()) {
+                    SupayCoreConfig.getSupayStats().totalSuccess.incrementAndGet();
+                } else {
+                    SupayCoreConfig.getSupayStats().totalFailed.incrementAndGet();
+                }
+                SupayCoreConfig.getSupayStats().invokeCosts.addAndGet(ctx.duration());
+            }
+            log.debug("[支付]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", ctx.duration(), currentDuration, ctx.getResponse());
         }
     }
 
@@ -67,13 +81,11 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
         if (ctx.hasError()) {
             return false;
         }
-        ctx.startTimer();
         SupayChannelConfig channelConfig = ctx.getChannelConfig();
         if (channelConfig == null) {
             ctx.fail("请配置支付渠道参数");
             return false;
         }
-
         Request request = ctx.getRequest();
         if (request == null) {
             ctx.fail("请求配置请求参数");

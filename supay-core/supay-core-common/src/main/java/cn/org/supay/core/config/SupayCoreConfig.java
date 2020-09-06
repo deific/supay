@@ -8,9 +8,12 @@ import cn.hutool.core.collection.ListUtil;
 import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.ChannelPayProxy;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
+import cn.org.supay.core.filter.ChannelStatsFilter;
+import cn.org.supay.core.filter.StatsFilter;
 import cn.org.supay.core.filter.SupayFilter;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.stats.SupayStats;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,6 +48,10 @@ public class SupayCoreConfig {
     }};
     /** 全局过滤器 */
     private static List<SupayFilter> filters = new ArrayList<>();
+    /** 全局监控统计器 */
+    private static SupayStats stats = new SupayStats();
+    /** 是否启用全局监控统计 */
+    private static boolean enableStats = true;
 
     /**
      * 注册渠道支付参数
@@ -55,14 +62,20 @@ public class SupayCoreConfig {
     }
 
     /**
-     * 注册渠道支付服务
+     *
      * @param channelType 渠道类型
-     * @param channelService 渠道服务实例
+     * @param channelService 渠道服务
+     * @param isFinal 是否最终支付渠道
+     * @param filters 过滤器
      */
-    public static void registerPayService(SupayChannelType channelType, ChannelPayService channelService, SupayFilter... filters) {
+    public static void registerPayService(SupayChannelType channelType, ChannelPayService channelService, boolean isFinal, SupayFilter... filters) {
         log.debug("[注册] 注册渠道支付服务：channelType={} channelService={}", channelType, channelService.getClass().getName());
         // 通过代理服务注册
         ChannelPayProxy proxy = new ChannelPayProxy(channelService);
+        // 如果开启了
+        if (enableStats && isFinal) {
+            proxy.addFilter(new ChannelStatsFilter());
+        }
         // 如果全局filter存在
         if (!SupayCoreConfig.filters.isEmpty()) {
             proxy.addFilter(SupayCoreConfig.filters);
@@ -72,9 +85,17 @@ public class SupayCoreConfig {
         if (filters != null) {
             proxy.addFilter(filters);
         }
-
         ChannelPayService proxyService = (ChannelPayService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), channelService.getClass().getInterfaces(), proxy);
         channelServiceMap.put(channelType, proxyService);
+    }
+
+    /**
+     * 注册渠道支付服务
+     * @param channelType 渠道类型
+     * @param channelService 渠道服务实例
+     */
+    public static void registerPayService(SupayChannelType channelType, ChannelPayService channelService, SupayFilter... filters) {
+        registerPayService(channelType, channelService, true, filters);
     }
 
     /**
@@ -154,4 +175,15 @@ public class SupayCoreConfig {
         return converter;
     }
 
+    /**
+     * 获取全局统计器
+     * @return
+     */
+    public static SupayStats getSupayStats() {
+        return stats;
+    }
+
+    public static boolean isEnableStats() {
+        return enableStats;
+    }
 }

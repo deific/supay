@@ -34,7 +34,7 @@ public class SupayChannelPayService implements BaseChannelPayService {
 
     @Override
     public void register() {
-        SupayCoreConfig.registerPayService(getSupportType(), this, new AggregateFilter());
+        SupayCoreConfig.registerPayService(getSupportType(), this, false, new AggregateFilter());
     }
 
     @Override
