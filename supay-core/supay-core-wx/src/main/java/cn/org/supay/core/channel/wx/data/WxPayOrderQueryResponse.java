@@ -6,6 +6,7 @@ package cn.org.supay.core.channel.wx.data;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.context.SupayContext;
@@ -87,9 +88,10 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
                 .originTradeNo(this.outTradeNo)
                 .payTime(this.timeEnd == null?null:DateUtil.parse(this.timeEnd, "yyyyMMddHHmmss"))
                 .serviceTradeNo(this.transactionId)
+                .payStatus(convertPayStatus())
                 .build();
-        payQueryResponse.setResultCode(this.getResultCode());
-        payQueryResponse.setResultMsg(this.getReturnMsg());
+        payQueryResponse.setResultCode(this.getErrCode());
+        payQueryResponse.setResultMsg(this.getErrCodeDes());
         payQueryResponse.setSuccess(this.checkResult());
         return payQueryResponse;
     }
@@ -100,6 +102,10 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
      * @return
      */
     private SupayPayStatus convertPayStatus() {
+        if (StrUtil.isBlank(this.tradeState)) {
+            return null;
+        }
+
         switch (this.tradeState) {
             case "SUCCESS":
                 return SupayPayStatus.PAY_SUCCESS;

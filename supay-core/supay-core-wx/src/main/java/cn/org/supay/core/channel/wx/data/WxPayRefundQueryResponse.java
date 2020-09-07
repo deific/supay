@@ -176,12 +176,12 @@ public class WxPayRefundQueryResponse extends WxPayBaseResponse implements Aggre
   public SupayBaseResponse convertResponse(SupayContext context) {
     SupayRefundQueryResponse refundQueryResponse = SupayRefundQueryResponse.builder()
             .originTradeNo(this.outTradeNo)
-            .refundTime(DateUtil.parse(this.refundSuccessTime0, "yyyyMMddHHmmss"))
+            .refundTime(this.refundSuccessTime0 == null?null:DateUtil.parse(this.refundSuccessTime0, "yyyyMMddHHmmss"))
             .refundTradeNo(this.refundId0)
             .refundStatus(convertRefundStatus())
             .build();
-    refundQueryResponse.setResultCode(this.getResultCode());
-    refundQueryResponse.setResultMsg(this.getReturnMsg());
+    refundQueryResponse.setResultCode(this.getErrCode());
+    refundQueryResponse.setResultMsg(this.getErrCodeDes());
     refundQueryResponse.setSuccess(this.checkResult());
     return refundQueryResponse;
   }
@@ -191,7 +191,18 @@ public class WxPayRefundQueryResponse extends WxPayBaseResponse implements Aggre
    * @return
    */
   private SupayRefundStatus convertRefundStatus() {
+    if (this.refundStatus0 == null) {
+      return null;
+    }
+
     switch (this.refundStatus0) {
+      case "SUCCESS":
+        return SupayRefundStatus.REFUND_SUCCESS;
+      case "REFUNDCLOSE":
+      case "CHANGE":
+        return SupayRefundStatus.REFUND_FAIL;
+      case "PROCESSING":
+        return SupayRefundStatus.REFUND_PROCESSING;
       default:
         return SupayRefundStatus.NO_REFUND;
     }

@@ -4,6 +4,8 @@
  *******************************************************************************/
 package cn.org.supay.core.channel;
 
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
@@ -73,7 +75,7 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
                 }
                 SupayCoreConfig.getSupayStats().invokeCosts.addAndGet(ctx.duration());
             }
-            log.debug("[支付]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", ctx.duration(), currentDuration, ctx.getResponse());
+            log.debug("[支付]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", ctx.duration(), currentDuration, JSONUtil.toJsonStr(ctx.getResponse()));
         }
     }
 
