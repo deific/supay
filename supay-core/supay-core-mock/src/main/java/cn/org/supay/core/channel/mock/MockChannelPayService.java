@@ -60,6 +60,11 @@ public class MockChannelPayService implements BaseChannelPayService {
     }
 
     @Override
+    public SupayContext<? extends Request, ? extends Response> queryRefund(SupayContext<? extends Request, ? extends Response> ctx) {
+        return randomSuccess(ctx);
+    }
+
+    @Override
     public SupayContext<? extends Request, ? extends Response> sendRedPackage(SupayContext<? extends Request, ? extends Response> ctx) {
         return randomSuccess(ctx);
     }
