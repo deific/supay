@@ -139,6 +139,11 @@ GitHub： [supay-boot-demo](https://github.com/deific/supay/tree/master/supay-de
     String qrCodeUrl = Supay.scanPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
     log.debug("二维码支付内容：{}", qrCodeUrl);
 
+    // app支付
+    String orderCode = IdUtil.fastSimpleUUID();
+    String appParamJson = Supay.appPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
+    log.debug("app支付内容：{}", appParamJson);
+
     // 退款
     String orderCode = IdUtil.fastSimpleUUID();
     String refundCode = IdUtil.fastSimpleUUID();
