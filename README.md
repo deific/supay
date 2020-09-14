@@ -132,8 +132,9 @@ GitHub： [supay-boot-demo](https://github.com/deific/supay/tree/master/supay-de
 - 明确的静态方法
 - 必要简洁的业务参数
 - 几行代码完成
-
+- 通知上下文
 ```java
+
     // 扫码支付，根据appId的配置自动识别微信，支付宝
     String orderCode = IdUtil.fastSimpleUUID();
     String qrCodeUrl = Supay.scanPay(channelConfig.getAppId(), "测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
