@@ -132,7 +132,7 @@ GitHub： [supay-boot-demo](https://github.com/deific/supay/tree/master/supay-de
 - 明确的静态方法
 - 必要简洁的业务参数
 - 几行代码完成
-- 通知上下文
+- 过滤器机制，全程可监控扩展
 ```java
 
     // 扫码支付，根据appId的配置自动识别微信，支付宝
