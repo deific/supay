@@ -40,7 +40,7 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
-        log.debug("[支付][{}#{}]正在调用服务...", this.proxyService.getClass().getSimpleName(), method.getName());
+        log.debug("[调用][{}#{}]正在调用服务...", this.proxyService.getClass().getSimpleName(), method.getName());
         SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
         ctx.startInvoke();
         long startTime = System.currentTimeMillis();
@@ -54,14 +54,14 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
             try {
                 ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(this.proxyService, ctx);
             } catch (Exception e) {
-                log.error("[支付]支付异常：", e);
-                ctx.fail("支付异常：" + e.getMessage());
+                log.error("[调用]调用异常：", e);
+                ctx.fail("调用异常：" + e.getMessage());
             }
             ctx = this.nextAfter(ctx);
             return ctx;
         } catch (Exception e) {
-            log.error("[支付]支付异常：", e);
-            return ctx.fail("支付异常：" + e.getMessage());
+            log.error("[调用]调用异常：", e);
+            return ctx.fail("调用异常：" + e.getMessage());
         } finally {
             long currentDuration = System.currentTimeMillis() - startTime;
             ctx.endInvoke();
@@ -75,7 +75,7 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
                 }
                 SupayCoreConfig.getSupayStats().invokeCosts.addAndGet(ctx.duration());
             }
-            log.debug("[支付]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", ctx.duration(), currentDuration, JSONUtil.toJsonStr(ctx.getResponse()));
+            log.debug("[调用]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", ctx.duration(), currentDuration, JSONUtil.toJsonStr(ctx.getResponse()));
         }
     }
 
@@ -90,7 +90,7 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
         }
         SupayChannelConfig channelConfig = ctx.getChannelConfig();
         if (channelConfig == null) {
-            ctx.fail("请配置支付渠道参数");
+            ctx.fail("请配置调用渠道参数");
             return false;
         }
         Request request = ctx.getRequest();
