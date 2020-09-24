@@ -5,9 +5,9 @@
 package cn.org.supay.core.channel.aggregate.context;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReferenceUtil;
-import cn.org.supay.core.channel.aggregate.data.*;
+import cn.org.supay.core.channel.aggregate.data.AggregateRequestConvert;
+import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
+import cn.org.supay.core.channel.aggregate.data.SupayBaseRequest;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
