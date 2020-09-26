@@ -84,7 +84,8 @@ public class SupayCoreConfig {
         if (filters != null) {
             proxy.addFilter(filters);
         }
-        ChannelPayService proxyService = (ChannelPayService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), channelService.getClass().getInterfaces(), proxy);
+        ChannelPayService proxyService = (ChannelPayService) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                channelService.getClass().getInterfaces(), proxy);
         channelServiceMap.put(channelType, proxyService);
     }
 

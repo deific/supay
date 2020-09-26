@@ -36,6 +36,26 @@ public class ChannelPayProxy extends SupayFilterChain implements InvocationHandl
         this.proxyService = proxyService;
     }
 
+    /**
+     * 代理调用前
+     * @param ctx
+     */
+    public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
+        ctx.startInvoke();
+        long startTime = System.currentTimeMillis();
+        boolean isOk = checkContext(ctx);
+        // 拦截器
+        ctx = this.nextBefore(ctx);
+    }
+
+    /**
+     * 代理调用后
+     * @param ctx
+     */
+    public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
+        ctx = this.nextAfter(ctx);
+    }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         log.debug("[调用][{}#{}]正在调用服务...", this.proxyService.getClass().getSimpleName(), method.getName());
