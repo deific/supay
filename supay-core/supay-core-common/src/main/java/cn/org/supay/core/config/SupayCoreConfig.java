@@ -6,10 +6,9 @@ package cn.org.supay.core.config;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.org.supay.core.channel.ChannelPayService;
-import cn.org.supay.core.channel.ChannelPayProxy;
+import cn.org.supay.core.channel.proxy.ChannelPayProxy;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
 import cn.org.supay.core.filter.ChannelStatsFilter;
-import cn.org.supay.core.filter.StatsFilter;
 import cn.org.supay.core.filter.SupayFilter;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.enums.SupayChannelType;

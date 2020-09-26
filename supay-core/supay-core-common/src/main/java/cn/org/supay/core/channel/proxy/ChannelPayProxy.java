@@ -2,17 +2,15 @@
  * @(#)ChannelPayService.java 2020年05月15日 22:37
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.core.channel;
+package cn.org.supay.core.channel.proxy;
 
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
+import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.enums.SupayChannelType;
-import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.filter.SupayFilterChain;
 import lombok.extern.slf4j.Slf4j;
 

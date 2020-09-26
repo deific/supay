@@ -41,5 +41,13 @@
             <version>${hutool.version}</version>
         </dependency>
         <!-- huTool 工具包 End -->
+
+        <!--代理-->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
     </dependencies>
 </project>
