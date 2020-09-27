@@ -4,6 +4,8 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.proxy;
 
+import cn.org.supay.core.channel.ChannelPayService;
+
 /**
  * <b>Application name：</b> JdkProxy.java <br>
  * <b>Application describing： </b> <br>
@@ -14,4 +16,13 @@ package cn.org.supay.core.channel.proxy;
  * <b>@version：</b>V1.0.0 <br>
  */
 public class ProxyFactory {
+
+    /**
+     * 获取代理类
+     * @param targetService
+     * @return
+     */
+    public static ChannelPayProxy getProxy(ChannelPayService targetService) {
+        return new CglibProxy(targetService);
+    }
 }

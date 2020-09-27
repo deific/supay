@@ -4,6 +4,10 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.proxy;
 
+import cn.org.supay.core.channel.ChannelPayService;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.context.SupayContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -20,28 +24,36 @@ import java.lang.reflect.Proxy;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Slf4j
-public class JdkProxy implements InvocationHandler {
+public class JdkProxy extends ChannelPayProxy implements InvocationHandler {
 
-    /** 需要代理的目标对象 */
-    private Object target;
+    public JdkProxy(ChannelPayService targetService) {
+        super(targetService);
+    }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        log.debug("JDK动态代理，监听开始！");
-        Object result = method.invoke(target, args);
-        log.debug("JDK动态代理，监听结束！");
-        return result;
+    public Object invoke(Object proxy, Method method, Object[] args) {
+        log.debug("[jdk调用][{}#{}]正在调用服务...", this.targetService.getClass().getSimpleName(), method.getName());
+        SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
+        try {
+            this.beforeInvoke(ctx);
+            //方法执行，参数：target 目标对象 arr参数数组
+            ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(targetService, args);
+            this.afterInvoke(ctx);
+        } catch (Exception e) {
+            log.error("[调用]服务调用异常：", e);
+            this.compalete(ctx);
+        }
+        return ctx;
     }
 
     /**
      * 定义获取代理对象方法
-     * @param targetObject
      * @return
      */
-    private Object getJDKProxy(Object targetObject){
-        //为目标对象target赋值
-        this.target = targetObject;
+    @Override
+    public ChannelPayService getProxyService() {
         //JDK动态代理只能针对实现了接口的类进行代理，newProxyInstance 函数所需参数就可看出
-        return Proxy.newProxyInstance(targetObject.getClass().getClassLoader(), targetObject.getClass().getInterfaces(), this);
+        return (ChannelPayService) Proxy.newProxyInstance(this.targetService.getClass().getClassLoader(),
+                this.targetService.getClass().getInterfaces(), this);
     }
 }
