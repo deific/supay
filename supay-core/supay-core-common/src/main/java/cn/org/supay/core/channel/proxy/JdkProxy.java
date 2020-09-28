@@ -5,9 +5,6 @@
 package cn.org.supay.core.channel.proxy;
 
 import cn.org.supay.core.channel.ChannelPayService;
-import cn.org.supay.core.channel.data.Request;
-import cn.org.supay.core.channel.data.Response;
-import cn.org.supay.core.context.SupayContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -28,6 +25,7 @@ public class JdkProxy extends ChannelPayProxy implements InvocationHandler {
 
     public JdkProxy(ChannelPayService targetService) {
         super(targetService);
+        log.debug("[代理]jdk代理：{}", targetService.getClass().getSimpleName());
     }
 
     @Override

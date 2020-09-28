@@ -23,6 +23,10 @@ public class ProxyFactory {
      * @return
      */
     public static ChannelPayProxy getProxy(ChannelPayService targetService) {
-        return new CglibProxy(targetService);
+        if (targetService.getClass().isInterface()) {
+            return new JdkProxy(targetService);
+        } else {
+            return new CglibProxy(targetService);
+        }
     }
 }

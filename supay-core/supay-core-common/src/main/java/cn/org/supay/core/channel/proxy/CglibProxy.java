@@ -5,9 +5,6 @@
 package cn.org.supay.core.channel.proxy;
 
 import cn.org.supay.core.channel.ChannelPayService;
-import cn.org.supay.core.channel.data.Request;
-import cn.org.supay.core.channel.data.Response;
-import cn.org.supay.core.context.SupayContext;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -29,6 +26,7 @@ public class CglibProxy extends ChannelPayProxy implements MethodInterceptor {
 
     public CglibProxy(ChannelPayService proxyService) {
         super(proxyService);
+        log.debug("[代理]jdk代理：{}", targetService.getClass().getSimpleName());
     }
 
     @Override

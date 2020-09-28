@@ -73,13 +73,13 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     }
 
     /**
-     * 调用
+     * 实际代理方法调用
      * @param method
      * @param args
      * @return
      */
     protected Object invoke(Method method, Object[] args) {
-        log.debug("[jdk调用][{}#{}]正在调用服务...", this.targetService.getClass().getSimpleName(), method.getName());
+        log.debug("[调用][{}#{}]正在调用服务...", this.targetService.getClass().getSimpleName(), method.getName());
         SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
         try {
             boolean isOk = checkContext(ctx);
@@ -104,46 +104,6 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @return
      */
     public abstract ChannelPayService getProxyService();
-//    @Override
-//    public Object invoke(Object proxy, Method method, Object[] args) {
-//        log.debug("[调用][{}#{}]正在调用服务...", this.proxyService.getClass().getSimpleName(), method.getName());
-//        SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
-//        ctx.startInvoke();
-//        long startTime = System.currentTimeMillis();
-//        try {
-//            boolean isOk = checkContext(ctx);
-//            if (!isOk) {
-//                return ctx;
-//            }
-//            // 拦截器
-//            ctx = this.nextBefore(ctx);
-//            try {
-//                ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(this.proxyService, ctx);
-//            } catch (Exception e) {
-//                log.error("[调用]调用异常：", e);
-//                ctx.fail("调用异常：" + e.getMessage());
-//            }
-//            ctx = this.nextAfter(ctx);
-//            return ctx;
-//        } catch (Exception e) {
-//            log.error("[调用]调用异常：", e);
-//            return ctx.fail("调用异常：" + e.getMessage());
-//        } finally {
-//            long currentDuration = System.currentTimeMillis() - startTime;
-//            ctx.endInvoke();
-//            // 首层调用
-//            if (SupayCoreConfig.isEnableStats() && ctx.getInvokeLevel() == 0) {
-//                SupayCoreConfig.getSupayStats().totalCount.incrementAndGet();
-//                if (ctx.isSuccess()) {
-//                    SupayCoreConfig.getSupayStats().totalSuccess.incrementAndGet();
-//                } else {
-//                    SupayCoreConfig.getSupayStats().totalFailed.incrementAndGet();
-//                }
-//                SupayCoreConfig.getSupayStats().invokeCosts.addAndGet(ctx.duration());
-//            }
-//            log.debug("[调用]累计耗时：{}ms 当前调用耗时：{}ms 结果：{}", ctx.duration(), currentDuration, JSONUtil.toJsonStr(ctx.getResponse()));
-//        }
-//    }
 
     /**
      * 检查请求上下文
