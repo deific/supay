@@ -12,6 +12,7 @@ import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayPayType;
+import cn.org.supay.core.stats.InvokeStats;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -51,6 +52,8 @@ public class SupayContext<R extends Request, S extends Response> {
     protected S response;
     /** 附加参数 */
     protected Map<String, Object> extra;
+    /** 调用统计 */
+    private InvokeStats invokeStats;
     /** 是否启动本地模拟支付 */
     protected boolean isLocalMock;
     /** 是否聚合支付 */
