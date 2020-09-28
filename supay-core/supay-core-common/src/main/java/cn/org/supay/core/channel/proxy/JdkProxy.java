@@ -32,18 +32,7 @@ public class JdkProxy extends ChannelPayProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
-        log.debug("[jdk调用][{}#{}]正在调用服务...", this.targetService.getClass().getSimpleName(), method.getName());
-        SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
-        try {
-            this.beforeInvoke(ctx);
-            //方法执行，参数：target 目标对象 arr参数数组
-            ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(targetService, args);
-            this.afterInvoke(ctx);
-        } catch (Exception e) {
-            log.error("[调用]服务调用异常：", e);
-            this.compalete(ctx);
-        }
-        return ctx;
+        return invoke(method, args);
     }
 
     /**

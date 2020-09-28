@@ -14,6 +14,8 @@ import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.filter.SupayFilterChain;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Method;
+
 /**
  * <b>Application name：</b> ChannelPayService.java <br>
  * <b>Application describing： </b> <br>
@@ -39,7 +41,6 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      */
     public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
         ctx.startInvoke();
-        boolean isOk = checkContext(ctx);
         // 拦截器
         this.nextBefore(ctx);
     }
@@ -50,14 +51,14 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      */
     public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
         ctx = this.nextAfter(ctx);
+        ctx.endInvoke();
     }
 
     /**
      * 代理调用后
      * @param ctx
      */
-    public void compalete(SupayContext<? extends Request, ? extends Response> ctx) {
-        ctx.endInvoke();
+    public void finish(SupayContext<? extends Request, ? extends Response> ctx) {
         // 首层调用
         if (SupayCoreConfig.isEnableStats() && ctx.getInvokeLevel() == 0) {
             SupayCoreConfig.getSupayStats().totalCount.incrementAndGet();
@@ -69,6 +70,33 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
             SupayCoreConfig.getSupayStats().invokeCosts.addAndGet(ctx.duration());
         }
         log.debug("[调用]耗时：{}ms 结果：{}", ctx.duration(), JSONUtil.toJsonStr(ctx.getResponse()));
+    }
+
+    /**
+     * 调用
+     * @param method
+     * @param args
+     * @return
+     */
+    protected Object invoke(Method method, Object[] args) {
+        log.debug("[jdk调用][{}#{}]正在调用服务...", this.targetService.getClass().getSimpleName(), method.getName());
+        SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
+        try {
+            boolean isOk = checkContext(ctx);
+            if (!isOk) {
+                return ctx;
+            }
+
+            this.beforeInvoke(ctx);
+            //方法执行，参数：target 目标对象 arr参数数组
+            ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(targetService, args);
+            this.afterInvoke(ctx);
+        } catch (Exception e) {
+            log.error("[调用]服务调用异常：", e);
+        } finally {
+            this.finish(ctx);
+        }
+        return ctx;
     }
 
     /**
