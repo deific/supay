@@ -14,6 +14,7 @@ import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.filter.SupayFilterChain;
 import cn.org.supay.core.stats.InvokeStats;
 import lombok.extern.slf4j.Slf4j;
+import sun.plugin2.message.Message;
 
 import java.lang.reflect.Method;
 
@@ -41,8 +42,6 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param ctx
      */
     public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
-        // 拦截器
-        this.nextBefore(ctx);
     }
 
     /**
@@ -50,7 +49,6 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param ctx
      */
     public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
-        ctx = this.nextAfter(ctx);
     }
 
     /**
@@ -80,21 +78,27 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     protected Object invoke(Method method, Object[] args) {
         log.debug("[调用][{}#{}]正在调用服务...", this.targetService.getClass().getSimpleName(), method.getName());
         SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
-        InvokeStats currentInvoke = null;
+        boolean isOk = checkContext(ctx);
+        if (!isOk) {
+            return ctx;
+        }
         try {
-            currentInvoke = ctx.startInvoke(this.targetService.getClass().getSimpleName(), method.getName(), ctx.getCurrentInvoke());
-            boolean isOk = checkContext(ctx);
-            if (!isOk) {
-                return ctx;
-            }
-            this.beforeInvoke(ctx);
+            InvokeStats currentInvoke = ctx.getCurrentInvoke();
+            ctx.startInvoke(this.targetService.getClass().getSimpleName(), method.getName(), currentInvoke);
+            // 前置拦截器
+            this.nextBefore(ctx);
+
             //方法执行，参数：target 目标对象 arr参数数组
+            this.beforeInvoke(ctx);
             ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(targetService, args);
             this.afterInvoke(ctx);
+
+            // 后置拦截器
+            ctx = this.nextAfter(ctx);
+            ctx.endInvoke(this.targetService.getClass().getSimpleName(), method.getName(), currentInvoke);
         } catch (Exception e) {
             log.error("[调用]服务调用异常：", e);
         } finally {
-            ctx.endInvoke(this.targetService.getClass().getSimpleName(), method.getName(), currentInvoke);
             this.finish(ctx);
         }
         return ctx;

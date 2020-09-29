@@ -38,7 +38,6 @@ public class SupayCore {
      * @return
      */
     public static ChannelPayService getPayChannelService(SupayContext<? extends Request, ? extends Response> ctx) {
-        ctx.setStartTime(new Date());
         SupayChannelConfig channelConfig = ctx.getChannelConfig();
 
         // 如果启用本地模拟

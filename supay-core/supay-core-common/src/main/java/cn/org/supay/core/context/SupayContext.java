@@ -5,13 +5,11 @@
 package cn.org.supay.core.context;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
-import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
-import cn.org.supay.core.enums.SupayPayType;
+import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.stats.InvokeStats;
 import lombok.Data;
 import lombok.ToString;
@@ -40,20 +38,14 @@ public class SupayContext<R extends Request, S extends Response> {
     protected String tradeId;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
-    /** 开始时间 */
-    protected Date startTime;
-    /** 结束时间 */
-    protected Date endTime;
-    /** 调用层级 */
-    protected int invokeLevel = 0;
     /** 支付请求参数 */
     protected R request;
     /** 支付结果 */
     protected S response;
+    /** 调用信息 */
+    protected InvokeStats currentInvoke;
     /** 附加参数 */
     protected Map<String, Object> extra;
-    /** 调用统计 */
-    private InvokeStats currentInvoke;
     /** 是否启动本地模拟支付 */
     protected boolean isLocalMock;
     /** 是否聚合支付 */
@@ -154,7 +146,7 @@ public class SupayContext<R extends Request, S extends Response> {
         if (parentInvoke == null) {
             currentInvoke = new InvokeStats(0, invokeService, method, new Date());
         } else {
-            currentInvoke = new InvokeStats(currentInvoke.getInvokeLevel() + 1, invokeService, method, new Date());
+            currentInvoke = new InvokeStats(parentInvoke.getInvokeLevel() + 1, invokeService, method, new Date());
             parentInvoke.setNextInvoke(currentInvoke);
         }
         return currentInvoke;
@@ -163,14 +155,15 @@ public class SupayContext<R extends Request, S extends Response> {
     /**
      * 结束调用
      */
-    public void endInvoke(String invokeService, String method, InvokeStats parentInvoke) {
-        parentInvoke.setEndTime(new Date());
-        parentInvoke.setInvokeCost(parentInvoke.getEndTime().getTime() - parentInvoke.getStartTime().getTime());
-        currentInvoke = parentInvoke;
+    public InvokeStats endInvoke(String invokeService, String method, InvokeStats parentInvoke) {
+        this.currentInvoke.setEndTime(new Date());
+        this.currentInvoke.setInvokeCost(this.currentInvoke.getEndTime().getTime() - this.currentInvoke.getStartTime().getTime());
+        this.currentInvoke = parentInvoke == null?this.currentInvoke:parentInvoke;
+        return this.currentInvoke;
     }
 
     public int getInvokeLevel() {
-        return invokeLevel;
+        return this.currentInvoke.getInvokeLevel();
     }
 
     /**
@@ -178,10 +171,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public long duration() {
-        if (this.endTime == null) {
-            this.endTime = new Date();
-        }
-        return this.endTime.getTime() - this.startTime.getTime();
+        return this.currentInvoke.getInvokeCost();
     }
 
     /**
