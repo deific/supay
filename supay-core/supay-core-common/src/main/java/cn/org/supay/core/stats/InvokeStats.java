@@ -23,6 +23,8 @@ public class InvokeStats {
     private int invokeLevel = 0;
     /** 调用服务 */
     private String invokeService;
+    /** 调用服务方法 */
+    private String invokeMethod;
     /** 调用耗时 */
     private long invokeCost;
     /** 调用开始时间 */
@@ -30,7 +32,17 @@ public class InvokeStats {
     /** 调用结束时间 */
     private Date endTime;
     /** 下一层调用 */
-    private InvokeStats nextInvokeStats;
+    private InvokeStats nextInvoke;
 
+    public InvokeStats() {
+
+    }
+
+    public InvokeStats(int invokeLevel, String invokeService, String invokeMethod, Date startTime) {
+        this.invokeLevel = invokeLevel;
+        this.invokeService = invokeService;
+        this.invokeMethod = invokeMethod;
+        this.startTime = startTime;
+    }
 
 }

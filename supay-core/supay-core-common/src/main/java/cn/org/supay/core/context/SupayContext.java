@@ -53,7 +53,7 @@ public class SupayContext<R extends Request, S extends Response> {
     /** 附加参数 */
     protected Map<String, Object> extra;
     /** 调用统计 */
-    private InvokeStats invokeStats;
+    private InvokeStats currentInvoke;
     /** 是否启动本地模拟支付 */
     protected boolean isLocalMock;
     /** 是否聚合支付 */
@@ -150,21 +150,23 @@ public class SupayContext<R extends Request, S extends Response> {
     /**
      * 开始计时
      */
-    public void startInvoke() {
-        if (invokeLevel == 0) {
-            this.startTime = new Date();
+    public InvokeStats startInvoke(String invokeService, String method, InvokeStats parentInvoke) {
+        if (parentInvoke == null) {
+            currentInvoke = new InvokeStats(0, invokeService, method, new Date());
+        } else {
+            currentInvoke = new InvokeStats(currentInvoke.getInvokeLevel() + 1, invokeService, method, new Date());
+            parentInvoke.setNextInvoke(currentInvoke);
         }
-        this.invokeLevel += 1;
+        return currentInvoke;
     }
 
     /**
      * 结束调用
      */
-    public void endInvoke() {
-        if (this.invokeLevel == 0) {
-            this.endTime = new Date();
-        }
-        this.invokeLevel -= 1;
+    public void endInvoke(String invokeService, String method, InvokeStats parentInvoke) {
+        parentInvoke.setEndTime(new Date());
+        parentInvoke.setInvokeCost(parentInvoke.getEndTime().getTime() - parentInvoke.getStartTime().getTime());
+        currentInvoke = parentInvoke;
     }
 
     public int getInvokeLevel() {
