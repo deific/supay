@@ -82,8 +82,8 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
         if (!isOk) {
             return ctx;
         }
-        InvokeStats currentInvoke = ctx.getCurrentInvoke();
-        ctx.startInvoke(this.targetService.getClass().getSimpleName(), method.getName(), currentInvoke);
+        InvokeStats parentInvoke = ctx.getCurrentInvoke();
+        ctx.startInvoke(this.targetService.getClass().getSimpleName(), method.getName(), parentInvoke);
         try {
             // 前置拦截器
             this.nextBefore(ctx);
@@ -97,7 +97,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
             log.error("[调用]服务调用异常：", e);
         } finally {
             this.finish(ctx);
-            ctx.endInvoke(this.targetService.getClass().getSimpleName(), method.getName(), currentInvoke);
+            ctx.endInvoke(parentInvoke);
         }
         return ctx;
     }

@@ -140,7 +140,11 @@ public class SupayContext<R extends Request, S extends Response> {
     }
 
     /**
-     * 开始计时
+     * 开始调用
+     * @param invokeService
+     * @param method
+     * @param parentInvoke
+     * @return
      */
     public InvokeStats startInvoke(String invokeService, String method, InvokeStats parentInvoke) {
         if (parentInvoke == null) {
@@ -154,8 +158,11 @@ public class SupayContext<R extends Request, S extends Response> {
 
     /**
      * 结束调用
+     * 结束当前层调用，并且将上下文中invoke设置为上层invoke返回
+     * @param parentInvoke
+     * @return
      */
-    public InvokeStats endInvoke(String invokeService, String method, InvokeStats parentInvoke) {
+    public InvokeStats endInvoke(InvokeStats parentInvoke) {
         this.currentInvoke.setEndTime(new Date());
         this.currentInvoke.setInvokeCost(this.currentInvoke.getEndTime().getTime() - this.currentInvoke.getStartTime().getTime());
         this.currentInvoke = parentInvoke == null?this.currentInvoke:parentInvoke;
