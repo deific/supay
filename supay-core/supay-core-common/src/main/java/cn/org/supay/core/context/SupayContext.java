@@ -8,13 +8,9 @@ import cn.hutool.core.util.IdUtil;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
-<<<<<<< HEAD
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.stats.InvokeStats;
-=======
-import cn.org.supay.core.enums.SupayPayType;
->>>>>>> parent of b8cde8c... feat:多层级调用监控统计机制
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
