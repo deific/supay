@@ -4,8 +4,11 @@
  *******************************************************************************/
 package cn.org.supay.core.stats;
 
+import cn.org.supay.core.enums.SupayChannelType;
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -30,4 +33,47 @@ public class SupayStats {
     public final AtomicLong	invokeCosts	= new AtomicLong();
     /** 渠道总调用耗时 */
     public final AtomicLong	channelInvokeCosts	= new AtomicLong();
+    /** 平均耗时 */
+    public long avgCost;
+
+    /** 各渠道统计 */
+    public final Map<SupayChannelType, ChannelStats> channelStatsMap = new HashMap<>();
+
+    /**
+     * 新增一次成功统计
+     * @param cost
+     */
+    public synchronized void incrementSuccess(SupayChannelType channelType, long cost) {
+        totalCount.incrementAndGet();
+        totalSuccess.incrementAndGet();
+        invokeCosts.addAndGet(cost);
+        channelInvokeCosts.addAndGet(cost);
+        if (channelStatsMap.containsKey(channelType)) {
+            channelStatsMap.get(channelType).incrementSuccess(cost);
+        } else {
+            ChannelStats channelStats = new ChannelStats();
+            channelStats.incrementSuccess(cost);
+            channelStatsMap.put(channelType, channelStats);
+        }
+        this.avgCost = invokeCosts.get() / totalCount.get();
+    }
+
+    /**
+     * 新增一次成功统计
+     * @param cost
+     */
+    public synchronized void incrementFailed(SupayChannelType channelType, long cost) {
+        totalCount.incrementAndGet();
+        totalFailed.incrementAndGet();
+        invokeCosts.addAndGet(cost);
+        channelInvokeCosts.addAndGet(cost);
+        if (channelStatsMap.containsKey(channelType)) {
+            channelStatsMap.get(channelType).incrementFailed(cost);
+        } else {
+            ChannelStats channelStats = new ChannelStats();
+            channelStats.incrementFailed(cost);
+            channelStatsMap.put(channelType, channelStats);
+        }
+        this.avgCost = invokeCosts.get() / totalCount.get();
+    }
 }

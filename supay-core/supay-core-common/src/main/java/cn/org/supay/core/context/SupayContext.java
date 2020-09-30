@@ -5,13 +5,16 @@
 package cn.org.supay.core.context;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
-import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
+<<<<<<< HEAD
+import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.config.SupayCoreConfig;
+import cn.org.supay.core.stats.InvokeStats;
+=======
 import cn.org.supay.core.enums.SupayPayType;
+>>>>>>> parent of b8cde8c... feat:多层级调用监控统计机制
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -39,16 +42,12 @@ public class SupayContext<R extends Request, S extends Response> {
     protected String tradeId;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
-    /** 开始时间 */
-    protected Date startTime;
-    /** 结束时间 */
-    protected Date endTime;
-    /** 调用层级 */
-    protected int invokeLevel = 0;
     /** 支付请求参数 */
     protected R request;
     /** 支付结果 */
     protected S response;
+    /** 调用信息 */
+    protected InvokeStats currentInvoke;
     /** 附加参数 */
     protected Map<String, Object> extra;
     /** 是否启动本地模拟支付 */
@@ -147,25 +146,40 @@ public class SupayContext<R extends Request, S extends Response> {
     /**
      * 开始计时
      */
-    public void startInvoke() {
-        if (invokeLevel == 0) {
-            this.startTime = new Date();
+    public InvokeStats startInvoke(String invokeService, String method, InvokeStats parentInvoke) {
+        if (parentInvoke == null) {
+            currentInvoke = new InvokeStats(this.getChannelConfig().getChannelType(), 0, invokeService, method, new Date());
+        } else {
+            currentInvoke = new InvokeStats(this.getChannelConfig().getChannelType(), parentInvoke.getInvokeLevel() + 1, invokeService, method, new Date());
+            parentInvoke.setNextInvoke(currentInvoke);
         }
-        this.invokeLevel += 1;
+        return currentInvoke;
     }
 
     /**
      * 结束调用
      */
-    public void endInvoke() {
-        if (this.invokeLevel == 0) {
-            this.endTime = new Date();
-        }
-        this.invokeLevel -= 1;
+    public InvokeStats endInvoke(String invokeService, String method, InvokeStats parentInvoke) {
+        this.currentInvoke.setEndTime(new Date());
+        this.currentInvoke.setInvokeCost(this.currentInvoke.getEndTime().getTime() - this.currentInvoke.getStartTime().getTime());
+        this.currentInvoke = parentInvoke == null?this.currentInvoke:parentInvoke;
+        return this.currentInvoke;
     }
 
     public int getInvokeLevel() {
-        return invokeLevel;
+        return this.currentInvoke.getInvokeLevel();
+    }
+
+    /**
+     * 获取渠道调用统计
+     * @return
+     */
+    public InvokeStats getChannelInvoke(InvokeStats invokeStats) {
+        if (invokeStats.getNextInvoke() == null) {
+            return invokeStats;
+        } else {
+            return this.getChannelInvoke(invokeStats.getNextInvoke());
+        }
     }
 
     /**
@@ -173,10 +187,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public long duration() {
-        if (this.endTime == null) {
-            this.endTime = new Date();
-        }
-        return this.endTime.getTime() - this.startTime.getTime();
+        return this.currentInvoke.getInvokeCost();
     }
 
     /**
