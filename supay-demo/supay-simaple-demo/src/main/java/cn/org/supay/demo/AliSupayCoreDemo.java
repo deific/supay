@@ -68,7 +68,7 @@ public class AliSupayCoreDemo {
         log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getSupayStats()));
     }
 
-    private void test() {
+    public static void test() {
         String orderCode = IdUtil.fastSimpleUUID();
 
         // 构建支付上下文
@@ -97,44 +97,44 @@ public class AliSupayCoreDemo {
         log.debug("交易状态：{} 信息：{} 耗时：{}ms 接口响应数据：{}", cxt.hasError(), cxt.getMsg(), cxt.duration(), ((AliPayQueryResponse)cxt.getResponse()));
     }
 
-    private static void testScanPay() {
+    public static void testScanPay() {
         String orderCode = IdUtil.fastSimpleUUID();
         String qrCodeUrl = Supay.scanPay(channelConfig.getAppId(), "扫码测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
         log.debug("app支付内容：{}", qrCodeUrl);
     }
 
-    private static void testAppPay() {
+    public static void testAppPay() {
         String orderCode = IdUtil.fastSimpleUUID();
         String appParamJson = Supay.appPay(channelConfig.getAppId(), "app测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
         log.debug("二维码支付内容：{}", appParamJson);
     }
 
-    private static void testMpPay() {
+    public static void testMpPay() {
         String orderCode = IdUtil.fastSimpleUUID();
         String qrCodeUrl = Supay.mpPay(channelConfig.getAppId(), "公众号测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
         log.debug("app支付内容：{}", qrCodeUrl);
     }
 
-    private static void testH5Pay() {
+    public static void testH5Pay() {
         String orderCode = IdUtil.fastSimpleUUID();
         String qrCodeUrl = Supay.h5Pay(channelConfig.getAppId(), "h5网页测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
         log.debug("app支付内容：{}", qrCodeUrl);
     }
 
-    private static void testFacePay() {
+    public static void testFacePay() {
         String orderCode = IdUtil.fastSimpleUUID();
         String qrCodeUrl = Supay.facePay(channelConfig.getAppId(), "面对面测试支付", orderCode, new BigDecimal(0.01), "https://www.spay.org.cn/notify");
         log.debug("app支付内容：{}", qrCodeUrl);
     }
 
 
-    private static void testRefund() {
+    public static void testRefund() {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
         Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal("0.01"), new BigDecimal("0.01"), "https://www.spay.org.cn/notify");
     }
 
-    private static void testPayQuery() {
+    public static void testPayQuery() {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
         SupayPayQueryResponse payQueryResponse = Supay.payQuery(channelConfig.getAppId(), orderCode);
