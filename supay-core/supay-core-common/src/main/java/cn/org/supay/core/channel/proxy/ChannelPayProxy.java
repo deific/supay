@@ -12,7 +12,10 @@ import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.filter.SupayFilterChain;
+import cn.org.supay.core.stats.InvokeStats;
+import cn.org.supay.core.stats.SupayStats;
 import lombok.extern.slf4j.Slf4j;
+import sun.plugin2.message.Message;
 
 import java.lang.reflect.Method;
 
@@ -40,9 +43,6 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param ctx
      */
     public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
-        ctx.startInvoke();
-        // 拦截器
-        this.nextBefore(ctx);
     }
 
     /**
@@ -50,8 +50,6 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param ctx
      */
     public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
-        ctx = this.nextAfter(ctx);
-        ctx.endInvoke();
     }
 
     /**
@@ -59,17 +57,16 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param ctx
      */
     public void finish(SupayContext<? extends Request, ? extends Response> ctx) {
-        // 首层调用
-        if (SupayCoreConfig.isEnableStats() && ctx.getInvokeLevel() == 0) {
-            SupayCoreConfig.getSupayStats().totalCount.incrementAndGet();
+        // 开启统计且在最上层统计
+        if (SupayCoreConfig.isEnableStats() && ctx.getCurrentInvoke().getInvokeLevel() == 0) {
+            SupayStats supayStats = SupayCoreConfig.getSupayStats();
             if (ctx.isSuccess()) {
-                SupayCoreConfig.getSupayStats().totalSuccess.incrementAndGet();
+                supayStats.incrementSuccess(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(ctx.getCurrentInvoke()).getInvokeCost());
             } else {
-                SupayCoreConfig.getSupayStats().totalFailed.incrementAndGet();
+                supayStats.incrementFailed(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(ctx.getCurrentInvoke()).getInvokeCost());
             }
-            SupayCoreConfig.getSupayStats().invokeCosts.addAndGet(ctx.duration());
         }
-        log.debug("[调用]耗时：{}ms 结果：{}", ctx.duration(), JSONUtil.toJsonStr(ctx.getResponse()));
+        log.debug("[调用]服务调用完成，耗时：{}ms 结果：{}", ctx.duration(), JSONUtil.toJsonStr(ctx.getResponse()));
     }
 
     /**
@@ -81,20 +78,26 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     protected Object invoke(Method method, Object[] args) {
         log.debug("[调用][{}#{}]正在调用服务...", this.targetService.getClass().getSimpleName(), method.getName());
         SupayContext<? extends Request, ? extends Response> ctx = (SupayContext<? extends Request, ? extends Response>)args[0];
+        boolean isOk = checkContext(ctx);
+        if (!isOk) {
+            return ctx;
+        }
+        InvokeStats currentInvoke = ctx.getCurrentInvoke();
+        ctx.startInvoke(this.targetService.getClass().getSimpleName(), method.getName(), currentInvoke);
         try {
-            boolean isOk = checkContext(ctx);
-            if (!isOk) {
-                return ctx;
-            }
-
-            this.beforeInvoke(ctx);
+            // 前置拦截器
+            this.nextBefore(ctx);
             //方法执行，参数：target 目标对象 arr参数数组
+            this.beforeInvoke(ctx);
             ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(targetService, args);
             this.afterInvoke(ctx);
+            // 后置拦截器
+            ctx = this.nextAfter(ctx);
         } catch (Exception e) {
             log.error("[调用]服务调用异常：", e);
         } finally {
             this.finish(ctx);
+            ctx.endInvoke(this.targetService.getClass().getSimpleName(), method.getName(), currentInvoke);
         }
         return ctx;
     }
