@@ -41,32 +41,49 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * 代理调用前
      * @param ctx
      */
-    public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
+    public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke, Method method) {
+        if (parentInvoke == null) {
+            ctx.setCurrentInvoke(new InvokeStats(ctx.getChannelConfig().getChannelType(),
+                    0, this.targetService.getClass().getSimpleName(), method.getName()));
+        } else {
+            InvokeStats currentInvoke = new InvokeStats(ctx.getChannelConfig().getChannelType(),
+                    parentInvoke.getInvokeLevel() + 1, this.targetService.getClass().getSimpleName(), method.getName());
+            // 本层调用invoke设置为上层的子层
+            parentInvoke.setNextInvoke(currentInvoke);
+            ctx.setCurrentInvoke(currentInvoke);
+        }
+        ctx.getCurrentInvoke().start();
     }
 
     /**
      * 代理调用后
      * @param ctx
      */
-    public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx) {
+    public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke) {
+        ctx.getCurrentInvoke().end();
     }
 
     /**
      * 代理调用后
      * @param ctx
      */
-    public void finish(SupayContext<? extends Request, ? extends Response> ctx) {
+    public void finishInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke) {
+        InvokeStats currentInvoke = ctx.getCurrentInvoke();
         // 开启统计且在最上层统计
-        if (SupayCoreConfig.isEnableStats() && ctx.getCurrentInvoke().getInvokeLevel() == 0) {
+        if (SupayCoreConfig.isEnableStats() && currentInvoke.getInvokeLevel() == 0) {
             SupayStats supayStats = SupayCoreConfig.getStats();
             if (ctx.isSuccess()) {
-                supayStats.incrementSuccess(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(ctx.getCurrentInvoke()).getInvokeCost());
+                supayStats.incrementSuccess(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(currentInvoke).getInvokeCost());
             } else {
-                supayStats.incrementFailed(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(ctx.getCurrentInvoke()).getInvokeCost());
+                supayStats.incrementFailed(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(currentInvoke).getInvokeCost());
             }
         }
-        log.debug("[调用][{}#{}]服务调用完成，耗时：{}ms 结果：{} {} 响应数据：{}", ctx.getCurrentInvoke().getInvokeService(),
-                ctx.getCurrentInvoke().getInvokeMethod(), ctx.duration(), ctx.isSuccess(), ctx.getMsg(), JSONUtil.toJsonStr(ctx.getResponse()));
+
+        log.debug("[调用][{}#{}]服务调用完成，耗时：{}ms 结果：{} {} 响应数据：{}", currentInvoke.getInvokeService(),
+                currentInvoke.getInvokeMethod(), currentInvoke.getInvokeCost(), ctx.isSuccess(), ctx.getMsg(), JSONUtil.toJsonStr(ctx.getResponse()));
+
+        // 返回上层前，将上层的invoke设置到上下文中
+        ctx.setCurrentInvoke(parentInvoke == null?ctx.getCurrentInvoke():parentInvoke);
     }
 
     /**
@@ -82,26 +99,25 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
         if (!isOk) {
             return ctx;
         }
+        // 上层的调用作为本层的父
         InvokeStats parentInvoke = ctx.getCurrentInvoke();
-        ctx.startInvoke(this.targetService.getClass().getSimpleName(), method.getName(), parentInvoke);
         try {
+            //方法执行，参数：target 目标对象 arr参数数组
+            this.beforeInvoke(ctx, parentInvoke, method);
             // 前置拦截器
             this.nextBefore(ctx);
-            //方法执行，参数：target 目标对象 arr参数数组
-            this.beforeInvoke(ctx);
             ctx = (SupayContext<? extends Request, ? extends Response>) method.invoke(targetService, args);
-            this.afterInvoke(ctx);
             // 后置拦截器
             ctx = this.nextAfter(ctx);
+             this.afterInvoke(ctx, parentInvoke);
         } catch (Exception e) {
             log.error("[调用][{}#{}]服务调用异常：", this.targetService.getClass().getSimpleName(), method.getName(), e);
             ctx.fail("服务调用异常");
-            this.afterInvoke(ctx);
             // 后置拦截器
             ctx = this.nextAfter(ctx);
+            this.afterInvoke(ctx, parentInvoke);
         } finally {
-            this.finish(ctx);
-            ctx.endInvoke(parentInvoke);
+            this.finishInvoke(ctx, parentInvoke);
         }
         return ctx;
     }

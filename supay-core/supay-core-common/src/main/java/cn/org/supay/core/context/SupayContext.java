@@ -16,7 +16,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,35 +139,9 @@ public class SupayContext<R extends Request, S extends Response> {
     }
 
     /**
-     * 开始调用
-     * @param invokeService
-     * @param method
-     * @param parentInvoke
+     * 获取当前调用层级
      * @return
      */
-    public InvokeStats startInvoke(String invokeService, String method, InvokeStats parentInvoke) {
-        if (parentInvoke == null) {
-            currentInvoke = new InvokeStats(this.getChannelConfig().getChannelType(), 0, invokeService, method, new Date());
-        } else {
-            currentInvoke = new InvokeStats(this.getChannelConfig().getChannelType(), parentInvoke.getInvokeLevel() + 1, invokeService, method, new Date());
-            parentInvoke.setNextInvoke(currentInvoke);
-        }
-        return currentInvoke;
-    }
-
-    /**
-     * 结束调用
-     * 结束当前层调用，并且将上下文中invoke设置为上层invoke返回
-     * @param parentInvoke
-     * @return
-     */
-    public InvokeStats endInvoke(InvokeStats parentInvoke) {
-        this.currentInvoke.setEndTime(new Date());
-        this.currentInvoke.setInvokeCost(this.currentInvoke.getEndTime().getTime() - this.currentInvoke.getStartTime().getTime());
-        this.currentInvoke = parentInvoke == null?this.currentInvoke:parentInvoke;
-        return this.currentInvoke;
-    }
-
     public int getInvokeLevel() {
         return this.currentInvoke.getInvokeLevel();
     }

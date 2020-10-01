@@ -41,11 +41,25 @@ public class InvokeStats {
 
     }
 
-    public InvokeStats(SupayChannelType channelType, int invokeLevel, String invokeService, String invokeMethod, Date startTime) {
+    public InvokeStats(SupayChannelType channelType, int invokeLevel, String invokeService, String invokeMethod) {
         this.channelType = channelType;
         this.invokeLevel = invokeLevel;
         this.invokeService = invokeService;
         this.invokeMethod = invokeMethod;
-        this.startTime = startTime;
+    }
+
+    /**
+     * 开始
+     */
+    public void start() {
+        this.setStartTime(new Date());
+    }
+
+    /**
+     * 结束
+     */
+    public void end() {
+        this.endTime = new Date();
+        this.invokeCost = this.endTime.getTime() - this.startTime.getTime();
     }
 }
