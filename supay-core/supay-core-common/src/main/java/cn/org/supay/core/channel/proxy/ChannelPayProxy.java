@@ -65,7 +65,8 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
                 supayStats.incrementFailed(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(ctx.getCurrentInvoke()).getInvokeCost());
             }
         }
-        log.debug("[调用]服务调用完成，耗时：{}ms 结果：{}", ctx.duration(), JSONUtil.toJsonStr(ctx.getResponse()));
+        log.debug("[调用][{}#{}]服务调用完成，耗时：{}ms 结果：{} {} 响应数据：{}", ctx.getCurrentInvoke().getInvokeService(),
+                ctx.getCurrentInvoke().getInvokeMethod(), ctx.duration(), ctx.isSuccess(), ctx.getMsg(), JSONUtil.toJsonStr(ctx.getResponse()));
     }
 
     /**
@@ -93,7 +94,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
             // 后置拦截器
             ctx = this.nextAfter(ctx);
         } catch (Exception e) {
-            log.error("[调用]服务调用异常：", e);
+            log.error("[调用][{}#{}]服务调用异常：", this.targetService.getClass().getSimpleName(), method.getName(), e);
             ctx.fail("服务调用异常");
             this.afterInvoke(ctx);
             // 后置拦截器

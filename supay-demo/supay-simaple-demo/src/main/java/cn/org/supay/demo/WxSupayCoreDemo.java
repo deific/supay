@@ -57,8 +57,8 @@ public class WxSupayCoreDemo {
 //        WxSupayCoreDemo.testAppPay();
 //        WxSupayCoreDemo.testRefund();
         WxSupayCoreDemo.testPayQuery();
-        AliSupayCoreDemo.testPayQuery();
-        WxSupayCoreDemo.testRefundQuery();
+//        AliSupayCoreDemo.testPayQuery();
+//        WxSupayCoreDemo.testRefundQuery();
 
         log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getStats()));
     }
