@@ -94,6 +94,10 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
             ctx = this.nextAfter(ctx);
         } catch (Exception e) {
             log.error("[调用]服务调用异常：", e);
+            ctx.fail("服务调用异常");
+            this.afterInvoke(ctx);
+            // 后置拦截器
+            ctx = this.nextAfter(ctx);
         } finally {
             this.finish(ctx);
             ctx.endInvoke(parentInvoke);
