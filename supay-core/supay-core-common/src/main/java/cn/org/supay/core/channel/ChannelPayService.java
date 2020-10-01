@@ -31,7 +31,7 @@ public interface ChannelPayService {
      * 注册自己的渠道服务
      */
     default void register() {
-        SupayCoreConfig.registerPayService(getSupportType(), this);
+        SupayCoreConfig.registerPayChannelService(getSupportType(), this);
     }
 
     /**

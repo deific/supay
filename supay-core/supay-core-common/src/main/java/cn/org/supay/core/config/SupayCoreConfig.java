@@ -67,7 +67,7 @@ public class SupayCoreConfig {
      * @param isFinal 是否最终支付渠道
      * @param filters 过滤器
      */
-    public static void registerPayService(SupayChannelType channelType, ChannelPayService channelService, boolean isFinal, SupayFilter... filters) {
+    public static void registerPayChannelService(SupayChannelType channelType, ChannelPayService channelService, boolean isFinal, SupayFilter... filters) {
         log.debug("[注册] 注册渠道支付服务：channelType={} channelService={}", channelType, channelService.getClass().getName());
         // 通过代理服务注册
         ChannelPayProxy proxy = ProxyFactory.getProxy(channelService);
@@ -92,8 +92,8 @@ public class SupayCoreConfig {
      * @param channelType 渠道类型
      * @param channelService 渠道服务实例
      */
-    public static void registerPayService(SupayChannelType channelType, ChannelPayService channelService, SupayFilter... filters) {
-        registerPayService(channelType, channelService, true, filters);
+    public static void registerPayChannelService(SupayChannelType channelType, ChannelPayService channelService, SupayFilter... filters) {
+        registerPayChannelService(channelType, channelService, true, filters);
     }
 
     /**
@@ -108,10 +108,11 @@ public class SupayCoreConfig {
 
     /**
      * 注册渠道接口参数转换器
+     * 处理不同渠道api接口对数据格式，默认JSON格式
      * @param channelType 渠道类型
      * @param converter 转换器
      */
-    public static void registerParamConverter(SupayChannelType channelType, ChannelDataConverter converter) {
+    public static void registerChannelApiParamConverter(SupayChannelType channelType, ChannelDataConverter converter) {
         log.debug("[注册] 注册渠道接口参数转换器：channelType={} converter={}", channelType, converter.getClass().getName());
         converterMap.put(channelType, converter);
     }
@@ -163,11 +164,12 @@ public class SupayCoreConfig {
     }
 
     /**
-     * 获取参数转换器
+     * 获取渠道参数转换器
+     * 处理不同渠道api接口对数据格式，默认JSON格式
      * @param channelType
      * @return
      */
-    public static ChannelDataConverter getApiParamConverter(SupayChannelType channelType) {
+    public static ChannelDataConverter getChannelApiParamConverter(SupayChannelType channelType) {
         ChannelDataConverter converter = converterMap.get(channelType);
         converter = converter == null?converterMap.get(null):converter;
         return converter;

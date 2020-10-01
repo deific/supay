@@ -50,7 +50,7 @@ public class AliChannelPayService implements BaseChannelPayService {
 
     @Override
     public void register() {
-        SupayCoreConfig.registerPayService(getSupportType(), this,
+        SupayCoreConfig.registerPayChannelService(getSupportType(), this,
                 new AliPayFilter());
     }
 

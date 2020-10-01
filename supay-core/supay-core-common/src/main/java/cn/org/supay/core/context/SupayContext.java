@@ -121,7 +121,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public String toRequestStr() {
-        ChannelDataConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        ChannelDataConverter converter = SupayCoreConfig.getChannelApiParamConverter(this.channelConfig.getChannelType());
         return converter.convert(this.getRequest());
     }
 
@@ -132,7 +132,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * @return
      */
     public Response parseResponseStr(String respStr, Class<? extends Response> targetClass) {
-        ChannelDataConverter converter = SupayCoreConfig.getApiParamConverter(this.channelConfig.getChannelType());
+        ChannelDataConverter converter = SupayCoreConfig.getChannelApiParamConverter(this.channelConfig.getChannelType());
         this.setResponse((S)converter.convert(respStr, targetClass));
         // 检查结果
         this.getResponse().checkResult(this);

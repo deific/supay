@@ -47,8 +47,8 @@ public class WxChannelPayService implements BaseChannelPayService {
     @Override
     public void register() {
         // 注册渠道参数转换器，默认为JSON格式
-        SupayCoreConfig.registerParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
-        SupayCoreConfig.registerPayService(getSupportType(), this, new WxPayFilter());
+        SupayCoreConfig.registerChannelApiParamConverter(SupayChannelType.WECHAT, new WxPayConverter());
+        SupayCoreConfig.registerPayChannelService(getSupportType(), this, new WxPayFilter());
     }
 
     /**
