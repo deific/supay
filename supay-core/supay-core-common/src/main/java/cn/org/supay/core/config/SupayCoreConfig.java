@@ -55,13 +55,13 @@ public class SupayCoreConfig {
     /**
      * 注册渠道支付参数
      */
-    public static void registerPayConfig(String appId, SupayChannelConfig channelConfig) {
+    public static void registerChannelConfig(String appId, SupayChannelConfig channelConfig) {
         log.debug("[注册] 注册渠道支付参数：appId={} config={}", appId, channelConfig.getClass().getName());
         channelConfigMap.put(appId, channelConfig);
     }
 
     /**
-     *
+     * 注册渠道支付服务
      * @param channelType 渠道类型
      * @param channelService 渠道服务
      * @param isFinal 是否最终支付渠道
@@ -84,8 +84,7 @@ public class SupayCoreConfig {
         if (filters != null) {
             proxy.addFilter(filters);
         }
-        ChannelPayService proxyService = proxy.getProxyService();
-        channelServiceMap.put(channelType, proxyService);
+        channelServiceMap.put(channelType, proxy.newProxyInstance());
     }
 
     /**
@@ -178,7 +177,7 @@ public class SupayCoreConfig {
      * 获取全局统计器
      * @return
      */
-    public static SupayStats getSupayStats() {
+    public static SupayStats getStats() {
         return stats;
     }
 

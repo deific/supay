@@ -60,7 +60,7 @@ public class WxSupayCoreDemo {
         AliSupayCoreDemo.testPayQuery();
         WxSupayCoreDemo.testRefundQuery();
 
-        log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getSupayStats()));
+        log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getStats()));
     }
 
 

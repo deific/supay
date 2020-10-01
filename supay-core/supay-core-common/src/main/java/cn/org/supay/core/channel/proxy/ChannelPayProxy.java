@@ -15,7 +15,6 @@ import cn.org.supay.core.filter.SupayFilterChain;
 import cn.org.supay.core.stats.InvokeStats;
 import cn.org.supay.core.stats.SupayStats;
 import lombok.extern.slf4j.Slf4j;
-import sun.plugin2.message.Message;
 
 import java.lang.reflect.Method;
 
@@ -59,7 +58,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     public void finish(SupayContext<? extends Request, ? extends Response> ctx) {
         // 开启统计且在最上层统计
         if (SupayCoreConfig.isEnableStats() && ctx.getCurrentInvoke().getInvokeLevel() == 0) {
-            SupayStats supayStats = SupayCoreConfig.getSupayStats();
+            SupayStats supayStats = SupayCoreConfig.getStats();
             if (ctx.isSuccess()) {
                 supayStats.incrementSuccess(ctx.getChannelConfig().getChannelType(), ctx.getChannelInvoke(ctx.getCurrentInvoke()).getInvokeCost());
             } else {
@@ -106,7 +105,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * 获取实际代理服务
      * @return
      */
-    public abstract ChannelPayService getProxyService();
+    public abstract ChannelPayService newProxyInstance();
 
     /**
      * 检查请求上下文

@@ -13,7 +13,6 @@ import cn.org.supay.core.channel.aggregate.data.SupayRefundQueryResponse;
 import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryRequest;
 import cn.org.supay.core.channel.alipay.data.AliPayQueryResponse;
-import cn.org.supay.core.channel.alipay.filter.AliPayFilter;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
@@ -65,7 +64,7 @@ public class AliSupayCoreDemo {
         AliSupayCoreDemo.testPayQuery();
         AliSupayCoreDemo.testRefundQuery();
 
-        log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getSupayStats()));
+        log.debug("统计：{}", JSON.toJSONString(SupayCoreConfig.getStats()));
     }
 
     public static void test() {

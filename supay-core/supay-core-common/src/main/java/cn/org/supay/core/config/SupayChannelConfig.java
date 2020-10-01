@@ -71,7 +71,7 @@ public class SupayChannelConfig {
      * 注册渠道参数配置
      */
     public SupayChannelConfig register() {
-        SupayCoreConfig.registerPayConfig(appId, this);
+        SupayCoreConfig.registerChannelConfig(appId, this);
         return this;
     }
 

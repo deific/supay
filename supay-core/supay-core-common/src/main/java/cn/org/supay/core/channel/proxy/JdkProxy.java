@@ -38,7 +38,7 @@ public class JdkProxy extends ChannelPayProxy implements InvocationHandler {
      * @return
      */
     @Override
-    public ChannelPayService getProxyService() {
+    public ChannelPayService newProxyInstance() {
         //JDK动态代理只能针对实现了接口的类进行代理，newProxyInstance 函数所需参数就可看出
         return (ChannelPayService) Proxy.newProxyInstance(this.targetService.getClass().getClassLoader(),
                 this.targetService.getClass().getInterfaces(), this);
