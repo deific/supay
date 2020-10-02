@@ -40,9 +40,12 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     /**
      * 代理调用前
      * @param ctx
+     * @param parentInvoke
+     * @param method
      */
     public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke, Method method) {
         if (parentInvoke == null) {
+            // 根从0开始
             ctx.setCurrentInvoke(new InvokeStats(ctx.getChannelConfig().getChannelType(),
                     0, this.targetService.getClass().getSimpleName(), method.getName()));
         } else {
@@ -58,6 +61,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     /**
      * 代理调用后
      * @param ctx
+     * @param parentInvoke
      */
     public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke) {
         ctx.getCurrentInvoke().end();
@@ -66,6 +70,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     /**
      * 代理调用后
      * @param ctx
+     * @param parentInvoke
      */
     public void finishInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke) {
         InvokeStats currentInvoke = ctx.getCurrentInvoke();
@@ -123,7 +128,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
     }
 
     /**
-     * 获取实际代理服务
+     * 创建实际代理服务
      * @return
      */
     public abstract ChannelPayService newProxyInstance();
