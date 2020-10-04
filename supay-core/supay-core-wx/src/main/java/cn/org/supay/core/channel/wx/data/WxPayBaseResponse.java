@@ -121,6 +121,7 @@ public class WxPayBaseResponse<T extends WxPayData> implements Response {
                 errorMsg.append("，错误详情：").append(getErrCodeDes());
             }
             ctx.fail(errorMsg.toString());
+            return ctx;
         }
         ctx.success("成功");
         return ctx;
