@@ -100,13 +100,14 @@ public class WxPayBaseResponse<T extends WxPayData> implements Response {
         //校验返回结果签名
         if (!checkSign(ctx.getChannelConfig())) {
             ctx.fail("微信返回报文签名校验失败");
+            return ctx;
         }
 
         //校验结果是否成功
         if (!checkResult()) {
             StringBuilder errorMsg = new StringBuilder("[微信接口返回]");
             if (getReturnCode() != null) {
-                errorMsg.append("返回代码：").append(getReturnCode());
+                errorMsg.append("，返回代码：").append(getReturnCode());
             }
             if (getReturnMsg() != null) {
                 errorMsg.append("，返回信息：").append(getReturnMsg());
