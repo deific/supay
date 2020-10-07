@@ -18,7 +18,7 @@ import cn.org.supay.core.context.SupayContext;
 public interface AggregateResponseConvert {
     /**
      * 将渠道响应参数转换为聚合响应类型
-     * @param
+     * @param context
      * @return
      */
     SupayBaseResponse convertResponse(SupayContext context);
