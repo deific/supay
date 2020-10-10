@@ -126,7 +126,5 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
                 log.error("[转换]转换聚合参数类型异常", e);
             }
         }
-        // 设置上下文结果
-//        this.setSuccess(rsp.checkResult());
     }
 }
