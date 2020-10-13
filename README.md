@@ -165,6 +165,4 @@ GitHub： [supay-boot-demo](https://github.com/deific/supay/tree/master/supay-de
 
 - [微信委托扣款 API-服务商模式](https://pay.weixin.qq.com/wiki/doc/api/pap_sl.php?chapter=17_1)
 - [微信委托扣款 API-普通商户模式](https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=17_1)
-- [微信刷脸支付 API](https://pay.weixin.qq.com/wiki/doc/wxfacepay/develop/backend.html)
-- [微信支付 V3开发文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/api.shtml)
 - [支付宝开发平台](https://docs.open.alipay.com)
