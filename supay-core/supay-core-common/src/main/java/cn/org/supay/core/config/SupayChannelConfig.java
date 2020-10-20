@@ -6,6 +6,7 @@ package cn.org.supay.core.config;
 
 import cn.org.supay.core.enums.KeyStoreType;
 import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.utils.HttpUtils;
 import lombok.Builder;
 import lombok.Data;
 
@@ -71,47 +72,9 @@ public class SupayChannelConfig {
      * 注册渠道参数配置
      */
     public SupayChannelConfig register() {
+        sslSocketFactory = HttpUtils.getSSLSocketFactory(this.getMchCertFormat().name(), this.getMchCertFile(), this.getMchCertPassword());
         SupayCoreConfig.registerChannelConfig(appId, this);
         return this;
     }
 
-
-    /**
-     * 初始化
-     * @return
-     */
-    public SSLSocketFactory getSSLSocketFactory() {
-        if (sslSocketFactory != null) {
-            return sslSocketFactory;
-        }
-
-        try {
-            // 客户端证书
-            KeyStore keyStore = KeyStore.getInstance(getMchCertFormat().name());
-            //加载证书
-            InputStream ksIn = new FileInputStream(getMchCertFile());
-            keyStore.load(ksIn, getMchCertPassword().toCharArray());
-            ksIn.close();
-
-            //读取证书
-            KeyStore trustStore = KeyStore.getInstance(getMchCertFormat().name());
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-
-            keyManagerFactory.init(keyStore, getMchCertPassword().toCharArray());
-            trustManagerFactory.init(trustStore);
-
-            TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-
-            // 初始化SSLContext
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            keyManagerFactory.init(keyStore, getMchCertPassword().toCharArray());
-            KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
-            sslContext.init(keyManagers, null, null);
-            sslSocketFactory = sslContext.getSocketFactory();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sslSocketFactory;
-    }
 }

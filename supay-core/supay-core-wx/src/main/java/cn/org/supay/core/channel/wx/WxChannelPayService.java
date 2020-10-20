@@ -113,7 +113,7 @@ public class WxChannelPayService implements BaseChannelPayService {
         long startCallTime = System.currentTimeMillis();
         String resXml = null;
         if (apiType.isSslCertRequired()) {
-            resXml = HttpUtils.postSsl(channelConfig.getSSLSocketFactory(), targetUrl, reqXml);
+            resXml = HttpUtils.postSsl(channelConfig.getSslSocketFactory(), targetUrl, reqXml);
         } else {
             resXml = HttpUtils.post(targetUrl, reqXml);
         }
