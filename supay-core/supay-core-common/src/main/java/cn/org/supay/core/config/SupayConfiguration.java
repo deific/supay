@@ -24,9 +24,20 @@ import java.util.Set;
 @Slf4j
 public class SupayConfiguration {
 
-    public static void init() {
-        initPayChannelService();
-        initNotifyHandler();
+    private static boolean isInit = false;
+
+
+    /**
+     * 初始化
+     */
+    public static synchronized void init() {
+        if (!isInit) {
+            log.debug("[初始化]执行初始化...");
+            initPayChannelService();
+            initNotifyHandler();
+        } else {
+            log.debug("[初始化]已初始化，略过");
+        }
     }
 
     /**

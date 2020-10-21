@@ -11,9 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.net.ssl.*;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.KeyStore;
 
 /**
  * <b>Application name：</b> SupayChannelConfig.java <br>
@@ -68,11 +65,12 @@ public class SupayChannelConfig {
 
     /** 配置证书构建sslFactory*/
     private SSLSocketFactory sslSocketFactory = null;
+
     /**
      * 注册渠道参数配置
      */
     public SupayChannelConfig register() {
-        sslSocketFactory = HttpUtils.getSSLSocketFactory(this.getMchCertFormat().name(), this.getMchCertFile(), this.getMchCertPassword());
+        sslSocketFactory = HttpUtils.createSSLSocketFactory(this.getMchCertFormat().name(), this.getMchCertFile(), this.getMchCertPassword());
         SupayCoreConfig.registerChannelConfig(appId, this);
         return this;
     }

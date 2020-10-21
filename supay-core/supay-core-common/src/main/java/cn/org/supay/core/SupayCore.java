@@ -28,10 +28,6 @@ import java.util.Date;
 @Slf4j
 public class SupayCore {
 
-    static {
-        SupayConfiguration.init();
-    }
-
     /**
      * 根据上下文获取渠道支付服务
      * @param ctx

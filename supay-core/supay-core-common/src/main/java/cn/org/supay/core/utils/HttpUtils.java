@@ -50,7 +50,7 @@ public class HttpUtils extends HttpUtil {
      * @param mchCertPassword
      * @return
      */
-    public static SSLSocketFactory getSSLSocketFactory(String mchCertFormat, String mchCertFile, String mchCertPassword)  {
+    public static SSLSocketFactory createSSLSocketFactory(String mchCertFormat, String mchCertFile, String mchCertPassword)  {
         if (StrUtil.hasBlank(mchCertFormat, mchCertFile)) {
             return null;
         }

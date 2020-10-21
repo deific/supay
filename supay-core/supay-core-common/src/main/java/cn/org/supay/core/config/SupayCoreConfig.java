@@ -35,6 +35,7 @@ import java.util.Map;
 @Data
 public class SupayCoreConfig {
 
+
     /** 支付渠道参数配置列表 */
     private static Map<String, SupayChannelConfig> channelConfigMap = new HashMap<>();
     /** 支付渠道服务配置列表 */
@@ -51,6 +52,10 @@ public class SupayCoreConfig {
     private static SupayStats stats = new SupayStats();
     /** 是否启用全局监控统计 */
     private static boolean enableStats = true;
+
+    static {
+        SupayConfiguration.init();
+    }
 
     /**
      * 注册渠道支付参数

@@ -26,7 +26,7 @@ public class CglibProxy extends ChannelPayProxy implements MethodInterceptor {
 
     public CglibProxy(ChannelPayService proxyService) {
         super(proxyService);
-        log.debug("[代理]jdk代理：{}", targetService.getClass().getSimpleName());
+        log.debug("[代理]创建cglib代理：{} => {}", this, targetService.getClass().getSimpleName());
     }
 
     @Override

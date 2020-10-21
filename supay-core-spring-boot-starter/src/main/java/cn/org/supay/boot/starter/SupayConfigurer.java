@@ -4,9 +4,11 @@
  *******************************************************************************/
 package cn.org.supay.boot.starter;
 
+import cn.org.supay.core.config.SupayConfiguration;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 
 /**
  * <b>Application name：</b> SupayConfigurer.java <br>
@@ -21,8 +23,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SupayConfigurer {
 
-    @Bean
+    @PostConstruct
     public void init() {
         log.debug("[自动初始化]");
+        SupayConfiguration.init();
     }
 }

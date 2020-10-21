@@ -25,7 +25,7 @@ public class JdkProxy extends ChannelPayProxy implements InvocationHandler {
 
     public JdkProxy(ChannelPayService targetService) {
         super(targetService);
-        log.debug("[代理]jdk代理：{}", targetService.getClass().getSimpleName());
+        log.debug("[代理]创建jdk代理：{} => {}", this, targetService.getClass().getSimpleName());
     }
 
     @Override
