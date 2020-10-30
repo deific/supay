@@ -11,6 +11,7 @@
         <module>supay-core</module>
         <module>supay-demo</module>
         <module>supay-core-spring-boot-starter</module>
+        <module>supay-boot</module>
 
     </modules>
 
