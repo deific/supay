@@ -45,6 +45,7 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
         SupayContext cxt = AggregateContext.builder()
                 .tradeId(IdUtil.fastUUID())
                 .channelConfig(channelConfig)
+                .payType(request.getPayType())
                 .isSandBox(isSandBox)
                 .request(request)
                 .originRequest(request)

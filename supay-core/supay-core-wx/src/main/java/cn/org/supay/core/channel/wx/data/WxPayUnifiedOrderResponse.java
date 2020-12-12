@@ -11,7 +11,9 @@ import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayPayStatus;
 import cn.org.supay.core.enums.SupayPayType;
+import cn.org.supay.core.stats.SupayStats;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.SignUtils;
 import lombok.Data;
@@ -33,9 +35,20 @@ import java.util.Map;
 @ToString(callSuper = true)
 public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseResponse implements AggregateResponseConvert {
 
+    /** 附加数据 */
+    private String attach;
+
     /** 微信生成的预支付回话标识，用于后续接口调用中使用，该值有效期为2小时 */
     @XmlField("prepay_id")
     private String prepayId;
+
+    /** 商户订单号 */
+    @XmlField("out_trade_no")
+    private String outTradeNo;
+
+    /** 微信支付订单号(付款码支付等支付成功时同步返回) */
+    @XmlField("transaction_id")
+    private String transactionId;
 
     /** 交易类型，取值为：JSAPI，NATIVE，APP等 */
     @XmlField("trade_type")
@@ -52,12 +65,13 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
     @Override
     public SupayBaseResponse convertResponse(SupayContext ctx) {
         SupayPayResponse payResponse = null;
-        SupayPayType payType = SupayPayType.valueOfByCode(this.tradeType);
+        SupayPayType payType = ctx.getPayType();
         switch (payType) {
             // h5支付场景信息
             case WX_H5_PAY:
                 payResponse = SupayH5PayResponse.builder()
                         .redirectBody(getMwebUrl())
+                        .payStatus(SupayPayStatus.NO_PAY)
                         .build();
                 break;
             case WX_MP_PAY:
@@ -74,6 +88,7 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
                 payResponse = SupayMpPayResponse.builder()
                         .redirectBody(JSONUtil.toJsonStr(mpParam))
                         .redirectType(RedirectType.JSON_BODY)
+                        .payStatus(SupayPayStatus.NO_PAY)
                         .build();
                 break;
             case WX_APP_PAY:
@@ -90,21 +105,33 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
                 payResponse = SupayAppPayResponse.builder()
                         .redirectBody(JSONUtil.toJsonStr(appParam))
                         .redirectType(RedirectType.JSON_BODY)
+                        .payStatus(SupayPayStatus.NO_PAY)
                         .build();
                 break;
             case WX_SCAN_PAY:
                 payResponse = SupayScanPayResponse.builder()
                         .qrCodeUrl(this.codeURL)
+                        .payStatus(SupayPayStatus.NO_PAY)
                         .build();
                 break;
             case WX_FACE_PAY:
                 break;
             case WX_MICRO_PAY:
+                payResponse = SupayMicroPayResponse.builder()
+                        .payStatus(this.checkResult()?SupayPayStatus.PAY_SUCCESS:
+                                "SYSTEMERROR".equals(this.errCode)?SupayPayStatus.PAY_PROCESSING:SupayPayStatus.PAY_FAIL)
+                        .build();
                 break;
+            default:
+                payResponse = SupayPayResponse.builder().build();
         }
-        payResponse.setPayType(payType);
-        payResponse.setResultCode(this.getResultCode());
-        payResponse.setResultMsg(this.getReturnMsg());
+
+        payResponse.setAttach(attach);
+        payResponse.setOutTradeNo(outTradeNo);
+        payResponse.setTransactionNo(transactionId);
+
+        payResponse.setResultCode(checkReturn()?this.getErrCode():this.getReturnCode());
+        payResponse.setResultMsg(checkReturn()?this.getErrCodeDes():this.getReturnMsg());
         payResponse.setSuccess(this.checkResult());
         return payResponse;
     }

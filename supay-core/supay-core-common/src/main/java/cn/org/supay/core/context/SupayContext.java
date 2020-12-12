@@ -10,6 +10,7 @@ import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
+import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.stats.InvokeStats;
 import lombok.Data;
 import lombok.ToString;
@@ -37,6 +38,8 @@ public class SupayContext<R extends Request, S extends Response> {
     protected String tradeId;
     /** 支付渠道参数 */
     protected SupayChannelConfig channelConfig;
+    /** 支付类型 */
+    protected SupayPayType payType;
     /** 支付请求参数 */
     protected R request;
     /** 支付结果 */
@@ -215,6 +218,7 @@ public class SupayContext<R extends Request, S extends Response> {
         SupayContext cxt = SupayContext.builder()
                 .tradeId(IdUtil.fastUUID())
                 .channelConfig(channelConfig)
+                .payType(request.getPayType())
                 .isSandBox(isSandBox)
                 .request(request)
                 .isLocalMock(false)

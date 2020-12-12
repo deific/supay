@@ -20,6 +20,7 @@ import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +67,8 @@ public class WxChannelPayService implements BaseChannelPayService {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> pay(SupayContext<? extends Request, ? extends Response> ctx) {
-        return callApi(ctx, WxPayUnifiedOrderRequest.class, WxPayUnifiedOrderResponse.class, WxApiType.UNIFIED_ORDER);
+        WxApiType apiType = ctx.getRequest().getPayType().equals(SupayPayType.WX_MICRO_PAY)?WxApiType.MICRO_ORDER:WxApiType.UNIFIED_ORDER;
+        return callApi(ctx, WxPayUnifiedOrderRequest.class, WxPayUnifiedOrderResponse.class, apiType);
     }
 
     @Override

@@ -9,6 +9,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.aggregate.Supay;
+import cn.org.supay.core.channel.aggregate.data.SupayMicroPayResponse;
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.config.SupayChannelConfig;
@@ -56,7 +57,8 @@ public class WxSupayCoreDemo {
 //        WxSupayCoreDemo.testScanPay();
 //        WxSupayCoreDemo.testAppPay();
 //        WxSupayCoreDemo.testRefund();
-        WxSupayCoreDemo.testPayQuery();
+//        WxSupayCoreDemo.testPayQuery();
+        WxSupayCoreDemo.testMicroPay();
 //        AliSupayCoreDemo.testPayQuery();
 //        WxSupayCoreDemo.testRefundQuery();
 
@@ -115,6 +117,14 @@ public class WxSupayCoreDemo {
         log.debug("app支付内容：{}", appParamJson);
     }
 
+    private static void testMicroPay() {
+        String orderCode = "13451860000000002";
+        String authCode = "134619091800251424" +
+                "";
+        SupayMicroPayResponse response = Supay.microPay(channelConfig.getAppId(), authCode, "测试支付", orderCode, new BigDecimal(0.01));
+        log.debug("支付结果：{}", JSON.toJSONString(response));
+    }
+
     private static void testRefund() {
         String orderCode = IdUtil.fastSimpleUUID();
         String refundCode = IdUtil.fastSimpleUUID();
@@ -132,4 +142,5 @@ public class WxSupayCoreDemo {
         String refundCode = IdUtil.fastSimpleUUID();
         Supay.refundQuery(channelConfig.getAppId(), orderCode, refundCode);
     }
+
 }

@@ -10,13 +10,14 @@ import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.enums.SupayPayStatus;
 import cn.org.supay.core.enums.SupayPayType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 
 /**
- * <b>Application name：</b> AliPayFilter.java <br>
+ * <b>Application name：</b> Supay.java <br>
  * <b>Application describing： </b> <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
@@ -27,15 +28,51 @@ import java.math.BigDecimal;
 @Slf4j
 public class Supay {
 
+    /**
+     * 付款码支付
+     * 根据appId自动识别微信还是支付宝
+     * @param appId
+     * @param authCode
+     * @param tradeName
+     * @param outTradeNo
+     * @param amount
+     * @return
+     */
+    public static SupayMicroPayResponse microPay(String appId, String authCode, String tradeName, String outTradeNo, BigDecimal amount) {
+        SupayPayType payType = getMatchedPayType(appId, SupayPayType.WX_MICRO_PAY);
+        if (payType == null) {
+            log.error("当前商户appId对应的渠道不支持扫码扫码支付");
+            return SupayMicroPayResponse.builder()
+                    .payStatus(SupayPayStatus.PAY_FAIL).outTradeNo(outTradeNo).payType(SupayPayType.WX_MICRO_PAY)
+                    .success(false).resultCode("-1").resultMsg("当前商户appId对应的渠道不支持扫码扫码支付").build();
+        }
+
+        // 构建支付上下文参数
+        SupayContext cxt = SupayMicroPayRequest.builder()
+                .tradeNo(outTradeNo)
+                .payType(payType)
+                .tradeName(tradeName)
+                .amount(amount)
+                .payParam(SupayPayParamWxMicro.builder().authCode(authCode).build())
+                .build()
+                .toContext(appId, false);
+
+        // 调用支付接口
+        cxt = SupayCore.pay(cxt);
+
+        SupayMicroPayResponse microPayResponse = ((SupayMicroPayResponse) cxt.getResponse());
+        return microPayResponse;
+    }
 
     /**
      * 扫码支付
      * 根据appId自动识别微信还是支付宝
-     * @param appId 商户appId
-     * @param tradeName 交易名称
+     *
+     * @param appId      商户appId
+     * @param tradeName  交易名称
      * @param outTradeNo 订单号
-     * @param amount 交易金额
-     * @param notifyUrl 通知地址
+     * @param amount     交易金额
+     * @param notifyUrl  通知地址
      * @return 二维码内容
      */
     public static String scanPay(String appId, String tradeName, String outTradeNo, BigDecimal amount, String notifyUrl) {
@@ -60,7 +97,7 @@ public class Supay {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        SupayScanPayResponse scanPayResponse = ((SupayScanPayResponse)cxt.getResponse());
+        SupayScanPayResponse scanPayResponse = ((SupayScanPayResponse) cxt.getResponse());
 
         String result = null;
         if (scanPayResponse.isSuccess()) {
@@ -73,6 +110,7 @@ public class Supay {
     /**
      * app支付
      * 根据商户appId自动识别渠道
+     *
      * @param appId
      * @param tradeName
      * @param outTradeNo
@@ -102,7 +140,7 @@ public class Supay {
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 
-        SupayAppPayResponse appPayResponse = ((SupayAppPayResponse)cxt.getResponse());
+        SupayAppPayResponse appPayResponse = ((SupayAppPayResponse) cxt.getResponse());
 
         String result = null;
         if (appPayResponse.isSuccess()) {
@@ -113,6 +151,7 @@ public class Supay {
 
     /**
      * 公众号支付支付
+     *
      * @param appId
      * @param tradeName
      * @param outTradeNo
@@ -138,7 +177,7 @@ public class Supay {
                 .toContext(appId, false);
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
-        SupayMpPayResponse mpPayResponse = ((SupayMpPayResponse)cxt.getResponse());
+        SupayMpPayResponse mpPayResponse = ((SupayMpPayResponse) cxt.getResponse());
 
         String result = null;
         if (mpPayResponse.isSuccess()) {
@@ -149,6 +188,7 @@ public class Supay {
 
     /**
      * h5支付支付
+     *
      * @param appId
      * @param tradeName
      * @param outTradeNo
@@ -174,7 +214,7 @@ public class Supay {
                 .toContext(appId, false);
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
-        SupayH5PayResponse h5PayResponse = ((SupayH5PayResponse)cxt.getResponse());
+        SupayH5PayResponse h5PayResponse = ((SupayH5PayResponse) cxt.getResponse());
 
         String result = null;
         if (h5PayResponse.isSuccess()) {
@@ -185,6 +225,7 @@ public class Supay {
 
     /**
      * 面对面支付支付
+     *
      * @param appId
      * @param tradeName
      * @param outTradeNo
@@ -210,7 +251,7 @@ public class Supay {
                 .toContext(appId, false);
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
-        SupayFacePayResponse h5PayResponse = ((SupayFacePayResponse)cxt.getResponse());
+        SupayFacePayResponse h5PayResponse = ((SupayFacePayResponse) cxt.getResponse());
 
         String result = null;
         if (h5PayResponse.isSuccess()) {
@@ -221,6 +262,7 @@ public class Supay {
 
     /**
      * 退款接口
+     *
      * @param appId
      * @param originTradeNo
      * @param refundAmount
@@ -242,13 +284,14 @@ public class Supay {
         // 调用支付接口
         cxt = SupayCore.refund(cxt);
 
-        SupayRefundResponse refundResponse = ((SupayRefundResponse)cxt.getResponse());
+        SupayRefundResponse refundResponse = ((SupayRefundResponse) cxt.getResponse());
 
         return refundResponse;
     }
 
     /**
      * 支付查询
+     *
      * @param appId
      * @param outTradeNo
      * @return
@@ -263,19 +306,20 @@ public class Supay {
         // 调用支付接口
         cxt = SupayCore.payQuery(cxt);
 
-        SupayPayQueryResponse payQueryResponse = ((SupayPayQueryResponse)cxt.getResponse());
+        SupayPayQueryResponse payQueryResponse = ((SupayPayQueryResponse) cxt.getResponse());
 
         return payQueryResponse;
     }
 
     /**
      * 退款查询
+     *
      * @param appId
      * @param outTradeNo
      * @param refundNo
      * @return
      */
-    public static  SupayRefundQueryResponse refundQuery(String appId, String outTradeNo, String refundNo) {
+    public static SupayRefundQueryResponse refundQuery(String appId, String outTradeNo, String refundNo) {
         // 构建支付上下文参数
         SupayContext cxt = SupayRefundQueryRequest.builder()
                 .outTradeNo(outTradeNo)
@@ -286,13 +330,14 @@ public class Supay {
         // 调用支付接口
         cxt = SupayCore.refundQuery(cxt);
 
-        SupayRefundQueryResponse refundQueryResponse = ((SupayRefundQueryResponse)cxt.getResponse());
+        SupayRefundQueryResponse refundQueryResponse = ((SupayRefundQueryResponse) cxt.getResponse());
 
         return refundQueryResponse;
     }
 
     /**
      * 查找该使用的支付方式
+     *
      * @param appId
      * @param payTypes
      * @return

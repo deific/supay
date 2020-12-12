@@ -88,6 +88,14 @@ public class WxPayBaseResponse<T extends WxPayData> implements Response {
      * 检查结果是否成功
      * @return
      */
+    public boolean checkReturn() {
+        return "SUCCESS".equalsIgnoreCase(getReturnCode());
+    }
+
+    /**
+     * 检查结果是否成功
+     * @return
+     */
     public boolean checkResult() {
         return "SUCCESS".equalsIgnoreCase(getReturnCode()) && "SUCCESS".equalsIgnoreCase(getResultCode());
     }

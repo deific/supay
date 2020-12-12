@@ -5,6 +5,7 @@
 package cn.org.supay.core.channel.aggregate.data;
 
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.enums.SupayPayStatus;
 import cn.org.supay.core.enums.SupayPayType;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -21,10 +22,16 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayPayResponse extends SupayBaseResponse implements Response {
+    /** 商户订单号 */
+    private String outTradeNo;
+    /** 支付渠道交易号（支付成功时有值） */
+    private String transactionNo;
     /** 支付方式 */
     protected SupayPayType payType;
-    /** 跳转地址 */
-    protected String redirectBody;
+    /** 支付状态 */
+    protected SupayPayStatus payStatus;
+    /** 附加数据 */
+    protected String attach;
     /**
      * 返回参数跳转类型
      * 不同支付方式下返回接口参数跳转不同，总的来说分为三种情况
@@ -34,4 +41,6 @@ public class SupayPayResponse extends SupayBaseResponse implements Response {
      *
      */
     protected RedirectType redirectType;
+    /** 跳转地址 */
+    protected String redirectBody;
 }

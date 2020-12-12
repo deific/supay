@@ -47,12 +47,17 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest implements Aggreg
     private String totalFee;
     @XmlField("spbill_create_ip")
     private String spbillCreateIp;
+
+    /** 交易起始时间 */
     @XmlField("time_start")
     private String timeStart;
+    /** 交易结束时间 */
     @XmlField("time_expire")
     private String timeExpire;
+    /** 订单优惠标记 */
     @XmlField("goods_tag")
     private String goodsTag;
+
     @XmlField("notify_url")
     private String notifyUrl;
     @XmlField("trade_type")
@@ -65,9 +70,18 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest implements Aggreg
     private String openid;
     @XmlField("sub_openid")
     private String subOpenid;
+
+    /** 付款码 */
+    @XmlField("auth_code")
+    private String authCode;
+
+    /** 电子发票入口开放标识 */
     private String receipt;
+
+    /** 场景信息 */
     @XmlField("scene_info")
     private String sceneInfo;
+
     @XmlField("profit_sharing")
     private String profitSharing;
 
@@ -113,8 +127,9 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest implements Aggreg
             case WX_FACE_PAY:
                 break;
             case WX_MICRO_PAY:
-                this.setAppid(((SupayPayParamWxMini)payParam).getAppId());
-                this.setOpenid(((SupayPayParamWxMini)payParam).getOpenId());
+                this.setAuthCode(((SupayPayParamWxMicro)payParam).getAuthCode());
+                // 刷卡支付无此参数，需清空
+                this.setTradeType(null);
                 break;
         }
     }

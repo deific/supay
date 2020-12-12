@@ -15,6 +15,7 @@ package cn.org.supay.core.enums;
  * <b>@version：</b>V1.0.0 <br>
  */
 public enum SupayPayStatus {
+    ERROR("-1", "支付过程错误"),
     NO_PAY("0", "未支付"),
     PAY_SUCCESS("1", "支付成功"),
     PAY_FAIL("2", "支付失败"),
