@@ -9,12 +9,10 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
-import cn.org.supay.core.channel.aggregate.data.SupayPagePayResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayPayQueryResponse;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayPayStatus;
-import cn.org.supay.core.enums.SupayRefundStatus;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.aliyun.tea.TeaModel;
 import lombok.Data;
@@ -51,7 +49,7 @@ public class AliPayQueryResponse extends AlipayTradeQueryResponse implements Res
     @Override
     public SupayBaseResponse convertResponse(SupayContext context) {
         return SupayPayQueryResponse.builder()
-                .originTradeNo(this.outTradeNo)
+                .outTradeNo(this.outTradeNo)
                 .serviceTradeNo(this.tradeNo)
                 .payStatus(convertPayStatus())
                 .payTime(StrUtil.isNotBlank(this.sendPayDate)?DateUtil.parseTime(this.sendPayDate):null)

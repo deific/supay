@@ -32,6 +32,8 @@ public class WxApiType extends ChannelApiType {
 
     /** 刷卡支付统一下单 */
     public static WxApiType MICRO_ORDER = new WxApiType("", "/pay/micropay");
+    /** 撤销订单 */
+    public static WxApiType REVERSE = new WxApiType("", "/pay/reverse");
 
     /** 红包接口 */
     public static WxApiType REDPACKET = new WxApiType("", "/mmpaymkttransfers/sendredpack");

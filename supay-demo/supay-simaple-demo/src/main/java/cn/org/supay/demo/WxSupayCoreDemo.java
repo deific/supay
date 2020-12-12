@@ -10,6 +10,7 @@ import cn.hutool.setting.dialect.Props;
 import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.aggregate.Supay;
 import cn.org.supay.core.channel.aggregate.data.SupayMicroPayResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayPayQueryResponse;
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.config.SupayChannelConfig;
@@ -123,6 +124,9 @@ public class WxSupayCoreDemo {
                 "";
         SupayMicroPayResponse response = Supay.microPay(channelConfig.getAppId(), authCode, "测试支付", orderCode, new BigDecimal(0.01));
         log.debug("支付结果：{}", JSON.toJSONString(response));
+
+        SupayPayQueryResponse queryResponse = Supay.payQuery(channelConfig.getAppId(), orderCode);
+        log.debug("查询结果：{}", JSON.toJSONString(queryResponse));
     }
 
     private static void testRefund() {

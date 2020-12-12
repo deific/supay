@@ -6,8 +6,8 @@ package cn.org.supay.core.utils;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
 import cn.hutool.crypto.SecureUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +23,7 @@ import java.util.TreeMap;
  * <b>@author：</b> <a href="mailto:deific@126.com"> deific </a> <br>
  * <b>@version：</b>V1.0.0 <br>
  */
+@Slf4j
 public class SignUtils {
     /**
      * 微信公众号支付签名算法(详见:https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=4_3)
@@ -47,15 +48,17 @@ public class SignUtils {
         StringBuilder toSign = new StringBuilder();
         for (String key : sortedMap.keySet()) {
             Object value = params.get(key);
-            if (!Objects.isNull(value) && !"sign".equals(key) && !"key".equals(key)) {
+            if (!Objects.isNull(value) && StrUtil.isNotBlank(value.toString()) && !"sign".equals(key) && !"key".equals(key)) {
                 toSign.append(key + "=" + value + "&");
             }
         }
 
         toSign.append("key=" + signKey);
         String toSignStr = toSign.toString();
-
-        return SecureUtil.md5(toSignStr).toUpperCase();
+        log.debug("签名字符串：{}", toSignStr);
+        String signStr = SecureUtil.md5(toSignStr).toUpperCase();
+        log.debug("签名结果：{}", signStr);
+        return signStr;
     }
 
     /**

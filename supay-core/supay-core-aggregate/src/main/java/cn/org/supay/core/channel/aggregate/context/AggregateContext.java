@@ -94,21 +94,28 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
         if (this.getRequest().getClass().isAssignableFrom(r)) {
             return (Re) this.getRequest();
         }
-
         // 尝试转换类型
+        toChannelRequest(r);
+
+        return (Re)super.getRequest();
+    }
+
+    /**
+     * 转换为渠道侧参数对象
+     * @param r
+     */
+    private void toChannelRequest(Class r) {
         // 判断是否目标类型是否实现了聚合参数转换接口，如果实现了调用转换
         if (AggregateRequestConvert.class.isAssignableFrom(r)) {
             try {
                 log.debug("[转换]转换聚合请求类型 -> 渠道请求参数类型：[{}] -> [{}]", this.getRequest().getClass().getName(), r.getName());
                 AggregateRequestConvert targetRequest = (AggregateRequestConvert) r.newInstance();
                 this.request = targetRequest.convertRequest((SupayBaseRequest) this.getRequest());
-                return (Re)this.request;
+
             } catch (Exception e) {
                 log.error("[转换]转换聚合参数类型异常", e);
-                return null;
             }
         }
-        return (Re)super.getRequest();
     }
 
     /**
@@ -118,6 +125,15 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
     @Override
     public void setResponse(Response rsp) {
         super.setResponse(rsp);
+        // 转换类型
+        toAggregateResponse(rsp);
+    }
+
+    /**
+     * 转换为聚合响应对象
+     * @param rsp
+     */
+    private void toAggregateResponse(Response rsp) {
         if (AggregateResponseConvert.class.isAssignableFrom(rsp.getClass())) {
             try {
                 AggregateResponseConvert targetResponse = (AggregateResponseConvert) rsp;

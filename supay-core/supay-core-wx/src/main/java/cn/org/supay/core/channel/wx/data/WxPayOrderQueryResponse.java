@@ -4,14 +4,12 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.data;
 
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayPayStatus;
-import cn.org.supay.core.enums.SupayRefundStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -85,7 +83,7 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
     @Override
     public SupayBaseResponse convertResponse(SupayContext context) {
         SupayPayQueryResponse payQueryResponse = SupayPayQueryResponse.builder()
-                .originTradeNo(this.outTradeNo)
+                .outTradeNo(this.outTradeNo)
                 .payTime(this.timeEnd == null?null:DateUtil.parse(this.timeEnd, "yyyyMMddHHmmss"))
                 .serviceTradeNo(this.transactionId)
                 .payStatus(convertPayStatus())

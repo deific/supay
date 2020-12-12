@@ -4,16 +4,15 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.data;
 
-import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.enums.SupayPayStatus;
 import cn.org.supay.core.enums.SupayPayType;
-import cn.org.supay.core.stats.SupayStats;
+import cn.org.supay.core.enums.SupayPayUserType;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.SignUtils;
 import lombok.Data;
@@ -34,6 +33,35 @@ import java.util.Map;
 @Data
 @ToString(callSuper = true)
 public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseResponse implements AggregateResponseConvert {
+    /** 用户标识，支付码支付时，下单接口会返回。用户在商户appid 下的唯一标识 */
+    private String openid;
+    /** 用户是否关注公众账号，仅在公众账号类型支付有效，取值范围：Y或N;Y-关注;N-未关注 */
+    @XmlField("is_subscribe")
+    private String isSubscribe;
+
+    /** 交易类型，取值为：JSAPI，NATIVE，APP等 */
+    @XmlField("trade_type")
+    private String tradeType;
+
+    /** 付款银行，采用字符串类型的银行标识，值列表详见银行类型 */
+    @XmlField("bank_type")
+    private String bankType;
+
+    /** 标价金额，单位为该币种最小计算单位，只能为整数 */
+    @XmlField("total_fee")
+    private Integer totalFee;
+
+    /** 标价币种 */
+    @XmlField("fee_type")
+    private String feeType;
+
+    /** 用户支付金额 */
+    @XmlField("cash_fee")
+    private Integer cashFee;
+
+    /** 用户支付金额币种 */
+    @XmlField("cash_fee_type")
+    private String cashFeeType;
 
     /** 附加数据 */
     private String attach;
@@ -50,17 +78,21 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
     @XmlField("transaction_id")
     private String transactionId;
 
-    /** 交易类型，取值为：JSAPI，NATIVE，APP等 */
-    @XmlField("trade_type")
-    private String tradeType;
 
     /** trade_type为NATIVE时有返回，用于生成二维码，展示给用户进行扫码支付 */
     @XmlField("code_url")
     private String codeURL;
 
-    /** 支付跳转链接 */
+    /** trade_type为H5时有返回 支付跳转链接 */
     @XmlField("mweb_url")
     private String mwebUrl;
+
+    /** 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010 */
+    @XmlField("time_end")
+    private String timeEnd;
+
+    /** 汇率 */
+    private String rate;
 
     @Override
     public SupayBaseResponse convertResponse(SupayContext ctx) {
@@ -120,15 +152,18 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
                 payResponse = SupayMicroPayResponse.builder()
                         .payStatus(this.checkResult()?SupayPayStatus.PAY_SUCCESS:
                                 "SYSTEMERROR".equals(this.errCode)?SupayPayStatus.PAY_PROCESSING:SupayPayStatus.PAY_FAIL)
+                        .attach(attach)
+                        .outTradeNo(outTradeNo)
+                        .serviceTradeNo(transactionId)
+                        .payUserId(openid)
+                        .payUserType(SupayPayUserType.WX_OPEN_ID)
+                        .payTime(StrUtil.isNotBlank(timeEnd)? DateUtil.parse(timeEnd, "yyyyMMddHHmmss"):null)
                         .build();
+
                 break;
             default:
                 payResponse = SupayPayResponse.builder().build();
         }
-
-        payResponse.setAttach(attach);
-        payResponse.setOutTradeNo(outTradeNo);
-        payResponse.setTransactionNo(transactionId);
 
         payResponse.setResultCode(checkReturn()?this.getErrCode():this.getReturnCode());
         payResponse.setResultMsg(checkReturn()?this.getErrCodeDes():this.getReturnMsg());

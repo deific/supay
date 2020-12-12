@@ -7,6 +7,7 @@ package cn.org.supay.core.channel.aggregate.data;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.enums.SupayPayStatus;
 import cn.org.supay.core.enums.SupayPayType;
+import cn.org.supay.core.enums.SupayPayUserType;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -25,8 +26,8 @@ import java.util.Date;
 @SuperBuilder
 public class SupayPayQueryResponse extends SupayBaseResponse implements Response {
 
-    /** 原支付单号 */
-    public String originTradeNo;
+    /** 业务支付单号 */
+    public String outTradeNo;
 
     /** 渠道侧服务单号 */
     public String serviceTradeNo;
@@ -39,4 +40,11 @@ public class SupayPayQueryResponse extends SupayBaseResponse implements Response
 
     /** 支付时间 */
     private Date payTime;
+
+    /** 支付用户id */
+    protected String payUserId;
+
+    /** 支付用户类型 */
+    protected SupayPayUserType payUserType;
+
 }

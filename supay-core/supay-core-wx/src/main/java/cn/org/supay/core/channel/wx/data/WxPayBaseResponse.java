@@ -45,21 +45,31 @@ public class WxPayBaseResponse<T extends WxPayData> implements Response {
     /** 错误代码描述 */
     @XmlField("err_code_des")
     protected String errCodeDes;
+
     /** 应用ID */
     @XmlField("appid")
     protected String appid;
+
     /** 商户号 */
     @XmlField("mch_id")
     protected String mchId;
+
     /** 服务商模式下的子公众账号ID */
     @XmlField("sub_appid")
     protected String subAppId;
+
     /** 服务商模式下的子商户号 */
     @XmlField("sub_mch_id")
     protected String subMchId;
+
+    /** 调用接口提交的终端设备号 */
+    @XmlField("device_info")
+    protected String deviceInfo;
+
     /** 随机字符串 */
     @XmlField("nonce_str")
     protected String nonceStr;
+
     /** 签名 */
     @XmlField("sign")
     protected String sign;
