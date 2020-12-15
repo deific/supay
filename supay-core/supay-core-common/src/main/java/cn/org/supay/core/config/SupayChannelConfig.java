@@ -32,25 +32,24 @@ public class SupayChannelConfig {
     private String appSecret;
     /** 第三方渠道app名称 */
     private String appName;
+    /** 第三方渠道证书路径 */
+    private String appCertFile;
+    /** 第三方渠道证书密码 */
+    private String appCertPassword;
+    /** 第三方渠道证书格式 */
+    private String appCertFormat;
+
     /** 第三方渠道商户id */
     private String mchId;
     /** 第三方渠道商户名称 */
     private String mchName;
     /** 第三方渠道商户秘钥 */
     private String mchSecretKey;
-
-    /** 第三方渠道证书路径 */
-    private String appCertFile;
-    /** 合作方证书密码 */
-    private String appCertPassword;
-    /** 合作方证书格式 */
-    private String appCertFormat;
-
-    /** 第三方渠道证书路径 */
+    /** 第三方渠道商户证书路径 */
     private String mchCertFile;
-    /** 合作方证书密码 */
+    /** 第三方渠道商户证书密码 */
     private String mchCertPassword;
-    /** 合作方证书格式 */
+    /** 第三方渠道商户证书格式 */
     private KeyStoreType mchCertFormat;
 
     /** 根密钥 */

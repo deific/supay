@@ -11,6 +11,7 @@ import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.aggregate.Supay;
 import cn.org.supay.core.channel.aggregate.data.SupayMicroPayResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayPayQueryResponse;
+import cn.org.supay.core.channel.aggregate.data.SupayRefundResponse;
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.config.SupayChannelConfig;
@@ -120,13 +121,16 @@ public class WxSupayCoreDemo {
 
     private static void testMicroPay() {
         String orderCode = "13451860000000002";
-        String authCode = "134619091800251424" +
-                "";
-        SupayMicroPayResponse response = Supay.microPay(channelConfig.getAppId(), authCode, "测试支付", orderCode, new BigDecimal(0.01));
-        log.debug("支付结果：{}", JSON.toJSONString(response));
+        String authCode = "134619091800251424";
+        String refundCode = "23451860000000002";
+//        SupayMicroPayResponse response = Supay.microPay(channelConfig.getAppId(), authCode, "测试支付", orderCode, new BigDecimal(0.01));
+//        log.debug("支付结果：{}", JSON.toJSONString(response));
 
         SupayPayQueryResponse queryResponse = Supay.payQuery(channelConfig.getAppId(), orderCode);
         log.debug("查询结果：{}", JSON.toJSONString(queryResponse));
+
+        SupayRefundResponse refundResponse = Supay.refund(channelConfig.getAppId(), orderCode, refundCode, new BigDecimal(0.01), new BigDecimal(0.01), null);
+        log.debug("退款结果：{}", JSON.toJSONString(refundResponse));
     }
 
     private static void testRefund() {
