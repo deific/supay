@@ -5,6 +5,7 @@ import cn.org.supay.core.channel.aggregate.data.AggregateResponseConvert;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
 import cn.org.supay.core.channel.aggregate.data.SupayRefundResponse;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayRefundStatus;
 import lombok.Data;
 import lombok.ToString;
 
@@ -84,10 +85,10 @@ public class WxPayRefundResponse extends WxPayBaseResponse implements AggregateR
     refundResponse.setRefundTradeNo(this.outRefundNo);
     refundResponse.setRefundServiceId(this.refundId);
     refundResponse.setRefundFee(this.refundFee);
+    refundResponse.setRefundStatus(SupayRefundStatus.REFUND_PROCESSING);
     refundResponse.setResultCode(this.getResultCode());
     refundResponse.setResultMsg(this.getReturnMsg());
     refundResponse.setSuccess(this.checkResult());
     return refundResponse;
-
   }
 }

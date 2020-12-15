@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.config;
 
+import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.enums.KeyStoreType;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.utils.HttpUtils;
@@ -69,7 +70,9 @@ public class SupayChannelConfig {
      * 注册渠道参数配置
      */
     public SupayChannelConfig register() {
-        sslSocketFactory = HttpUtils.createSSLSocketFactory(this.getMchCertFormat().name(), this.getMchCertFile(), this.getMchCertPassword());
+        if (!StrUtil.hasBlank(this.getMchCertFile()) && this.getMchCertFormat() != null) {
+            sslSocketFactory = HttpUtils.createSSLSocketFactory(this.getMchCertFormat().name(), this.getMchCertFile(), this.getMchCertPassword());
+        }
         SupayCoreConfig.registerChannelConfig(appId, this);
         return this;
     }
