@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <b>Application name：</b> SupayServerConfig.java <br>
@@ -37,7 +38,7 @@ public class SupayCoreConfig {
 
 
     /** 支付渠道参数配置列表 */
-    private static Map<String, SupayChannelConfig> channelConfigMap = new HashMap<>();
+    private static Map<String, SupayChannelConfig> channelConfigMap = new ConcurrentHashMap<>();
     /** 支付渠道服务配置列表 */
     private static Map<SupayChannelType, ChannelPayService> channelServiceMap = new HashMap<>();
     /** 支付渠道异步通知处理列表 */

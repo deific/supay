@@ -79,4 +79,14 @@ public class SupayConfiguration {
             });
         }
     }
+
+    /**
+     * 刷新渠道配置参数
+     * @param configs
+     */
+    public static void refreshConfig(SupayChannelConfig ...configs) {
+        for (SupayChannelConfig config : configs) {
+            SupayCoreConfig.registerChannelConfig(config.getAppId(), config);
+        }
+    }
 }
