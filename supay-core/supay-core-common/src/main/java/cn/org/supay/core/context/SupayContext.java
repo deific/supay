@@ -222,8 +222,7 @@ public class SupayContext<R extends Request, S extends Response> {
                 .payType(request.getPayType())
                 .isSandBox(isSandBox)
                 .request(request)
-                .isLocalMock(false)
-                .success(true)
+                .isLocalMock(channelConfig.isMock())
                 .build();
 
         return cxt;

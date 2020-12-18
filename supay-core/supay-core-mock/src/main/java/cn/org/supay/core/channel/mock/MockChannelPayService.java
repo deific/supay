@@ -82,9 +82,9 @@ public class MockChannelPayService implements BaseChannelPayService {
         int successValue = RandomUtil.randomInt(1, 100);
         boolean isSuccess = successValue <= 98;
         if (isSuccess) {
-            ctx.success("模拟成功");
+            ctx.success("模拟成功支付");
         } else {
-            ctx.fail("模拟操作失败");
+            ctx.fail("模拟失败支付");
         }
         return ctx;
     }

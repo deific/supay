@@ -62,6 +62,8 @@ public class SupayChannelConfig {
     private String apiBaseUrl;
     /** 是否启用沙箱环境 */
     private boolean sandBox;
+    /** 是否模拟支付 */
+    private boolean isMock;
 
     /** 配置证书构建sslFactory*/
     private SSLSocketFactory sslSocketFactory = null;
