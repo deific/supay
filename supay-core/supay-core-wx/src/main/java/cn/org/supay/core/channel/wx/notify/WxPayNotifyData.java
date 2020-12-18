@@ -35,6 +35,7 @@ public class WxPayNotifyData extends WxPayBaseResponse implements ChannelNotifyD
      */
     @XmlField("device_info")
     private String deviceInfo;
+
     /**
      * <pre>
      * 用户标识
@@ -205,6 +206,7 @@ public class WxPayNotifyData extends WxPayBaseResponse implements ChannelNotifyD
      */
     @XmlField("out_trade_no")
     private String outTradeNo;
+
     /**
      * <pre>
      * 商家数据包
@@ -217,6 +219,7 @@ public class WxPayNotifyData extends WxPayBaseResponse implements ChannelNotifyD
      */
     @XmlField("attach")
     private String attach;
+
     /**
      * <pre>
      * 支付完成时间

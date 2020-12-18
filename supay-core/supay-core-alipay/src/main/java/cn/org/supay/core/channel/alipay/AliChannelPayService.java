@@ -14,6 +14,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.utils.BeanUtils;
@@ -28,7 +29,6 @@ import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
 import com.alipay.easysdk.payment.wap.models.AlipayTradeWapPayResponse;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -180,34 +180,39 @@ public class AliChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public String asyncNotifyCallback(Map formParam, InputStream body) {
+    public SupayNotifyContext checkAndHandleCallbackNotify(SupayNotifyContext notifyContext, ChannelNotifyHandler handler) {
         // 参数校验
-        String appId = (String) formParam.get("app_id");
+        String appId = (String) notifyContext.getFormParam().get("app_id");
         try {
-            boolean isOk = Factory.Payment.Common(appId).verifyNotify(formParam);
+            boolean isOk = Factory.Payment.Common(appId).verifyNotify(notifyContext.getFormParam());
             if (!isOk) {
-                return "验证失败";
+                return notifyContext.result("验证失败");
             }
 
             // 解析参数
             AliPayNotifyData notifyData = new AliPayNotifyData() {
                 @Override
                 public Map getNotifyOriginData() {
-                    return formParam;
+                    return notifyContext.getFormParam();
                 }
             };
 
             // 填充参数
-            BeanUtils.fillBeanWithMap(formParam, notifyData, true);
+            BeanUtils.fillBeanWithMap(notifyContext.getFormParam(), notifyData, true);
 
-            ChannelNotifyHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
-            if (callbackHandler != null) {
-                return callbackHandler.handle(notifyData, this);
+            ChannelNotifyHandler callbackHandler = handler;
+            if (callbackHandler == null) {
+                SupayCoreConfig.getNotifyHandler(getSupportType());
             }
+
+            boolean notifyOk = false;
+            if (callbackHandler != null) {
+                notifyOk = callbackHandler.handleNotify(notifyContext.getNotifyType(), notifyData);
+            }
+            return notifyContext.result(notifyOk?"成功":"失败");
         } catch (Exception e) {
             log.error("异步回调验证失败：", e);
-            return "验证异常";
+            return notifyContext.result("验证异常");
         }
-        return "不支持该通知";
     }
 }
