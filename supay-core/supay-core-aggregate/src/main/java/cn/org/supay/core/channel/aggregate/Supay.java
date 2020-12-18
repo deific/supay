@@ -5,10 +5,13 @@
 package cn.org.supay.core.channel.aggregate;
 
 import cn.org.supay.core.SupayCore;
+import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.aggregate.data.*;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayStatus;
 import cn.org.supay.core.enums.SupayPayType;
@@ -333,6 +336,16 @@ public class Supay {
         SupayRefundQueryResponse refundQueryResponse = ((SupayRefundQueryResponse) cxt.getResponse());
 
         return refundQueryResponse;
+    }
+
+    /**
+     * 检查通知并处理通知
+     * @param notifyCtx
+     * @param handler
+     * @return
+     */
+    public static SupayNotifyContext checkAndHandleCallbackNotify(SupayNotifyContext notifyCtx, ChannelNotifyHandler handler) {
+        return SupayCore.checkAndHandleCallbackNotify(notifyCtx, handler);
     }
 
     /**

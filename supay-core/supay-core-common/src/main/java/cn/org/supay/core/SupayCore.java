@@ -5,16 +5,15 @@
 package cn.org.supay.core;
 
 import cn.org.supay.core.channel.ChannelPayService;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
-import cn.org.supay.core.config.SupayConfiguration;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
 
 /**
  * <b>Application name：</b> SupayCore.java <br>
@@ -117,5 +116,16 @@ public class SupayCore {
     public static SupayContext<? extends Request, ? extends Response> sendRedPackage(SupayContext<? extends Request, ? extends Response> ctx) {
         ChannelPayService proxyService = getPayChannelService(ctx);
         return proxyService.sendRedPackage(ctx);
+    }
+
+    /**
+     * 检查通知并处理通知
+     * @param notifyCtx
+     * @param handler
+     * @return
+     */
+    public static SupayNotifyContext checkAndHandleCallbackNotify(SupayNotifyContext notifyCtx, ChannelNotifyHandler handler) {
+        ChannelPayService proxyService = getPayChannelService(notifyCtx.getNotifyType().channelType());
+        return proxyService.checkAndHandleCallbackNotify(notifyCtx, handler);
     }
 }

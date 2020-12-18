@@ -4,29 +4,27 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.ChannelApiType;
+import cn.org.supay.core.channel.data.Request;
+import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.channel.wx.convert.WxPayConverter;
 import cn.org.supay.core.channel.wx.data.*;
 import cn.org.supay.core.channel.wx.filter.WxPayFilter;
+import cn.org.supay.core.channel.wx.notify.WxNotifyReturn;
 import cn.org.supay.core.channel.wx.notify.WxPayNotifyData;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
-import cn.org.supay.core.channel.data.Request;
-import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayType;
 import cn.org.supay.core.utils.BeanUtils;
 import cn.org.supay.core.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.InputStream;
-import java.util.Map;
 
 /**
  * <b>Application name：</b> WxChannelPayService.java <br>
@@ -126,31 +124,35 @@ public class WxChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public String asyncNotifyCallback(Map formParam, InputStream body) {
+    public SupayNotifyContext checkAndHandleCallbackNotify(SupayNotifyContext notifyCtx, ChannelNotifyHandler handler) {
         // 参数校验
-        String appId = (String) formParam.get("app_id");
         try {
             // 解析流数据
             WxPayNotifyData notifyData = null;
             String bodyStr = null;
-            if (body != null) {
-                bodyStr = new String(IoUtil.readBytes(body));
+            if (notifyCtx.getBodyStr() != null) {
+                bodyStr = notifyCtx.getBodyStr();
                 notifyData = BeanUtils.xmlToBean(bodyStr, WxPayNotifyData.class);
             }
             // 校验
             if (notifyData != null && !notifyData.checkSign(SupayCoreConfig.getChannelConfig(notifyData.getAppid()))) {
                 log.error("异步回调验签失败：{}", bodyStr);
-                return "验签失败";
+                return notifyCtx.result(WxNotifyReturn.fail("验签失败"));
             }
 
-            ChannelNotifyHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
-            if (callbackHandler != null) {
-                return callbackHandler.handle(notifyData, this);
+            ChannelNotifyHandler callbackHandler = handler;
+            if (callbackHandler == null) {
+                SupayCoreConfig.getNotifyHandler(getSupportType());
             }
+
+            boolean isOk = false;
+            if (callbackHandler != null) {
+                isOk = callbackHandler.handleNotify(notifyCtx.getNotifyType(), notifyData);
+            }
+            return notifyCtx.result(isOk?WxNotifyReturn.success():WxNotifyReturn.fail());
         } catch (Exception e) {
             log.error("异步回调验证失败：", e);
-            return "验证异常";
+            return notifyCtx.result(WxNotifyReturn.fail("验证异常"));
         }
-        return "不支持该通知";
     }
 }

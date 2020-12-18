@@ -7,9 +7,11 @@ package cn.org.supay.core.channel.mock;
 import cn.hutool.core.util.RandomUtil;
 import cn.org.supay.core.channel.BaseChannelPayService;
 import cn.org.supay.core.channel.aggregate.data.SupayBaseResponse;
+import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
+import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import com.github.jsonzou.jmockdata.JMockData;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +37,8 @@ public class MockChannelPayService implements BaseChannelPayService {
     }
 
     @Override
-    public String asyncNotifyCallback(Map formParam, InputStream body) {
-        return null;
+    public SupayNotifyContext checkAndHandleCallbackNotify(SupayNotifyContext notifyCtx, ChannelNotifyHandler handler) {
+        return notifyCtx;
     }
 
     @Override

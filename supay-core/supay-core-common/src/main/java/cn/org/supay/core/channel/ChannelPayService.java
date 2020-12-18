@@ -4,16 +4,15 @@
  *******************************************************************************/
 package cn.org.supay.core.channel;
 
-import cn.hutool.core.io.IoUtil;
 import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.channel.notify.ChannelNotifyData;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,36 +40,40 @@ public interface ChannelPayService {
     SupayChannelType getSupportType();
 
     /**
-     * 异步通知处理回调处理
-     * @param formParam 表单数据
-     * @param body 请求体参数
+     * 检查通知并处理通知
+     * @param notifyContext
+     * @param handler
      * @return
      */
-    default String asyncNotifyCallback(Map formParam, InputStream body) {
+    default SupayNotifyContext checkAndHandleCallbackNotify(SupayNotifyContext notifyContext, ChannelNotifyHandler handler) {
         // 解析参数
         ChannelNotifyData notifyData = new ChannelNotifyData() {
             @Override
             public Map getNotifyOriginData() {
                 // 解析form数据
-                if (formParam != null && !formParam.isEmpty()) {
-                    return formParam;
+                if (notifyContext.getFormParam() != null && !notifyContext.getFormParam().isEmpty()) {
+                    return notifyContext.getFormParam();
                 }
 
                 // 解析流数据
-                if (body != null) {
-                    return new HashMap<String, byte[]>(1) {{
-                        put("body", IoUtil.readBytes(body));
+                if (notifyContext.getBodyStr() != null) {
+                    return new HashMap<String, String>(1) {{
+                        put("body", notifyContext.getBodyStr());
                     }};
                 }
                 return null;
             }
         };
-
-        ChannelNotifyHandler callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
-        if (callbackHandler != null) {
-            return callbackHandler.handle(notifyData, this);
+        ChannelNotifyHandler callbackHandler = handler;
+        if (callbackHandler == null) {
+            callbackHandler = SupayCoreConfig.getNotifyHandler(getSupportType());
         }
-        return "不支持该通知";
+
+        boolean isOk = false;
+        if (callbackHandler != null) {
+            isOk = callbackHandler.handleNotify(notifyContext.getNotifyType(), notifyData);
+        }
+        return notifyContext.result("");
     }
 
     /**
