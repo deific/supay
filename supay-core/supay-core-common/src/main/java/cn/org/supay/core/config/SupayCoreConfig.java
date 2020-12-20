@@ -36,7 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 public class SupayCoreConfig {
 
-
     /** 支付渠道参数配置列表 */
     private static Map<String, SupayChannelConfig> channelConfigMap = new ConcurrentHashMap<>();
     /** 支付渠道服务配置列表 */

@@ -7,6 +7,7 @@ package cn.org.supay.core;
 import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.config.SupayChannelConfig;
+import cn.org.supay.core.config.SupayConfiguration;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.channel.data.Request;
@@ -127,5 +128,13 @@ public class SupayCore {
     public static SupayNotifyContext checkAndHandleCallbackNotify(SupayNotifyContext notifyCtx, ChannelNotifyHandler handler) {
         ChannelPayService proxyService = getPayChannelService(notifyCtx.getNotifyType().channelType());
         return proxyService.checkAndHandleCallbackNotify(notifyCtx, handler);
+    }
+
+    /**
+     * 加载配置参数
+     * @param configs
+     */
+    public static void loadChannelConfig(SupayChannelConfig ...configs) {
+        SupayConfiguration.loadChannelConfig(configs);
     }
 }

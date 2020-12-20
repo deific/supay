@@ -14,9 +14,10 @@ package cn.org.supay.core.channel.notify;
  * <b>@version：</b>V1.0.0 <br>
  */
 public interface ChannelNotifyHandler {
-
     /**
      * 渠道通知回调处理
+     * 根据
+     * @see ChannelNotifyHandler#getSupportType 返回值，转换通知数据为对应渠道数据对象，传入该方法进行处理
      * @param notifyType 通知类型
      * @param notifyData 对应类型的通知数据封装对象 ChannelNotifyData子类实现
      * @return true 通知处理成功 false 通知处理失败

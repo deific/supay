@@ -7,9 +7,9 @@ package cn.org.supay.core.config;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.org.supay.core.channel.ChannelPayService;
-import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,7 +26,6 @@ public class SupayConfiguration {
 
     private static boolean isInit = false;
 
-
     /**
      * 初始化
      */
@@ -34,7 +33,6 @@ public class SupayConfiguration {
         if (!isInit) {
             log.debug("[初始化]执行初始化...");
             initPayChannelService();
-            initNotifyHandler();
         } else {
             log.debug("[初始化]已初始化，略过");
         }
@@ -61,30 +59,20 @@ public class SupayConfiguration {
     }
 
     /**
-     * 初始化渠道异步通知处理器
+     * 加载渠道配置参数
+     * @param configs
      */
-    public static void initNotifyHandler() {
-        Set<Class<?>> notifyHandlerSet = ClassUtil.scanPackageBySuper("cn.org.supay.core.channel", ChannelNotifyHandler.class);
-        if (ObjectUtil.isNotEmpty(notifyHandlerSet)) {
-            notifyHandlerSet.forEach(aClass -> {
-                try {
-                    if (!ClassUtil.isAbstract(aClass)) {
-                        ChannelNotifyHandler notifyHandler = (ChannelNotifyHandler) aClass.newInstance();
-                        SupayCoreConfig.registerNotifyHandler(notifyHandler.getSupportType(), notifyHandler);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    log.error("初始化渠道异步通知处理器异常：", e);
-                }
-            });
+    public static void loadChannelConfig(SupayChannelConfig ...configs) {
+        for (SupayChannelConfig config : configs) {
+            SupayCoreConfig.registerChannelConfig(config.getAppId(), config);
         }
     }
 
     /**
-     * 刷新渠道配置参数
+     * 加载渠道配置参数
      * @param configs
      */
-    public static void refreshConfig(SupayChannelConfig ...configs) {
+    public static void loadChannelConfigs(List<SupayChannelConfig> configs) {
         for (SupayChannelConfig config : configs) {
             SupayCoreConfig.registerChannelConfig(config.getAppId(), config);
         }
