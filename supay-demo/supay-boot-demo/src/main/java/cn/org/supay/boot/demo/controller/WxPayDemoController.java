@@ -4,19 +4,12 @@
  *******************************************************************************/
 package cn.org.supay.boot.demo.controller;
 
-import cn.hutool.core.util.IdUtil;
 import cn.org.supay.core.SupayCore;
-import cn.org.supay.core.channel.aggregate.Supay;
-import cn.org.supay.core.channel.alipay.data.AliPayPageRequest;
-import cn.org.supay.core.channel.alipay.data.AliPayPageResponse;
 import cn.org.supay.core.channel.notify.ChannelNotifyData;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
 import cn.org.supay.core.channel.notify.ChannelNotifyType;
 import cn.org.supay.core.channel.wx.notify.WxNotifyType;
-import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.context.SupayNotifyContext;
-import cn.org.supay.core.enums.SupayChannelType;
-import cn.org.supay.core.enums.SupayPayType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
@@ -35,7 +28,7 @@ import java.math.BigDecimal;
  */
 @Slf4j
 @Controller
-@RequestMapping("/alipay")
+@RequestMapping("/wxpay")
 public class WxPayDemoController {
 
     /**

@@ -2,7 +2,7 @@
  * @(#)SupayConfigurer.java 2020年05月30日 09:07
  * Copyright 2020 http://supay.org.cn All rights reserved.
  *******************************************************************************/
-package cn.org.supay.boot.starter;
+package cn.org.supay.core.all.starter;
 
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayChannelConfigLoader;
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Slf4j
 @Configuration
-public class SupayConfigurer {
+public class SupayAutoConfiguration {
 
     @Resource
     private ApplicationContext context;

@@ -19,12 +19,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>2.2.5.RELEASE</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
             <version>2.2.5.RELEASE</version>
         </dependency>
@@ -42,14 +36,10 @@
 
         <dependency>
             <groupId>cn.org.supay</groupId>
-            <artifactId>supay-core-wx</artifactId>
+            <artifactId>supay-core-all-spring-boot-starter</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>cn.org.supay</groupId>
-            <artifactId>supay-core-alipay</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-setting</artifactId>

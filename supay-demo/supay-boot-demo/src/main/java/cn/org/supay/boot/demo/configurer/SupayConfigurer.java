@@ -5,6 +5,7 @@
 package cn.org.supay.boot.demo.configurer;
 
 import cn.hutool.setting.dialect.Props;
+
 import cn.org.supay.core.channel.wx.WxApiType;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.enums.SupayChannelType;
@@ -28,6 +29,7 @@ public class SupayConfigurer {
     public void init() {
         Props alipayProps = new Props("./config/my-ali-pay.conf");
         Props wxpayProps = new Props("./config/my-wx-pay.conf");
+
         // 初始化渠道参数配置
         SupayChannelConfig.builder()
                 .rootSecretKey(alipayProps.getStr("ali.publicKey"))
