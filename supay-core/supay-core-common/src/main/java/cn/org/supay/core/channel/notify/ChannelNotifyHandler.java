@@ -4,10 +4,6 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.notify;
 
-import cn.org.supay.core.channel.ChannelPayService;
-import cn.org.supay.core.context.SupayNotifyContext;
-import cn.org.supay.core.enums.SupayChannelType;
-
 /**
  * <b>Application name：</b> ChannelNotifyHandler.java <br>
  * <b>Application describing： </b> <br>
@@ -20,17 +16,10 @@ import cn.org.supay.core.enums.SupayChannelType;
 public interface ChannelNotifyHandler {
 
     /**
-     * 获取支持的渠道类型
-     * @return
-     */
-    SupayChannelType getSupportType();
-
-    /**
      * 渠道通知回调处理
-     * @param notifyType
-     * @param notifyData
-     * @param service
-     * @return
+     * @param notifyType 通知类型
+     * @param notifyData 对应类型的通知数据封装对象 ChannelNotifyData子类实现
+     * @return true 通知处理成功 false 通知处理失败
      */
     boolean handleNotify(ChannelNotifyType notifyType, ChannelNotifyData notifyData);
 }

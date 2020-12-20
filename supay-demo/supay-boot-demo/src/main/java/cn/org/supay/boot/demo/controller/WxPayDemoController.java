@@ -50,10 +50,6 @@ public class WxPayDemoController {
         // 调用支付接口
         SupayNotifyContext notifyContext = SupayNotifyContext.buildNotifyContext(WxNotifyType.PAY_NOTIFY, null, null);
         notifyContext = SupayCore.checkAndHandleCallbackNotify(notifyContext, new ChannelNotifyHandler() {
-            @Override
-            public SupayChannelType getSupportType() {
-                return null;
-            }
 
             @Override
             public boolean handleNotify(ChannelNotifyType notifyType, ChannelNotifyData notifyData) {

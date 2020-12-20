@@ -4,14 +4,9 @@
  *******************************************************************************/
 package cn.org.supay.core.context;
 
-import cn.hutool.core.util.IdUtil;
-import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.notify.ChannelNotifyType;
-import cn.org.supay.core.config.SupayChannelConfig;
-import cn.org.supay.core.enums.SupayChannelType;
 import lombok.Data;
 
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -35,6 +30,26 @@ public class SupayNotifyContext {
 
     /** 通知处理返回字符串 各渠道返回数据格式要求不一样 */
     private String retStr;
+
+    /**
+     * 构建通知上下文
+     * @param notifyType
+     * @param formParam 通知数据（form参数形式）
+     * @return
+     */
+    public static SupayNotifyContext buildNotifyContext(ChannelNotifyType notifyType, Map formParam) {
+        return buildNotifyContext(notifyType, formParam, null);
+    }
+
+    /**
+     * 构建通知上下文
+     * @param notifyType
+     * @param bodyStr 通知数据（request body形式）
+     * @return
+     */
+    public static SupayNotifyContext buildNotifyContext(ChannelNotifyType notifyType, String bodyStr) {
+        return buildNotifyContext(notifyType, null, bodyStr);
+    }
 
     /**
      * 构建上下文
