@@ -20,5 +20,64 @@
         <module>supay-core-mock</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.org.supay</groupId>
+                <artifactId>supay-core-common</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.supay</groupId>
+                <artifactId>supay-core-aggregate</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.supay</groupId>
+                <artifactId>supay-core-alipay</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.supay</groupId>
+                <artifactId>supay-core-wx</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.supay</groupId>
+                <artifactId>supay-core-mock</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <!-- huTool 工具包 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-crypto</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-http</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-json</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-extra</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!-- huTool 工具包 End -->
+
+            <!--代理-->
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>3.3.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

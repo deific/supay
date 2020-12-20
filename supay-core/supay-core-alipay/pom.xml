@@ -12,18 +12,10 @@
     <artifactId>supay-core-alipay</artifactId>
 
     <dependencies>
-        <!--核心依赖-->
-        <dependency>
-            <groupId>cn.org.supay</groupId>
-            <artifactId>supay-core-common</artifactId>
-            <version>${supay.version}</version>
-        </dependency>
-
         <!-- 聚合转换支付依赖-->
         <dependency>
             <groupId>cn.org.supay</groupId>
             <artifactId>supay-core-aggregate</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -36,7 +28,6 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.70</version>
         </dependency>
-
     </dependencies>
 
 </project>

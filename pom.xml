@@ -10,7 +10,7 @@
     <modules>
         <module>supay-core</module>
         <module>supay-demo</module>
-        <module>supay-core-spring-boot-starter</module>
+        <module>supay-starter</module>
         <module>supay-boot</module>
 
     </modules>
@@ -20,7 +20,6 @@
         <jdk.version>1.8</jdk.version>
         <lombook.version>1.18.12</lombook.version>
         <supay.version>1.0.0-SNAPSHOT</supay.version>
-
         <ali.easysdk.version>2.0.1</ali.easysdk.version>
         <hutool.version>5.3.4</hutool.version>
         <validation.version>2.0.1.Final</validation.version>
@@ -29,42 +28,71 @@
         <log4j2.version>2.13.3</log4j2.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombook.version}</version>
+            </dependency>
+
+            <!--日志依赖-->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j2.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombook.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
-
 
         <!--日志依赖-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
         </dependency>
 
-        <!-- slf4j 和 log4j2 绑定类，该类的作用就是使采用slf4j代码输出的日志具体采用log4j2实现，可以理解为log4j2 和slf4j之间的一个桥接，该依赖根据slf4j-api的版本不同，会有不同的选择，
+        <!--
+        slf4j 和 log4j2 绑定类，该类的作用就是使采用slf4j代码输出的日志具体采用log4j2实现，可以理解为log4j2 和slf4j之间的一个桥接，该依赖根据slf4j-api的版本不同，会有不同的选择，
         由于我的slf4j-api版本是1.7.x的版本，所以使用这个依赖，如果使用SLF4J 1.8.x 及以上的版本，需要使用 log4j-slf4j18-impl
         具体可见官网： https://logging.apache.org/log4j/2.x/log4j-slf4j-impl/index.html
         -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4j2.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>${log4j2.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>${log4j2.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
