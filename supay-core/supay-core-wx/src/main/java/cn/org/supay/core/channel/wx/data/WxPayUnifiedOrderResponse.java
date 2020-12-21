@@ -151,7 +151,8 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
             case WX_MICRO_PAY:
                 payResponse = SupayMicroPayResponse.builder()
                         .payStatus(this.checkResult()?SupayPayStatus.PAY_SUCCESS:
-                                "SYSTEMERROR".equals(this.errCode)?SupayPayStatus.PAY_PROCESSING:SupayPayStatus.PAY_FAIL)
+                                StrUtil.containsAny(this.errCode, "USERPAYING", "SYSTEMERROR")?
+                                        SupayPayStatus.PAY_PROCESSING:SupayPayStatus.PAY_FAIL)
                         .attach(attach)
                         .outTradeNo(outTradeNo)
                         .serviceTradeNo(transactionId)
@@ -159,7 +160,6 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
                         .payUserType(SupayPayUserType.WX_OPEN_ID)
                         .payTime(StrUtil.isNotBlank(timeEnd)? DateUtil.parse(timeEnd, "yyyyMMddHHmmss"):null)
                         .build();
-
                 break;
             default:
                 payResponse = SupayPayResponse.builder().build();
