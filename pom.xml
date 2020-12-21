@@ -12,7 +12,7 @@
         <module>supay-demo</module>
         <module>supay-starter</module>
         <module>supay-boot</module>
-
+        <module>supay-dependencies</module>
     </modules>
 
     <packaging>pom</packaging>

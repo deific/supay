@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>supay-core-all-spring-boot-starter</module>
+        <module>supay-core-wx-spring-boot-starter</module>
     </modules>
 
     <dependencyManagement>
@@ -38,6 +39,16 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>cn.org.supay</groupId>
+                <artifactId>supay-core-all-spring-boot-starter</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.supay</groupId>
+                <artifactId>supay-core-wx-spring-boot-starter</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
