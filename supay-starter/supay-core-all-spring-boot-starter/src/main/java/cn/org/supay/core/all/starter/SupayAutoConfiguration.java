@@ -35,8 +35,16 @@ public class SupayAutoConfiguration {
     @PostConstruct
     public void init() {
         log.debug("[自动初始化]");
-        SupayConfiguration.init();
+        // 初始化渠道参数配置
+        initChannelConfig();
 
+        SupayConfiguration.init();
+    }
+
+    /**
+     * 初始化
+     */
+    public void initChannelConfig() {
         // 扫描渠道参数加载器接口实现，获取渠道参数
         Map<String, SupayChannelConfigLoader> configLoaderMap =context.getBeansOfType(SupayChannelConfigLoader.class);
         if (configLoaderMap != null && !configLoaderMap.isEmpty()) {
