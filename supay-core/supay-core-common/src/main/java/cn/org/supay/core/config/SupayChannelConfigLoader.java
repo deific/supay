@@ -24,4 +24,11 @@ public interface SupayChannelConfigLoader {
      * @return
      */
     List<SupayChannelConfig> loadChannelConfig();
+
+    /**
+     * 刷新渠道配置参数
+     */
+    default void refreshChannelConfig() {
+        SupayConfiguration.loadChannelConfigs(loadChannelConfig());
+    }
 }
