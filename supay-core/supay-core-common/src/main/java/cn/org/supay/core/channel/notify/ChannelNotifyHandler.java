@@ -14,6 +14,7 @@ package cn.org.supay.core.channel.notify;
  * <b>@version：</b>V1.0.0 <br>
  */
 public interface ChannelNotifyHandler {
+
     /**
      * 渠道通知回调处理
      * 根据
