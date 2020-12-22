@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 /**
  * <b>Application name：</b> AlipayDemoController.java <br>
@@ -50,10 +51,13 @@ public class AlipayDemoController {
                 .payType(SupayPayType.ALI_WAP_PAY)
                 .subject("测试网页支付")
                 .totalAmount(price.toString())
-                .returnUrl("http://taobao.com")
+                .returnUrl("http://taobao.com/111")
+                .optionParams(new HashMap<>())
                 .build()
                 .toContext(appId, false);
 
+        // 模拟
+        cxt.setLocalMock(true);
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 

@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashMap;
+
 /**
  * <b>Application name：</b> AliPayPageRequest.java <br>
  * <b>Application describing： </b> <br>
@@ -44,6 +46,7 @@ public class AliPayPageRequest extends AliPayBaseRequest implements AggregateReq
             this.setTotalAmount(h5PayRequest.getAmount().toString());
             this.setReturnUrl(h5PayRequest.getReturnUrl());
         }
+        this.setOptionParams(new HashMap<>());
         return this;
     }
 }
