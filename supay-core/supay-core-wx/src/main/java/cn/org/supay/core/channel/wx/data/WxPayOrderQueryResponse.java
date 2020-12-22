@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.annotation.XmlField;
 import cn.org.supay.core.channel.aggregate.data.*;
 import cn.org.supay.core.context.SupayContext;
+import cn.org.supay.core.enums.SupayChannelType;
 import cn.org.supay.core.enums.SupayPayStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -84,6 +85,7 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
     public SupayBaseResponse convertResponse(SupayContext context) {
         SupayPayQueryResponse payQueryResponse = SupayPayQueryResponse.builder()
                 .outTradeNo(this.outTradeNo)
+                .payType(context.getPayType())
                 .payTime(this.timeEnd == null?null:DateUtil.parse(this.timeEnd, "yyyyMMddHHmmss"))
                 .serviceTradeNo(this.transactionId)
                 .payStatus(convertPayStatus())
@@ -104,7 +106,7 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
             return null;
         }
         // 订单不存在
-        if (errCode.equals("ORDERNOTEXIST")) {
+        if ("ORDERNOTEXIST".equals(errCode)) {
             return SupayPayStatus.NOT_EXIST;
         }
 

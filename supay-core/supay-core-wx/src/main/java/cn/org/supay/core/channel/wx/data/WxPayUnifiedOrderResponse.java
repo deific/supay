@@ -164,7 +164,7 @@ public class WxPayUnifiedOrderResponse<T extends WxPayData> extends WxPayBaseRes
             default:
                 payResponse = SupayPayResponse.builder().build();
         }
-
+        payResponse.setPayType(payType);
         payResponse.setResultCode(checkReturn()?this.getErrCode():this.getReturnCode());
         payResponse.setResultMsg(checkReturn()?this.getErrCodeDes():this.getReturnMsg());
         payResponse.setSuccess(this.checkResult());

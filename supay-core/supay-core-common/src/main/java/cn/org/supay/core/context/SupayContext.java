@@ -73,8 +73,10 @@ public class SupayContext<R extends Request, S extends Response> {
      */
     public void setResponse(Response s) {
         this.response = (S) s;
-        // 校验结果
-        getResponse().checkResult(this);
+        if (this.response != null) {
+            // 校验结果
+            this.getResponse().checkResult(this);
+        }
     }
 
     /**
