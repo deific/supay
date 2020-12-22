@@ -17,7 +17,6 @@
 
     <packaging>pom</packaging>
     <properties>
-
         <jdk.version>1.8</jdk.version>
         <lombook.version>1.18.12</lombook.version>
         <supay.version>1.0.0-SNAPSHOT</supay.version>
