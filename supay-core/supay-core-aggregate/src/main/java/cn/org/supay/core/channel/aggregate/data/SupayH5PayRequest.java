@@ -20,5 +20,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class SupayH5PayRequest extends SupayPayRequest {
 
-    String returnUrl;
+    @Override
+    public Class getRespClass() {
+        return SupayH5PayResponse.class;
+    }
 }

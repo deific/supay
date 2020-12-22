@@ -27,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class WxPayBaseRequest implements Request {
+public abstract class WxPayBaseRequest implements Request {
     /** 微信分配的应用ID（公众号、小程序、app） */
     @XmlField("appid")
     private String appid;
@@ -60,7 +60,4 @@ public class WxPayBaseRequest implements Request {
         this.setSign(sign);
         return ctx;
     }
-
-
-
 }

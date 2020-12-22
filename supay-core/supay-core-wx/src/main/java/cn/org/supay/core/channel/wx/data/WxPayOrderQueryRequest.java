@@ -39,4 +39,9 @@ public class WxPayOrderQueryRequest extends WxPayBaseRequest implements Aggregat
         this.setOutTradeNo(payQueryRequest.getOutTradeNo());
         return this;
     }
+
+    @Override
+    public Class getRespClass() {
+        return WxPayOrderQueryResponse.class;
+    }
 }

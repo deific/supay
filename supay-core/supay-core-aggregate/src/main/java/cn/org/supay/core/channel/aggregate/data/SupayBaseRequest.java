@@ -27,7 +27,7 @@ import java.util.Map;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class SupayBaseRequest implements Request {
+public abstract class SupayBaseRequest implements Request {
     /** 其他接口配置参数 */
     protected Map<String, Object> optionParams;
 

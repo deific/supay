@@ -26,7 +26,7 @@ import java.util.Map;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class AliPayBaseRequest implements Request {
+public abstract class AliPayBaseRequest implements Request {
     /** 支付类型 */
     protected SupayPayType payType;
     protected String subject;

@@ -35,4 +35,9 @@ public class AliPayQueryRequest implements Request, AggregateRequestConvert {
         this.setOutTradeNo(queryRequest.getOutTradeNo());
         return this;
     }
+
+    @Override
+    public Class getRespClass() {
+        return AliPayQueryResponse.class;
+    }
 }

@@ -57,7 +57,7 @@ public class AlipayDemoController {
                 .toContext(appId, false);
 
         // 模拟
-        cxt.setLocalMock(true);
+//        cxt.setLocalMock(true);
         // 调用支付接口
         cxt = SupayCore.pay(cxt);
 

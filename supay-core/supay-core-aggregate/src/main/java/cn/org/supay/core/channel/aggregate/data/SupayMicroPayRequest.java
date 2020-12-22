@@ -19,4 +19,9 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayMicroPayRequest extends SupayPayRequest {
+
+    @Override
+    public Class getRespClass() {
+        return SupayMicroPayResponse.class;
+    }
 }

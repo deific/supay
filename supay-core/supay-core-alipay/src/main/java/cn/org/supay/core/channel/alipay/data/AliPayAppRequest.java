@@ -39,4 +39,9 @@ public class AliPayAppRequest extends AliPayBaseRequest implements AggregateRequ
         this.setReturnUrl(payRequest.getReturnUrl());
         return this;
     }
+
+    @Override
+    public Class getRespClass() {
+        return AliPayAppResponse.class;
+    }
 }

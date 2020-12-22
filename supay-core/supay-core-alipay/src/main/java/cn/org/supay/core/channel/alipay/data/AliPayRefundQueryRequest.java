@@ -36,4 +36,9 @@ public class AliPayRefundQueryRequest implements Request, AggregateRequestConver
         this.setOutRefundNo(refundQueryRequest.getOutRefundNo());
         return this;
     }
+
+    @Override
+    public Class getRespClass() {
+        return AliPayRefundQueryResponse.class;
+    }
 }

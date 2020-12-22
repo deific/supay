@@ -49,4 +49,9 @@ public class AliPayPageRequest extends AliPayBaseRequest implements AggregateReq
         this.setOptionParams(new HashMap<>());
         return this;
     }
+
+    @Override
+    public Class getRespClass() {
+        return AliPayPageResponse.class;
+    }
 }

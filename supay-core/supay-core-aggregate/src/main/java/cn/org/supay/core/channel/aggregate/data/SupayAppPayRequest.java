@@ -22,4 +22,9 @@ import lombok.experimental.SuperBuilder;
 public class SupayAppPayRequest extends SupayPayRequest implements Request {
 
     String returnUrl;
+
+    @Override
+    public Class getRespClass() {
+        return SupayAppPayResponse.class;
+    }
 }

@@ -23,4 +23,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class AliPayFaceRequest extends AliPayBaseRequest implements Request {
     String authCode;
+
+    @Override
+    public Class getRespClass() {
+        return AliPayFaceResponse.class;
+    }
 }

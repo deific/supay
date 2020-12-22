@@ -22,4 +22,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class SupayPayQueryRequest extends SupayBaseRequest implements Request {
     protected String outTradeNo;
+
+    @Override
+    public Class getRespClass() {
+        return SupayPayQueryResponse.class;
+    }
 }

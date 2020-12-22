@@ -68,4 +68,9 @@ public class WxPayRefundQueryRequest extends WxPayBaseRequest implements Aggrega
     this.setOutTradeNo(refundQueryRequest.getOutTradeNo());
     return this;
   }
+
+  @Override
+  public Class getRespClass() {
+    return WxPayRefundQueryResponse.class;
+  }
 }

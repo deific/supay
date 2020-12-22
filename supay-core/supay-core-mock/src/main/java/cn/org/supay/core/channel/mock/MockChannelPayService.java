@@ -14,6 +14,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
 import com.github.jsonzou.jmockdata.JMockData;
+import com.github.jsonzou.jmockdata.MockConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -30,6 +31,16 @@ import java.util.Map;
  */
 @Slf4j
 public class MockChannelPayService implements BaseChannelPayService {
+
+    private MockConfig mockConfig = new MockConfig()
+            // 全局配置
+            .setEnabledStatic(false)
+            // 某些字段（名等于integerNum的字段、包含float的字段、double开头的字段）配置
+            .subConfig("success","*code*","msg")
+            .booleanSeed(true)
+            .intRange(0, 0)
+            .stringSeed("成功")
+            .globalConfig();
 
     @Override
     public SupayChannelType getSupportType() {
@@ -76,7 +87,9 @@ public class MockChannelPayService implements BaseChannelPayService {
      * @return
      */
     private SupayContext<? extends Request, ? extends Response> randomSuccess(SupayContext<? extends Request, ? extends Response> ctx) {
-        Response response = JMockData.mock(SupayBaseResponse.class);
+
+        Class respClass = ctx.getRequest().getRespClass();
+        Response response = (Response) JMockData.mock(respClass, mockConfig);
         ctx.setResponse(response);
 
         int successValue = RandomUtil.randomInt(1, 100);

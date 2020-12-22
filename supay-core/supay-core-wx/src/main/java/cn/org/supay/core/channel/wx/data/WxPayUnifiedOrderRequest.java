@@ -133,4 +133,9 @@ public class WxPayUnifiedOrderRequest extends WxPayBaseRequest implements Aggreg
                 break;
         }
     }
+
+    @Override
+    public Class getRespClass() {
+        return WxPayUnifiedOrderResponse.class;
+    }
 }

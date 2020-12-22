@@ -38,4 +38,9 @@ public class AliPayCommonRequest extends AliPayBaseRequest implements AggregateR
         this.setBuyerId(payRequest.getTradeNo());
         return this;
     }
+
+    @Override
+    public Class getRespClass() {
+        return AliPayCommonResponse.class;
+    }
 }

@@ -43,4 +43,9 @@ public class SupayPayRequest extends SupayBaseRequest implements Request {
     private SupayPayType payType;
     /** 支付参数 */
     private SupayPayParam payParam;
+
+    @Override
+    public Class getRespClass() {
+        return SupayPayResponse.class;
+    }
 }

@@ -20,5 +20,11 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public class SupayFacePayRequest extends SupayPayRequest implements Request {
-    String authCode;
+    /** 授权码 */
+    private String authCode;
+
+    @Override
+    public Class getRespClass() {
+        return SupayFacePayResponse.class;
+    }
 }

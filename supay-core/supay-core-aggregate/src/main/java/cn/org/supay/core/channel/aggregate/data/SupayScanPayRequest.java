@@ -20,5 +20,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class SupayScanPayRequest extends SupayPayRequest {
 
-    String returnUrl;
+    @Override
+    public Class getRespClass() {
+        return SupayScanPayResponse.class;
+    }
 }

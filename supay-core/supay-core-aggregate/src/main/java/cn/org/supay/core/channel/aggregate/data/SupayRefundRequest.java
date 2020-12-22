@@ -34,4 +34,9 @@ public class SupayRefundRequest extends SupayBaseRequest implements Request {
     protected BigDecimal refundAmount;
     /** 退款成功通知地址 */
     protected String notifyUrl;
+
+    @Override
+    public Class getRespClass() {
+        return SupayRefundResponse.class;
+    }
 }

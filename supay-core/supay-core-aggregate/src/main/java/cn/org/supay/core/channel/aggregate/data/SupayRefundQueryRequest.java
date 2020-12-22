@@ -24,4 +24,10 @@ import lombok.experimental.SuperBuilder;
 public class SupayRefundQueryRequest extends SupayBaseRequest implements Request {
     protected String outTradeNo;
     protected String outRefundNo;
+
+
+    @Override
+    public Class getRespClass() {
+        return SupayRefundQueryResponse.class;
+    }
 }

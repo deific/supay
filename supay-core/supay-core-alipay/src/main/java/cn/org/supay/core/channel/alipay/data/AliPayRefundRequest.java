@@ -36,4 +36,9 @@ public class AliPayRefundRequest implements Request, AggregateRequestConvert {
         this.setRefundAmount(refundRequest.getRefundAmount().toString());
         return this;
     }
+
+    @Override
+    public Class getRespClass() {
+        return AliPayRefundResponse.class;
+    }
 }

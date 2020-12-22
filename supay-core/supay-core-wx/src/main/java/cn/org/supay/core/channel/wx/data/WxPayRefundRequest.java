@@ -99,4 +99,9 @@ public class WxPayRefundRequest extends WxPayBaseRequest implements AggregateReq
     this.setNotifyUrl(refundRequest.getNotifyUrl());
     return this;
   }
+
+  @Override
+  public Class getRespClass() {
+    return WxPayRefundResponse.class;
+  }
 }

@@ -45,4 +45,9 @@ public interface Request {
         return null;
     }
 
+    /**
+     * 对应响应对象类型
+     * @return
+     */
+    Class getRespClass();
 }
