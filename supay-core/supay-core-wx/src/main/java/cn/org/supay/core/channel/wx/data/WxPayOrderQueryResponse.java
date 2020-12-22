@@ -103,6 +103,10 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
         if (StrUtil.isBlank(this.tradeState)) {
             return null;
         }
+        // 订单不存在
+        if (errCode.equals("ORDERNOTEXIST")) {
+            return SupayPayStatus.NOT_EXIST;
+        }
 
         switch (this.tradeState) {
             case "SUCCESS":

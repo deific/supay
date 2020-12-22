@@ -4,6 +4,7 @@
  *******************************************************************************/
 package cn.org.supay.core.channel.wx.convert;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
 import cn.org.supay.core.channel.data.Response;
@@ -33,6 +34,9 @@ public class WxPayConverter implements ChannelDataConverter {
      */
     @Override
     public Response convert(String body, Class<? extends Response> targetClass) {
+        if (StrUtil.isBlank(body)) {
+            return null;
+        }
         return BeanUtils.map2XmlBean(XmlUtil.xmlToMap(body), targetClass);
     }
 }
