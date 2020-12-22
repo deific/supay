@@ -30,20 +30,18 @@ import java.util.List;
 public class SupayFilterChain implements FilterChain {
     /** 拦截器 */
     protected List<SupayFilter> filters;
-    /** 拦截器位置*/
-    protected int chainPos = 0;
 
     @Override
     public int getCurrent() {
-        return chainPos;
+        return 0;
     }
 
     @Override
     public SupayContext<? extends Request, ? extends Response> nextBefore(SupayContext<? extends Request, ? extends Response> ctx) {
-        if (filters != null && chainPos < filters.size() && !ctx.hasError()) {
-            SupayFilter filter = filters.get(chainPos);
-            log.debug("[过滤器][before-{}-{}]执行过滤器before方法:{}", ctx.getInvokeLevel(), this.getCurrent(), filter.getClass().getName());
-            chainPos ++;
+        if (filters != null && ctx.getFilterChainPos() < filters.size() && !ctx.hasError()) {
+            SupayFilter filter = filters.get(ctx.getFilterChainPos());
+            log.debug("[过滤器][before-{}-{}]执行过滤器before方法:{}", ctx.getInvokeLevel(), ctx.getFilterChainPos(), filter.getClass().getName());
+            ctx.incrementPos();
             return filter.before(ctx, this);
         } else {
             return ctx;
@@ -52,10 +50,10 @@ public class SupayFilterChain implements FilterChain {
 
     @Override
     public SupayContext<? extends Request, ? extends Response> nextAfter(SupayContext<? extends Request, ? extends Response> ctx) {
-        if (filters != null && chainPos > 0) {
-            chainPos --;
-            SupayFilter filter = filters.get(chainPos);
-            log.debug("[过滤器][after-{}-{}]执行过滤器after方法:{}", ctx.getInvokeLevel(), this.getCurrent(), filter.getClass().getName());
+        if (filters != null && ctx.getFilterChainPos() > 0) {
+            ctx.decrementPos();
+            SupayFilter filter = filters.get(ctx.getFilterChainPos());
+            log.debug("[过滤器][after-{}-{}]执行过滤器after方法:{}", ctx.getInvokeLevel(), ctx.getFilterChainPos(), filter.getClass().getName());
             filter.after(ctx, this);
             return ctx;
         }

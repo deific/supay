@@ -34,6 +34,8 @@ import java.util.Map;
 @SuperBuilder
 @ToString(callSuper = true)
 public class SupayContext<R extends Request, S extends Response> {
+    /** 拦截器位置*/
+    private int filterChainPos = 0;
     /** 交易流水号 */
     protected String tradeId;
     /** 支付渠道参数 */
@@ -59,6 +61,16 @@ public class SupayContext<R extends Request, S extends Response> {
     /** 交易信息 */
     protected String msg;
 
+    /**
+     * 过滤器链位置加1
+     */
+    public void incrementPos() {
+        this.filterChainPos ++;
+    }
+
+    public void decrementPos() {
+        this.filterChainPos --;
+    }
     /**
      * 设置请求
      * @param r
@@ -225,6 +237,7 @@ public class SupayContext<R extends Request, S extends Response> {
                 .isSandBox(isSandBox)
                 .request(request)
                 .isLocalMock(channelConfig.isMock())
+                .success(true)
                 .build();
 
         return cxt;
