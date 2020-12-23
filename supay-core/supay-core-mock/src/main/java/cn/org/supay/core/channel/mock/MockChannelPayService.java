@@ -13,6 +13,7 @@ import cn.org.supay.core.channel.data.Request;
 import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.context.SupayNotifyContext;
 import cn.org.supay.core.enums.SupayChannelType;
+import cn.org.supay.core.utils.BeanUtils;
 import com.github.jsonzou.jmockdata.JMockData;
 import com.github.jsonzou.jmockdata.MockConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -90,15 +91,10 @@ public class MockChannelPayService implements BaseChannelPayService {
 
         Class respClass = ctx.getRequest().getRespClass();
         Response response = (Response) JMockData.mock(respClass, mockConfig);
+        // 复制请求数据
+        BeanUtils.copyProperties(ctx.getRequest(), response);
         ctx.setResponse(response);
-
-        int successValue = RandomUtil.randomInt(1, 100);
-        boolean isSuccess = successValue <= 98;
-        if (isSuccess) {
-            ctx.success("模拟成功支付");
-        } else {
-            ctx.fail("模拟失败支付");
-        }
+        ctx.success("模拟成功支付");
         return ctx;
     }
 }
