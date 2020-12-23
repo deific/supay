@@ -64,7 +64,7 @@ public class SupayConfiguration {
      */
     public static void loadChannelConfig(SupayChannelConfig ...configs) {
         for (SupayChannelConfig config : configs) {
-            SupayCoreConfig.registerChannelConfig(config.getAppId(), config);
+            config.register();
         }
     }
 
@@ -74,7 +74,7 @@ public class SupayConfiguration {
      */
     public static void loadChannelConfigs(List<SupayChannelConfig> configs) {
         for (SupayChannelConfig config : configs) {
-            SupayCoreConfig.registerChannelConfig(config.getAppId(), config);
+            config.register();
         }
     }
 }
