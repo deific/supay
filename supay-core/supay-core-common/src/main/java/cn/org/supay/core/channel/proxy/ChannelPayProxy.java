@@ -12,7 +12,7 @@ import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.context.SupayContext;
 import cn.org.supay.core.filter.SupayFilterChain;
-import cn.org.supay.core.stats.InvokeStats;
+import cn.org.supay.core.stats.Invoker;
 import cn.org.supay.core.stats.SupayStats;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,13 +43,13 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param parentInvoke
      * @param method
      */
-    public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke, Method method) {
+    public void beforeInvoke(SupayContext<? extends Request, ? extends Response> ctx, Invoker parentInvoke, Method method) {
         if (parentInvoke == null) {
             // 根从0开始
-            ctx.setCurrentInvoke(new InvokeStats(ctx.getChannelConfig().getChannelType(),
+            ctx.setCurrentInvoke(new Invoker(ctx.getChannelConfig().getChannelType(),
                     0, this.targetService.getClass().getSimpleName(), method.getName()));
         } else {
-            InvokeStats currentInvoke = new InvokeStats(ctx.getChannelConfig().getChannelType(),
+            Invoker currentInvoke = new Invoker(ctx.getChannelConfig().getChannelType(),
                     parentInvoke.getInvokeLevel() + 1, this.targetService.getClass().getSimpleName(), method.getName());
             // 本层调用invoke设置为上层的子层
             parentInvoke.setNextInvoke(currentInvoke);
@@ -63,7 +63,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param ctx
      * @param parentInvoke
      */
-    public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke) {
+    public void afterInvoke(SupayContext<? extends Request, ? extends Response> ctx, Invoker parentInvoke) {
         ctx.getCurrentInvoke().end();
     }
 
@@ -72,8 +72,8 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
      * @param ctx
      * @param parentInvoke
      */
-    public void finishInvoke(SupayContext<? extends Request, ? extends Response> ctx, InvokeStats parentInvoke) {
-        InvokeStats currentInvoke = ctx.getCurrentInvoke();
+    public void finishInvoke(SupayContext<? extends Request, ? extends Response> ctx, Invoker parentInvoke) {
+        Invoker currentInvoke = ctx.getCurrentInvoke();
         // 开启统计且在最上层统计
         if (SupayCoreConfig.isEnableStats() && currentInvoke.getInvokeLevel() == 0) {
             SupayStats supayStats = SupayCoreConfig.getStats();
@@ -105,7 +105,7 @@ public abstract class ChannelPayProxy extends SupayFilterChain  {
             return ctx;
         }
         // 上层的调用作为本层的父
-        InvokeStats parentInvoke = ctx.getCurrentInvoke();
+        Invoker parentInvoke = ctx.getCurrentInvoke();
         try {
             //方法执行，参数：target 目标对象 arr参数数组
             this.beforeInvoke(ctx, parentInvoke, method);

@@ -11,7 +11,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.enums.SupayPayType;
-import cn.org.supay.core.stats.InvokeStats;
+import cn.org.supay.core.stats.Invoker;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -34,8 +34,7 @@ import java.util.Map;
 @SuperBuilder
 @ToString(callSuper = true)
 public class SupayContext<R extends Request, S extends Response> {
-    /** 拦截器位置*/
-    private int filterChainPos = 0;
+
     /** 交易流水号 */
     protected String tradeId;
     /** 支付渠道参数 */
@@ -47,7 +46,7 @@ public class SupayContext<R extends Request, S extends Response> {
     /** 支付结果 */
     protected S response;
     /** 调用信息 */
-    protected InvokeStats currentInvoke;
+    protected Invoker currentInvoke;
     /** 附加参数 */
     protected Map<String, Object> extra;
     /** 是否启动本地模拟支付 */
@@ -62,14 +61,21 @@ public class SupayContext<R extends Request, S extends Response> {
     protected String msg;
 
     /**
+     * 拦截器链位置
+     * @return
+     */
+    public int getFilterChainPos() {
+        return this.currentInvoke.getFilterChainPos();
+    }
+    /**
      * 过滤器链位置加1
      */
     public void incrementPos() {
-        this.filterChainPos ++;
+        this.currentInvoke.incrementPos();
     }
 
     public void decrementPos() {
-        this.filterChainPos --;
+        this.currentInvoke.decrementPos();
     }
     /**
      * 设置请求
@@ -167,7 +173,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * 获取渠道调用统计
      * @return
      */
-    public InvokeStats getChannelInvoke(InvokeStats invokeStats) {
+    public Invoker getChannelInvoke(Invoker invokeStats) {
         if (invokeStats.getNextInvoke() == null) {
             return invokeStats;
         } else {

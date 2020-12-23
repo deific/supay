@@ -19,11 +19,13 @@ import java.util.Date;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class InvokeStats {
+public class Invoker {
     /** 渠道类型 */
     private SupayChannelType channelType;
     /** 调用层级 */
     private int invokeLevel = 0;
+    /** 本层拦截器位置*/
+    private int filterChainPos = 0;
     /** 调用服务 */
     private String invokeService;
     /** 调用服务方法 */
@@ -35,13 +37,13 @@ public class InvokeStats {
     /** 调用结束时间 */
     private Date endTime;
     /** 下一层调用 */
-    private InvokeStats nextInvoke;
+    private Invoker nextInvoke;
 
-    public InvokeStats() {
+    public Invoker() {
 
     }
 
-    public InvokeStats(SupayChannelType channelType, int invokeLevel, String invokeService, String invokeMethod) {
+    public Invoker(SupayChannelType channelType, int invokeLevel, String invokeService, String invokeMethod) {
         this.channelType = channelType;
         this.invokeLevel = invokeLevel;
         this.invokeService = invokeService;
@@ -61,5 +63,16 @@ public class InvokeStats {
     public void end() {
         this.endTime = new Date();
         this.invokeCost = this.endTime.getTime() - this.startTime.getTime();
+    }
+
+    /**
+     * 过滤器链位置加1
+     */
+    public void incrementPos() {
+        this.filterChainPos ++;
+    }
+
+    public void decrementPos() {
+        this.filterChainPos --;
     }
 }
