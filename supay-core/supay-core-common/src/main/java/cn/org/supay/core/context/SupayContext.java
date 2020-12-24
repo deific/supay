@@ -11,7 +11,7 @@ import cn.org.supay.core.channel.data.Response;
 import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayCoreConfig;
 import cn.org.supay.core.enums.SupayPayType;
-import cn.org.supay.core.stats.Invoker;
+import cn.org.supay.core.stats.Invocation;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -46,7 +46,7 @@ public class SupayContext<R extends Request, S extends Response> {
     /** 支付结果 */
     protected S response;
     /** 调用信息 */
-    protected Invoker currentInvoke;
+    protected Invocation currentInvoke;
     /** 附加参数 */
     protected Map<String, Object> extra;
     /** 是否启动本地模拟支付 */
@@ -173,7 +173,7 @@ public class SupayContext<R extends Request, S extends Response> {
      * 获取渠道调用统计
      * @return
      */
-    public Invoker getChannelInvoke(Invoker invokeStats) {
+    public Invocation getChannelInvoke(Invocation invokeStats) {
         if (invokeStats.getNextInvoke() == null) {
             return invokeStats;
         } else {

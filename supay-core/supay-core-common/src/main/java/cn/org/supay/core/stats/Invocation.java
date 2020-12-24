@@ -10,8 +10,10 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * <b>Application name：</b> InvokeStats.java <br>
- * <b>Application describing： </b> <br>
+ * <b>Application name：</b> Invocation.java <br>
+ * <b>Application describing： </b>
+ * 调用信息
+ * <br>
  * <b>Copyright：</b> Copyright &copy; 2020 supay.org.cn/ 版权所有。<br>
  * <b>Company：</b> supay.org.cn/ <br>
  * <b>@Date：</b> 2020年09月30日 08:49 <br>
@@ -19,7 +21,7 @@ import java.util.Date;
  * <b>@version：</b>V1.0.0 <br>
  */
 @Data
-public class Invoker {
+public class Invocation {
     /** 渠道类型 */
     private SupayChannelType channelType;
     /** 调用层级 */
@@ -37,13 +39,13 @@ public class Invoker {
     /** 调用结束时间 */
     private Date endTime;
     /** 下一层调用 */
-    private Invoker nextInvoke;
+    private Invocation nextInvoke;
 
-    public Invoker() {
+    public Invocation() {
 
     }
 
-    public Invoker(SupayChannelType channelType, int invokeLevel, String invokeService, String invokeMethod) {
+    public Invocation(SupayChannelType channelType, int invokeLevel, String invokeService, String invokeMethod) {
         this.channelType = channelType;
         this.invokeLevel = invokeLevel;
         this.invokeService = invokeService;
