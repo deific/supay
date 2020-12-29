@@ -87,8 +87,8 @@ public class WxPayRefundResponse extends WxPayBaseResponse implements AggregateR
     refundResponse.setRefundFee(this.refundFee);
     refundResponse.setRefundChannel(context.getChannelConfig().getChannelType().getCode());
     refundResponse.setRefundStatus(checkResult()?SupayRefundStatus.REFUND_SUCCESS:SupayRefundStatus.REFUND_FAIL);
-    refundResponse.setResultCode(checkResult()?this.getErrCode():this.getReturnCode());
-    refundResponse.setResultMsg(checkResult()?this.getErrCodeDes():this.getReturnMsg());
+    refundResponse.setResultCode(checkReturn()?this.getErrCode():this.getReturnCode());
+    refundResponse.setResultMsg(checkReturn()?this.getErrCodeDes():this.getReturnMsg());
     refundResponse.setSuccess(this.checkResult());
     return refundResponse;
   }
