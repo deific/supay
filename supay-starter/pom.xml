@@ -14,6 +14,7 @@
     <modules>
         <module>supay-core-all-spring-boot-starter</module>
         <module>supay-core-wx-spring-boot-starter</module>
+        <module>supay-core-alipay-spring-boot-starter</module>
     </modules>
 
     <dependencyManagement>

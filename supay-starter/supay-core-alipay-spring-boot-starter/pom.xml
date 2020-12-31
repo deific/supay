@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>supay-core-wx-spring-boot-starter</artifactId>
+    <artifactId>supay-core-alipay-spring-boot-starter</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.org.supay</groupId>
-            <artifactId>supay-core-wx</artifactId>
+            <artifactId>supay-core-alipay</artifactId>
         </dependency>
 
         <dependency>

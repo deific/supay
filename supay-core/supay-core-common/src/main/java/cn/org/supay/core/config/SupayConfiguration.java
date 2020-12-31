@@ -51,7 +51,6 @@ public class SupayConfiguration {
                         channelService.register();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
                     log.error("初始化渠道服务异常：", e);
                 }
             });

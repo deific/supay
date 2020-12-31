@@ -8,6 +8,7 @@ import cn.org.supay.core.config.SupayChannelConfig;
 import cn.org.supay.core.config.SupayChannelConfigLoader;
 import cn.org.supay.core.config.SupayConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,6 +28,7 @@ import java.util.Map;
  */
 @Slf4j
 @Configuration
+@ConditionalOnMissingBean(SupayAutoConfiguration.class)
 public class SupayAutoConfiguration {
 
     @Resource
