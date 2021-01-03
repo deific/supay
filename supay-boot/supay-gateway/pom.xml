@@ -11,5 +11,10 @@
 
     <artifactId>supay-gateway</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+    </dependencies>
 </project>
