@@ -29,10 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @SuperBuilder
 public class AggregateContext<R extends Request, S extends Response> extends SupayContext<R, S> {
-    /** 转换后的原始请求 */
-    private R originRequest;
-    /** 转换后的原始响应 */
-    private S originResponse;
+    /** 转换后最终渠道请求对象 */
+    private R finalRequest;
+    /** 转换后最终渠道响应对象 */
+    private S finalResponse;
 
     /**
      * 构建上下文
@@ -48,7 +48,7 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
                 .payType(request.getPayType())
                 .isSandBox(isSandBox)
                 .request(request)
-                .originRequest(request)
+                .finalRequest(request)
                 .isLocalMock(false)
                 .success(true)
                 .build();
@@ -59,8 +59,8 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
      * 交换请求
      */
     public void switchRequest() {
-        R tempR = originRequest;
-        this.originRequest = this.request;
+        R tempR = finalRequest;
+        this.finalRequest = this.request;
         this.request = tempR;
     }
 
@@ -69,8 +69,8 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
      */
     public void switchResponse() {
         S tempS = this.response;
-        this.response = this.originResponse;
-        this.originResponse = tempS;
+        this.response = this.finalResponse;
+        this.finalResponse = tempS;
     }
 
     /**
@@ -137,8 +137,8 @@ public class AggregateContext<R extends Request, S extends Response> extends Sup
         if (AggregateResponseConvert.class.isAssignableFrom(rsp.getClass())) {
             try {
                 AggregateResponseConvert targetResponse = (AggregateResponseConvert) rsp;
-                this.originResponse = (S) targetResponse.convertResponse(this);
-                log.debug("[转换]转换渠道响应参数类型 -> 聚合响应参数类型: [{}] -> [{}]", rsp.getClass().getName(), this.originResponse.getClass().getName());
+                this.finalResponse = (S) targetResponse.convertResponse(this);
+                log.debug("[转换]转换渠道响应参数类型 -> 聚合响应参数类型: [{}] -> [{}]", rsp.getClass().getName(), this.finalResponse.getClass().getName());
             } catch (Exception e) {
                 log.error("[转换]转换聚合参数类型异常", e);
             }

@@ -26,14 +26,14 @@ public class AliPayPageResponse extends AlipayBaseResponse implements AggregateR
     @Override
     public SupayBaseResponse convertResponse(SupayContext context) {
         AggregateContext aggregateContext = (AggregateContext) context;
-        if (aggregateContext.getOriginRequest() instanceof SupayPagePayRequest) {
+        if (aggregateContext.getFinalRequest() instanceof SupayPagePayRequest) {
             return SupayPagePayResponse.builder()
                     .redirectBody(this.getBody())
                     .redirectType(RedirectType.PAGE_BODY)
                     .success(this.success)
                     .build();
         }
-        if (aggregateContext.getOriginRequest() instanceof SupayH5PayRequest) {
+        if (aggregateContext.getFinalRequest() instanceof SupayH5PayRequest) {
             return SupayH5PayResponse.builder()
                     .redirectBody(this.getBody())
                     .redirectType(RedirectType.PAGE_BODY)

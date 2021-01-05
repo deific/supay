@@ -88,7 +88,7 @@ public class WxSupayCoreDemo {
                 .build().toContext(channelConfig.getAppId(), false);
 
         // 调用支付接口
-        cxt = (SupayContext) SupayCore.pay(cxt);
+        cxt = SupayCore.pay(cxt);
         if (!cxt.hasError()) {
             cxt.getResponse();
         }
