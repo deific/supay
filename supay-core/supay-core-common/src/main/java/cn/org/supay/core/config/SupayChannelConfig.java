@@ -27,6 +27,8 @@ import javax.net.ssl.*;
 public class SupayChannelConfig {
     /** 渠道类型 {@link SupayChannelType} */
     private SupayChannelType channelType;
+    /** 第三方渠道Id */
+    private String id;
     /** 第三方渠道appappId */
     private String appId;
     /** 第三方渠道app秘钥 */
@@ -75,7 +77,7 @@ public class SupayChannelConfig {
         if (!StrUtil.hasBlank(this.getMchCertFile()) && this.getMchCertFormat() != null) {
             sslSocketFactory = HttpUtils.createSSLSocketFactory(this.getMchCertFormat().name(), this.getMchCertFile(), this.getMchCertPassword());
         }
-        SupayCoreConfig.registerChannelConfig(appId, this);
+        SupayCoreConfig.registerChannelConfig(id, this);
         return this;
     }
 

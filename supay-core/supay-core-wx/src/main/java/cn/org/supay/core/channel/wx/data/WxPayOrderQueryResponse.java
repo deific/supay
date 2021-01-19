@@ -90,8 +90,8 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
                 .serviceTradeNo(this.transactionId)
                 .payStatus(convertPayStatus())
                 .build();
-        payQueryResponse.setResultCode(this.getErrCode());
-        payQueryResponse.setResultMsg(this.getErrCodeDes());
+        payQueryResponse.setResultCode(checkReturn()?this.getErrCode():this.getReturnCode());
+        payQueryResponse.setResultMsg(checkReturn()?this.getErrCodeDes():this.getReturnMsg());
         payQueryResponse.setSuccess(this.checkResult());
         return payQueryResponse;
     }
@@ -115,14 +115,15 @@ public class WxPayOrderQueryResponse extends WxPayBaseResponse implements Aggreg
                 return SupayPayStatus.PAY_SUCCESS;
             case "NOTPAY":
                 return SupayPayStatus.NO_PAY;
+            case "USERPAYING":
+            case "SYSTEMERROR":
+                return SupayPayStatus.PAY_PROCESSING;
             case "ORDER_REFUND":
             case "CLOSED":
             case "REVOKED":
             case "PAYERROR":
+            default:
                 return SupayPayStatus.PAY_FAIL;
-            case "USERPAYING":
-                return SupayPayStatus.PAY_PROCESSING;
         }
-        return null;
     }
 }

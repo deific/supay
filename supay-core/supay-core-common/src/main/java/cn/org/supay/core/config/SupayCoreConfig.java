@@ -5,6 +5,7 @@
 package cn.org.supay.core.config;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.org.supay.core.channel.ChannelPayService;
 import cn.org.supay.core.channel.converter.ChannelDataConverter;
 import cn.org.supay.core.channel.notify.ChannelNotifyHandler;
@@ -60,9 +61,12 @@ public class SupayCoreConfig {
     /**
      * 注册渠道支付参数
      */
-    public static void registerChannelConfig(String appId, SupayChannelConfig channelConfig) {
-        log.debug("[注册] 注册渠道支付参数：appId={} config={}", appId, channelConfig.getClass().getName());
-        channelConfigMap.put(appId, channelConfig);
+    public static void registerChannelConfig(String id, SupayChannelConfig channelConfig) {
+        log.debug("[注册] 注册渠道支付参数：id={} config={}", id, channelConfig.getClass().getName());
+        if (StrUtil.isBlank(id)) {
+            throw new IllegalArgumentException("支付渠道配置id不能为空");
+        }
+        channelConfigMap.put(id, channelConfig);
     }
 
     /**

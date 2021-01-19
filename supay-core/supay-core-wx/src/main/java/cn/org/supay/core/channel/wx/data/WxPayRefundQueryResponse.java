@@ -180,8 +180,8 @@ public class WxPayRefundQueryResponse extends WxPayBaseResponse implements Aggre
             .refundTradeNo(this.refundId0)
             .refundStatus(convertRefundStatus())
             .build();
-    refundQueryResponse.setResultCode(this.getErrCode());
-    refundQueryResponse.setResultMsg(this.getErrCodeDes());
+    refundQueryResponse.setResultCode(checkReturn()?this.getErrCode():this.getReturnCode());
+    refundQueryResponse.setResultMsg(checkReturn()?this.getErrCodeDes():this.getReturnMsg());
     refundQueryResponse.setSuccess(this.checkResult());
     return refundQueryResponse;
   }
