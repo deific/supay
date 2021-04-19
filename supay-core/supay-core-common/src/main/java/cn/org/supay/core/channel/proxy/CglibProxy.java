@@ -30,8 +30,8 @@ public class CglibProxy extends ChannelPayProxy implements MethodInterceptor {
     }
 
     @Override
-    public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) {
-        return invoke(method, args);
+    public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+        return methodProxy.invokeSuper(o, args);
     }
 
     /**

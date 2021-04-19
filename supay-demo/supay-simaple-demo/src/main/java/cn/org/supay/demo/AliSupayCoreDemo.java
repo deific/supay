@@ -44,7 +44,7 @@ public class AliSupayCoreDemo {
         props = new Props("config/my-ali-pay.conf");
         // 初始化配置
         channelConfig = SupayChannelConfig.builder()
-                .rootSecretKey(props.getStr("ali.publicKey"))
+                .id(props.getStr("ali.appId")).rootSecretKey(props.getStr("ali.publicKey"))
                 .appId(props.getStr("ali.appId")).appSecret(props.getStr("ali.appSecret")).appName("支付宝应用-支付")
                 .mchId(props.getStr("ali.mchId")).mchName("支付宝商户").mchSecretKey(props.getStr("ali.mchSecretKey"))
                 .channelType(SupayChannelType.ALIPAY).apiBaseUrl("https://openapi.alipaydev.com/gateway.do")
